@@ -1,4 +1,3 @@
-
 <html>
 <head>
     <meta charset="UTF-8">
@@ -13,10 +12,10 @@
 body {
     color: #fff;
     background-color: #0A1D37;
-    font-family: "Outfit", sans-serif; /* Changed to blockier font */
+    font-family: "Outfit", sans-serif;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Changed from center to flex-start */
+    justify-content: flex-start;
     align-items: center;
     height: 100vh;
     margin: 0;
@@ -55,7 +54,7 @@ body {
 h1 {
     font-size: 3rem;
     color: #ffffff;
-    font-weight: 900; /* Maximum boldness (already bold) */
+    font-weight: 900;
     text-transform: none;
     letter-spacing: 2px;
     margin-bottom: 20px;
@@ -92,7 +91,7 @@ h1:hover {
     border: 2px solid #1e2a47;
     background-color: #141414;
     border-radius: 30px;
-    font-family: "Outfit", sans-serif; /* Changed to blockier font */
+    font-family: "Outfit", sans-serif;
     outline: none;
     margin: 0;
     color: #fff;
@@ -140,7 +139,7 @@ h1:hover {
     right: 10px;
     font-size: 18px;
     color: white;
-    font-family: "Outfit", sans-serif; /* Changed to blockier font */
+    font-family: "Outfit", sans-serif;
     background-color: rgba(0, 0, 0, 0.5);
     padding: 5px 10px;
     border-radius: 10px;
@@ -193,7 +192,7 @@ h1:hover {
     padding: 12px 15px;
     border-radius: 10px;
     transition: all 0.3s ease;
-    font-family: "Outfit", sans-serif; /* Changed to blockier font */
+    font-family: "Outfit", sans-serif;
 }
 
 .popup input[type="text"]:focus {
@@ -207,7 +206,7 @@ h1:hover {
     margin: 15px 0;
     color: #fff;
     width: 100%;
-    font-family: "Outfit", sans-serif; /* Changed to blockier font */
+    font-family: "Outfit", sans-serif;
 }
 
 .popup input[type="file"]::-webkit-file-upload-button {
@@ -240,7 +239,7 @@ h1:hover {
     color: #fff;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-family: "Outfit", sans-serif; /* Changed to blockier font */
+    font-family: "Outfit", sans-serif;
     font-weight: 500;
 }
 
@@ -293,10 +292,9 @@ h1:hover {
     <div id="search-container">
         <form id="uv-form">
             <input id="uv-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden"/>
-            <input id="uv-address" type="text" class="search-bar-home" placeholder="Search or enter a URL" />
-            <button class="search-button" onclick="submitSearch()">SEARCH <i class="fa-solid fa-magnifying-glass"></i></button>
+            <input id="uv-address" type="text" class="search-bar-home url-input" placeholder="Search or enter a URL" />
+            <button type="submit" class="search-button">SEARCH <i class="fa-solid fa-magnifying-glass"></i></button>
         </form> 
-
         <div class="desc left-margin">
             <p id="uv-error"></p>
             <pre id="uv-error-code"></pre>
@@ -335,11 +333,11 @@ h1:hover {
     <!-- Time Display Element -->
     <div id="time"></div>
 
-    <script src="/static/uv/uv.bundle.js" defer></script>
-    <script src="/static/uv/uv.config.js" defer></script>
-    <script src="/static/register-sw.js" defer></script>
-    <script src="/static/search.js" defer></script>
-    <script src="/static/index.js" defer></script>
+    <script src="/petezah/bundle.js" defer></script>
+    <script src="/petezah/config.js" defer></script>
+    <script src="/petezah/rizz.sw.js" defer></script>
+    <script src="/petezah/sw.js" defer></script>
+    <script src="/petezah/handler.js" defer></script>
 
     <script>
         const phrases = [
@@ -454,6 +452,47 @@ h1:hover {
 
         // Load pins when page loads
         window.addEventListener('load', loadSavedPins);
+
+        // Search bar functionality
+        document.getElementById('uv-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const url = document.getElementById('uv-address').value;
+            const isAUrl = url.includes(".");
+
+            if (isAUrl) {
+                let formattedUrl = url;
+                if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                    formattedUrl = "https://" + url;
+                }
+
+                window.navigator.serviceWorker
+                    .register("/petezah/sw.js", {
+                        scope: __uv$config.prefix,
+                    })
+                    .then(() => {
+                        window.location.href = __uv$config.prefix + __uv$config.encodeUrl(formattedUrl);
+                    });
+            } else {
+                const searchUrl = "https://duckduckgo.com/?q=" + encodeURIComponent(url);
+                window.navigator.serviceWorker
+                    .register("/petezah/sw.js", {
+                        scope: __uv$config.prefix,
+                    })
+                    .then(() => {
+                        window.location.href = __uv$config.prefix + __uv$config.encodeUrl(searchUrl);
+                    });
+            }
+        });
+
+        document.getElementById('uv-address').addEventListener("focus", function () {
+            if (this.value && this.value.indexOf(".") !== -1) {
+                this.value = "https://" + this.value;
+            }
+        });
+
+        document.getElementById('uv-address').addEventListener("blur", function () {
+            this.value = this.value.replace(/^https?:\/\//, "");
+        });
     </script>
     <script src="/storage/js/settings.js"></script>
 </body>

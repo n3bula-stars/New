@@ -1,75 +1,71 @@
-import wisp from "wisp-server-node"
-import { createBareServer } from "@tomphttp/bare-server-node"
-import { uvPath } from "@titaniumnetwork-dev/ultraviolet"
-import { epoxyPath } from "@mercuryworkshop/epoxy-transport"
-import { bareModulePath } from "@mercuryworkshop/bare-as-module3"
-import { baremuxPath } from "@mercuryworkshop/bare-mux/node"
+
+import { createBareServer } from "@tomphttp/bare-server-node";
 import express from "express";
 import { createServer } from "node:http";
-import { join } from "node:path";
+import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
+import path, { join } from "node:path";
+import { hostname } from "node:os";
 import { fileURLToPath } from "node:url";
 
-const bare = createBareServer("/bare/")
-const __dirname = join(fileURLToPath(import.meta.url), "..");
+// Fix __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const bare = createBareServer("/bare/");
 const app = express();
-const publicPath = "public"; // if you renamed your directory to something else other than public
+const publicPath = "public";
 
+// Serve static files
 app.use(express.static(publicPath));
-app.use("/uv/", express.static(uvPath));
-app.use("/epoxy/", express.static(epoxyPath));
-app.use("/baremux/", express.static(baremuxPath));
-app.use("/baremod/", express.static(bareModulePath));
+app.use("/petezah/", express.static(uvPath));
 
+// Custom 404 fallback
 app.use((req, res) => {
     res.status(404);
-    res.sendFile(join(__dirname, publicPath, "404.html")); // change to your 404 page
+    res.sendFile(join(__dirname, publicPath, "404.html")); // Now works in ESM
 });
 
+// Create and attach bare + express to the server
 const server = createServer();
 
 server.on("request", (req, res) => {
-    if (bare.shouldRoute(req)) {
-        bare.routeRequest(req, res);
-    } else {
-        app(req, res);
-    }
+  if (bare.shouldRoute(req)) {
+    bare.routeRequest(req, res);
+  } else {
+    app(req, res);
+  }
 });
 
 server.on("upgrade", (req, socket, head) => {
-    if (req.url.endsWith("/wisp/")) {
-        wisp.routeRequest(req, socket, head);
-    } else if (bare.shouldRoute(req)) {
-        bare.routeUpgrade(req, socket, head);
-    } else {
-        socket.end();
-    }
+  if (bare.shouldRoute(req)) {
+    bare.routeUpgrade(req, socket, head);
+  } else {
+    socket.end();
+  }
 });
 
-let port = parseInt(process.env.PORT || "");
+// Start server
+const port = parseInt(process.env.PORT || "3000");
 
-if (isNaN(port)) port = 8080; // set your port
-
-server.on("listening", () => {
-    const address = server.address();
-    console.log("Listening on:");
-    console.log(`\thttp://localhost:${address.port}`);
-    console.log(
-        `\thttp://${
-            address.family === "IPv6" ? `[${address.address}]` : address.address
-        }:${address.port}`
-    );
+server.listen({ port }, () => {
+  const address = server.address();
+  console.log("Listening on:");
+  console.log(`\thttp://localhost:${address.port}`);
+  console.log(`\thttp://${hostname()}:${address.port}`);
+  console.log(
+    `\thttp://${
+      address.family === "IPv6" ? `[${address.address}]` : address.address
+    }:${address.port}`
+  );
 });
 
+// Graceful shutdown
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
 
 function shutdown() {
-    console.log("SIGTERM signal received: closing HTTP server");
-    server.close();
-    bare.close();
-    process.exit(0);
+  console.log("SIGTERM signal received: closing HTTP server");
+  server.close();
+  bare.close();
+  process.exit(0);
 }
-
-server.listen({
-    port,
-});
