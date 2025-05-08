@@ -2129,7 +2129,7 @@
     {
       "label": "Crazy Cattle 3d",
       "url": "/iframe.html?url=/storage/ag/g2/crazy-cattle-3d/",
-      "imageUrl": "/storage/images/main3/crazy-cattle-3d/crazy-cattle-3d.png",
+      "imageUrl": "/storage/images/main3/crazycattle3d.png",
       "categories": [
         "action"
       ]
@@ -2137,7 +2137,7 @@
     {
       "label": "Sky Riders",
       "url": "/iframe.html?url=/storage/ag/g2/sky-riders/",
-      "imageUrl": "/storage/images/main3/sky-riders/sky-riders.png",
+      "imageUrl": "/storage/images/main3/skyriders.png",
       "categories": [
         "action",
         "racing"
@@ -2146,7 +2146,7 @@
     {
       "label": "Doors Online",
       "url": "/iframe.html?url=/storage/ag/g2/doors-online/",
-      "imageUrl": "/storage/images/main3/doors-online/doors-online.png",
+      "imageUrl": "/storage/images/main3/doorsonline.png",
       "categories": [
         "action"
       ]
@@ -3150,7 +3150,6 @@
     {
       "label": "Bacon May Die",
       "url": "/iframe.html?url=/storage/ag/g2/bacon-may-die/",
-      "imageUrl": "/storage/images/main3/bacon-may10n": "/iframe.html?url=/storage/ag/g2/bacon-may-die/",
       "imageUrl": "/storage/images/main3/bacon-may-die/bacon-may-die.png",
       "categories": [
         "action"
