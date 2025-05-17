@@ -10,13 +10,16 @@ self.__uv$config = {
   bundle: "/petezah/bundle.js",
   config: "/petezah/config.js",
   sw: "/petezah/rizz.sw.js",
+};
 
+  /*
     /**
      * Function to inject scripts into the doc Head
      * @type {function}
      * @param {URL} url - The URL for the rewrite function.
      * @returns {string} - The script to inject.
      */
+
     inject: async (url) => {
       if (url.host === '') {
           return `
@@ -31,3 +34,4 @@ self.__uv$config = {
       `
   },
 }
+*/
