@@ -24,7 +24,7 @@ Links- Your can visit [https://petezahgames.com](), and you can get more links i
 To deploy, type in 
 ``` npm i ```
 then follow up with 
-``` npm start ``
+``` npm start ```
 We support codespaces!
 
 ## Summary
