@@ -1,4 +1,3 @@
-
 import { createBareServer } from "@tomphttp/bare-server-node";
 import express from "express";
 import { createServer } from "node:http";
@@ -26,7 +25,7 @@ app.use((req, res) => {
 });
 
 // Create and attach bare + express to the server
-const server = createServer();
+const server = createServer(app);
 
 server.on("request", (req, res) => {
   if (bare.shouldRoute(req)) {
