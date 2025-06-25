@@ -30,7 +30,7 @@
       const access_token = params.get('access_token');
       const refresh_token = params.get('refresh_token');
       const error = params.get('error_description') || params.get('error');
-      const state = params.get('state');
+      const state = decodeURIComponent(params.get('state') || '/');
 
       if (error) {
         console.error('OAuth error:', error);
@@ -50,20 +50,23 @@
         const response = await fetch('/api/set-session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ access_token, refresh_token, state }),
+          body: JSON.stringify({ access_token, refresh_token }),
           credentials: 'include'
         });
+
         const data = await response.json();
+
         if (response.ok) {
           if (window.opener) {
-            const targetOrigin = window.opener.location.origin || window.location.origin;
             window.opener.postMessage({
               type: 'oauth_success',
-              state: state || null
-            }, targetOrigin);
+              redirect: state
+            }, window.opener.origin || window.location.origin);
             window.close();
           } else {
-            window.location.href = "/pages/settings/p2.html";
+            window.location.href = state.includes('?')
+              ? `${state}&showProfile=true`
+              : `${state}?showProfile=true`;
           }
         } else {
           console.error('Set session error:', data.error);
