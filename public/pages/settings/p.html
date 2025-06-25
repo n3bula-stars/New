@@ -1,167 +1,159 @@
-<!-- Google Tag Manager -->
-<script>(function (w, d, s, l, i) {
-    w[l] = w[l] || []; w[l].push({
-      'gtm.start':
-        new Date().getTime(), event: 'gtm.js'
-    }); var f = d.getElementsByTagName(s)[0],
-      j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-  })(window, document, 'script', 'dataLayer', 'GTM-WPH7NCG4');</script>
-<!-- End Google Tag Manager -->
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PeteZah | Settings</title>
-<link rel="icon" type="image/x-icon" href="/storage/images/logo-png-removebg-preview.png" />
-<meta name="description" content="Pete Zah, game on" />
-<link rel="stylesheet" type="text/css" href="/storage/css/themes.css">
-<meta name="keywords" content="Proxy, Unblocker, Pete Zah Unblocker, Pete Zah Games, Pete Zah" />
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-  body {
-    background: linear-gradient(135deg, #0a0a23 0%, #1e3a8a 100%);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Poppins', sans-serif;
-    color: #e5e7eb;
-    margin: 0;
-    padding: 1rem;
-    box-sizing: border-box;
-  }
-  .card {
-    background: rgba(17, 24, 39, 0.95);
-    border: 1px solid #3b82f6;
-    border-radius: 1rem;
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-    padding: 2.5rem;
-    width: 100%;
-    max-width: 500px;
-    backdrop-filter: blur(10px);
-    transition: transform 0.3s ease;
-  }
-  .card:hover {
-    transform: translateY(-3px);
-  }
-  .btn {
-    transition: all 0.3s ease;
-    background: #2563eb;
-    border: 1px solid #60a5fa;
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    font-size: 1.1rem;
-  }
-  .btn:hover {
-    background: #1e40af;
-    transform: translateY(-2px);
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
-  }
-  .oauth-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    background: #1f2937;
-    border: 1px solid #4b5563;
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-  }
-  .oauth-btn:hover {
-    background: #374151;
-    border-color: #60a5fa;
-    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
-  }
-  .oauth-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin: 2rem 0;
-  }
-  .divider::before, .divider::after {
-    content: '';
-    flex: 1;
-    border-bottom: 1px solid #4b5563;
-  }
-  input {
-    background: #1f2937;
-    border: 1px solid #4b5563;
-    color: #e5e7eb;
-    padding: 1rem 1.25rem;
-    border-radius: 0.5rem;
-    font-size: 1.1rem;
-    width: 100%;
-    box-sizing: border-box;
-    transition: all 0.3s ease;
-  }
-  input:focus {
-    border-color: #60a5fa;
-    box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
-    outline: none;
-  }
-  .link {
-    color: #60a5fa;
-    transition: color 0.3s ease;
-  }
-  .link:hover {
-    color: #3b82f6;
-    text-decoration: underline;
-  }
-  .glow {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
-    z-index: -1;
-    top: 0;
-    left: 0;
-  }
-  @media (max-width: 640px) {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PeteZah | Settings</title>
+  <link rel="icon" type="image/x-icon" href="/storage/images/logo-png-removebg-preview.png" />
+  <meta name="description" content="Pete Zah, game on" />
+  <link rel="stylesheet" type="text/css" href="/storage/css/themes.css">
+  <meta name="keywords" content="Proxy, Unblocker, Pete Zah Unblocker, Pete Zah Games, Pete Zah" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: #0A1D37; 
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+      color: #e5e7eb;
+      margin: 0;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
     .card {
-      padding: 1.5rem;
-      max-width: 90vw;
+      background: rgba(17, 24, 39, 0.95);
+      border: 1px solid #ffffff;
+      border-radius: 1rem;
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+      padding: 2rem;
+      width: 100%;
+      max-width: 700px;
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease;
     }
-    .btn, .oauth-btn {
-      font-size: 0.95rem;
-      padding: 0.65rem;
+    .card:hover {
+      transform: translateY(-3px);
     }
-    input {
+    .btn {
+      transition: all 0.3s ease;
+      background: #2563eb;
+      border: 1px solid #60a5fa;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    .btn:hover {
+      background: #1e40af;
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+    }
+    .oauth-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      background: #1f2937;
+      border: 1px solid #4b5563;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
       font-size: 1rem;
-      padding: 0.85rem 1rem;
+      transition: all 0.3s ease;
+    }
+    .oauth-btn:hover {
+      background: #374151;
+      border-color: #60a5fa;
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
     }
     .oauth-grid {
-      grid-template-columns: 1fr;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
     }
-  }
-</style>
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid #4b5563;
+    }
+    input {
+      background: #1f2937;
+      border: 1px solid #4b5563;
+      color: #e5e7eb;
+      padding: 3rem 1.5rem; 
+      border-radius: 0.5rem;
+      font-size: 1.2rem; 
+      width: 100%;
+      height: 40px;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+    input:focus {
+      border-color: #60a5fa;
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+      outline: none;
+    }
+    .link {
+      color: #60a5fa;
+      transition: color 0.3s ease;
+    }
+    .link:hover {
+      color: #3b82f6;
+      text-decoration: underline;
+    }
+    .glow {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+      z-index: -1;
+      top: 0;
+      left: 0;
+    }
+    @media (max-width: 640px) {
+      .card {
+        padding: 1.5rem;
+        max-width: 95vw; 
+      }
+      .btn, .oauth-btn {
+        font-size: 0.95rem;
+        padding: 0.65rem;
+      }
+      input {
+        font-size: 1.1rem;
+        padding: 1rem 1.25rem;
+      }
+      .oauth-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="glow"></div>
   <div class="card">
     <h2 class="text-2xl font-bold text-center text-gray-100 mb-6">Sign In</h2>
     
-    <!-- Email/Password Form -->
     <form id="login-form" class="space-y-6">
       <div>
         <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
-        <input type="email" id="email" required class="mt-2" placeholder="you@example.com">
+        <input type="email" id="email" required class="mt-2" placeholder="  you@example.com">
       </div>
       <div>
         <label for="password" class="block text-sm font-medium text-gray-300">Password</label>
-        <input type="password" id="password" required class="mt-2" placeholder="••••••••">
+        <input type="password" id="password" required class="mt-2" placeholder="  ••••••••">
       </div>
       <button type="submit" class="w-full text-white btn">Sign In</button>
     </form>
 
-    <!-- OAuth Providers -->
     <div class="divider">
       <span class="text-gray-400">or</span>
     </div>
@@ -184,13 +176,25 @@
       </button>
     </div>
 
-    <!-- Signup Link -->
     <p class="text-center text-sm text-gray-400 mt-6">
       Don't have an account yet? <a href="/pages/settings/p3.html" class="link">Sign up here</a>
     </p>
   </div>
 
   <script>
+    // Generate a random state parameter for OAuth
+    function generateState() {
+      return Math.random().toString(36).substring(2, 15);
+    }
+
+    // Listen for OAuth success message from callback tab
+    window.addEventListener('message', (event) => {
+      if (event.origin !== window.location.origin) return;
+      if (event.data.type === 'oauth_success') {
+        window.location.href = '/pages/settings/p2.html';
+      }
+    });
+
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('email').value;
@@ -204,7 +208,7 @@
         const data = await response.json();
         if (response.ok) {
           alert(data.message);
-          window.location.href = '/pages/settings/profile.html';
+          window.location.href = '/pages/settings/p2.html';
         } else {
           alert(data.error);
         }
@@ -215,16 +219,17 @@
 
     async function signInWithOAuth(provider) {
       try {
+        const state = generateState();
         const response = await fetch('/api/signin/oauth', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ provider }),
+          body: JSON.stringify({ provider, state }),
         });
         const data = await response.json();
-        if (response.ok) {
-          window.location.href = data.url;
+        if (response.ok && data.url) {
+          window.open(data.url, '_blank'); // Open in new tab
         } else {
-          alert(data.error);
+          alert('Error: ' + data.error);
         }
       } catch (error) {
         alert('Error: ' + error.message);

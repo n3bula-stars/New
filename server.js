@@ -66,7 +66,7 @@ app.post("/api/signin/oauth", async (req, res) => {
       options: { redirectTo }
     });
     if (error) throw error;
-    return res.status(200).json({ url: data.url });
+    return res.status(200).json({ url: data.url, openInNewTab: true });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
@@ -195,7 +195,7 @@ app.post("/api/link-account", async (req, res) => {
       options: { redirectTo, skipBrowserRedirect: true }
     });
     if (error) throw error;
-    return res.status(200).json({ url: data.url });
+    return res.status(200).json({ url: data.url, openInNewTab: true });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }

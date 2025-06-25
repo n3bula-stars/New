@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
-      background: linear-gradient(to bottom right, #1e3a8a, #60a5fa);
+      background: #1e3a8a;
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -30,10 +30,11 @@
       const access_token = params.get('access_token');
       const refresh_token = params.get('refresh_token');
       const error = params.get('error_description');
+      const state = params.get('state'); // Get state parameter if sent
 
       if (error) {
         alert('Login error: ' + error);
-        window.location.href = '/pages/settings/p.html';
+        window.close(); // Close the tab on error
         return;
       }
 
@@ -46,18 +47,26 @@
           });
           const data = await response.json();
           if (response.ok) {
-            window.location.href = '/pages/settings/p2.html';
+            // Post message to original tab
+            if (window.opener) {
+              window.opener.postMessage({
+                type: 'oauth_success',
+                state: state || null,
+              }, window.location.origin);
+            }
+            // Close the new tab
+            window.close();
           } else {
             alert('Error: ' + data.error);
-            window.location.href = '/pages/settings/p.html';
+            window.close();
           }
         } catch (err) {
           alert('Error: ' + err.message);
-          window.location.href = '/pages/settings/p.html';
+          window.close();
         }
       } else {
         alert('Invalid callback parameters');
-        window.location.href = '/pages/settings/p.html';
+        window.close();
       }
     }
 

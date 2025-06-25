@@ -19,7 +19,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   body {
-    background: linear-gradient(135deg, #0a0a23 0%, #1e3a8a 100%);
+    background: #0A1D37; 
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -32,12 +32,12 @@
   }
   .card {
     background: rgba(17, 24, 39, 0.95);
-    border: 1px solid #3b82f6;
+    border: 1px solid #f4f4f4;
     border-radius: 1rem;
     box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-    padding: 2.5rem;
+    padding: 2rem;
     width: 100%;
-    max-width: 500px;
+    max-width: 700px; 
     backdrop-filter: blur(10px);
     transition: transform 0.3s ease;
   }
@@ -95,10 +95,11 @@
     background: #1f2937;
     border: 1px solid #4b5563;
     color: #e5e7eb;
-    padding: 1rem 1.25rem;
+    padding: 3rem 1.5rem; 
     border-radius: 0.5rem;
-    font-size: 1.1rem;
+    font-size: 1.2rem; 
     width: 100%;
+    height: 40px;
     box-sizing: border-box;
     transition: all 0.3s ease;
   }
@@ -127,15 +128,15 @@
   @media (max-width: 640px) {
     .card {
       padding: 1.5rem;
-      max-width: 90vw;
+      max-width: 95vw; 
     }
     .btn, .oauth-btn {
       font-size: 0.95rem;
       padding: 0.65rem;
     }
     input {
-      font-size: 1rem;
-      padding: 0.85rem 1rem;
+      font-size: 1.1rem;
+      padding: 1rem 1.25rem;
     }
     .oauth-grid {
       grid-template-columns: 1fr;
@@ -148,24 +149,22 @@
   <div class="card">
     <h2 class="text-2xl font-bold text-center text-gray-100 mb-6">Sign Up</h2>
     
-    <!-- Signup Form -->
     <form id="signup-form" class="space-y-6">
       <div>
         <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
-        <input type="email" id="email" required class="mt-2" placeholder="you@example.com">
+        <input type="email" id="email" required class="mt-2" placeholder="  you@example.com">
       </div>
       <div>
         <label for="password" class="block text-sm font-medium text-gray-300">Password</label>
-        <input type="password" id="password" required class="mt-2" placeholder="••••••••">
+        <input type="password" id="password" required class="mt-2" placeholder="  ••••••••">
       </div>
       <div>
         <label for="confirm-password" class="block text-sm font-medium text-gray-300">Confirm Password</label>
-        <input type="password" id="confirm-password" required class="mt-2" placeholder="••••••••">
+        <input type="password" id="confirm-password" required class="mt-2" placeholder="  ••••••••">
       </div>
       <button type="submit" class="w-full text-white btn">Sign Up</button>
     </form>
 
-    <!-- OAuth Providers -->
     <div class="divider">
       <span class="text-gray-400">or</span>
     </div>
@@ -188,7 +187,6 @@
       </button>
     </div>
 
-    <!-- Login Link -->
     <p class="text-center text-sm text-gray-400 mt-6">
       Already have an account? <a href="/pages/settings/p.html" class="link">Sign in here</a>
     </p>
@@ -213,7 +211,7 @@
         const data = await response.json();
         if (response.ok) {
           alert(data.message);
-          window.location.href = '/pages/settings/profile.html';
+          window.location.href = '/pages/settings/p2.html';
         } else {
           alert(data.error);
         }
@@ -230,10 +228,14 @@
           body: JSON.stringify({ provider }),
         });
         const data = await response.json();
-        if (response.ok) {
-          window.location.href = data.url;
+        if (response.ok && data.url) {
+          if (data.openInNewTab) {
+            window.open(data.url, '_blank'); // Open in new tab
+          } else {
+            window.location.href = data.url; // Fallback to redirect
+          }
         } else {
-          alert(data.error);
+          alert('Error: ' + data.error);
         }
       } catch (error) {
         alert('Error: ' + error.message);
