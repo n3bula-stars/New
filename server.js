@@ -54,7 +54,12 @@ app.get("/api/profile", async (req, res) => {
 });
 app.post("/api/signin/oauth", async (req, res) => {
   const { provider } = req.body;
-  const redirectTo = `https://petezahgames.com/auth/callback`; 
+  const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
+  const host = req.headers.host;
+  if (!host) {
+    return res.status(400).json({ error: "Host header missing" });
+  }
+  const redirectTo = `${protocol}://${host}/auth/callback`;
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
@@ -178,7 +183,12 @@ app.post("/api/link-account", async (req, res) => {
     return res.status(401).json({ error: "Unauthorized" });
   }
   const { provider } = req.body;
-  const redirectTo = `https://petezahgames.com/auth/callback`; 
+  const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
+  const host = req.headers.host;
+  if (!host) {
+    return res.status(400).json({ error: "Host header missing" });
+  }
+  const redirectTo = `${protocol}://${host}/auth/callback`;
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
