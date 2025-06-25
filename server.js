@@ -24,7 +24,7 @@ const publicPath = "public";
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: process.env.NODE_ENV === "production", httpOnly: true, maxAge: 24 * 60 * 60 * 1000 } }));
+app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: false } });
 app.use(express.static(publicPath));
 app.use("/petezah/", express.static(uvPath));
 
@@ -54,30 +54,24 @@ app.get("/api/profile", async (req, res) => {
 });
 app.post("/api/signin/oauth", async (req, res) => {
   const { provider, state } = req.body;
-  const protocol = process.env.NODE_ENV === "production" ? "https" : req.headers['x-forwarded-proto'] || 'http';
-  const host = process.env.APP_HOST || req.headers['x-forwarded-host'] || req.headers.host || 'localhost:3000';
+  const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
+  let host = req.headers.host;
+  if (!host) {
+    host = process.env.APP_HOST || 'localhost:3000';
+  }
   const redirectTo = `${protocol}://${host}/auth/callback`;
-  req.session.oauth_state = state;
-  console.log(`OAuth initiated: provider=${provider}, state=${state}, redirectTo=${redirectTo}`);
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo, queryParams: { state } }
+      options: { redirectTo, scopes: 'email profile', queryParams: { state } }
     });
     if (error) throw error;
     return res.status(200).json({ url: data.url, openInNewTab: true });
   } catch (error) {
-    console.error(`OAuth error: ${error.message}`);
     return res.status(400).json({ error: error.message });
   }
 });
-app.get("/auth/callback", async (req, res) => {
-  const { state } = req.query;
-  console.log(`Callback received: state=${state}, session_state=${req.session.oauth_state}`);
-  if (!req.session.oauth_state || state !== req.session.oauth_state) {
-    console.error(`Invalid state: received=${state}, expected=${req.session.oauth_state}`);
-    return res.redirect(`/?error=invalid_request&error_code=bad_oauth_state&error_description=OAuth+callback+with+invalid+state`);
-  }
+app.get("/auth/callback", (req, res) => {
   return res.sendFile(join(__dirname, publicPath, "auth-callback.html"));
 });
 app.post("/api/set-session", async (req, res) => {
@@ -93,7 +87,6 @@ app.post("/api/set-session", async (req, res) => {
     if (error) throw error;
     req.session.user = data.user;
     req.session.access_token = access_token;
-    delete req.session.oauth_state;
     return res.status(200).json({ message: "Session set successfully" });
   } catch (error) {
     return res.status(400).json({ error: error.message });
@@ -186,21 +179,21 @@ app.delete("/api/delete-account", async (req, res) => {
   }
 });
 app.post("/api/link-account", async (req, res) => {
-  const { provider, state } = req.body;
-  const protocol = process.env.NODE_ENV === "production" ? "https" : req.headers['x-forwarded-proto'] || 'http';
-  const host = process.env.APP_HOST || req.headers['x-forwarded-host'] || req.headers.host || 'localhost:3000';
+  const { provider } = req.body;
+  const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
+  let host = req.headers.host;
+  if (!host) {
+    host = process.env.APP_HOST || 'localhost:3000';
+  }
   const redirectTo = `${protocol}://${host}/auth/callback`;
-  req.session.oauth_state = state;
-  console.log(`Link account initiated: provider=${provider}, state=${state}, redirectTo=${redirectTo}`);
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo, queryParams: { state } }
+      options: { redirectTo, skipBrowserRedirect: true }
     });
     if (error) throw error;
     return res.status(200).json({ url: data.url, openInNewTab: true });
   } catch (error) {
-    console.error(`Link account error: ${error.message}`);
     return res.status(400).json({ error: error.message });
   }
 });
