@@ -29,41 +29,48 @@
       const params = new URLSearchParams(hash);
       const access_token = params.get('access_token');
       const refresh_token = params.get('refresh_token');
-      const error = params.get('error_description');
+      const error = params.get('error_description') || params.get('error');
       const state = params.get('state');
 
       if (error) {
-        alert('Login error: ' + error);
+        console.error('OAuth error:', error);
+        alert(`Login error: ${error}`);
         window.close();
         return;
       }
 
-      if (access_token && refresh_token) {
-        try {
-          const response = await fetch('/api/set-session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ access_token, refresh_token }),
-          });
-          const data = await response.json();
-          if (response.ok) {
-            if (window.opener) {
-              window.opener.postMessage({
-                type: 'oauth_success',
-                state: state || null,
-              }, window.location.origin);
-            }
-            window.close();
-          } else {
-            alert('Error: ' + data.error);
-            window.close();
+      if (!access_token || !refresh_token) {
+        console.error('Missing tokens:', { access_token, refresh_token });
+        alert('Invalid callback parameters');
+        window.close();
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/set-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ access_token, refresh_token, state }),
+          credentials: 'include'
+        });
+        const data = await response.json();
+        if (response.ok) {
+          if (window.opener) {
+            const targetOrigin = window.opener.location.origin || window.location.origin;
+            window.opener.postMessage({
+              type: 'oauth_success',
+              state: state || null
+            }, targetOrigin);
           }
-        } catch (err) {
-          alert('Error: ' + err.message);
+          window.close();
+        } else {
+          console.error('Set session error:', data.error);
+          alert(`Error: ${data.error}`);
           window.close();
         }
-      } else {
-        alert('Invalid callback parameters');
+      } catch (err) {
+        console.error('Fetch error:', err.message);
+        alert(`Error: ${err.message}`);
         window.close();
       }
     }
