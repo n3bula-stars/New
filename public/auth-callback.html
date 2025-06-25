@@ -30,11 +30,11 @@
       const access_token = params.get('access_token');
       const refresh_token = params.get('refresh_token');
       const error = params.get('error_description');
-      const state = params.get('state'); // Get state parameter if sent
+      const state = params.get('state');
 
       if (error) {
         alert('Login error: ' + error);
-        window.close(); // Close the tab on error
+        window.close();
         return;
       }
 
@@ -47,14 +47,12 @@
           });
           const data = await response.json();
           if (response.ok) {
-            // Post message to original tab
             if (window.opener) {
               window.opener.postMessage({
                 type: 'oauth_success',
                 state: state || null,
               }, window.location.origin);
             }
-            // Close the new tab
             window.close();
           } else {
             alert('Error: ' + data.error);
