@@ -12,7 +12,7 @@ import fileUpload from "express-fileupload";
 import { signupHandler } from "./server/api/signup.js";
 import { signinHandler } from "./server/api/signin.js";
 
-dotenv.config({ path: `.env.${process.env.NODE_ENV || "development"}` });
+dotenv.config({ path: .env.${process.env.NODE_ENV || "production"} });
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const { SUPABASE_URL, SUPABASE_KEY, SUPABASE_SERVICE_ROLE_KEY } = process.env;
@@ -54,7 +54,12 @@ app.get("/api/profile", async (req, res) => {
 });
 app.post("/api/signin/oauth", async (req, res) => {
   const { provider } = req.body;
-  const redirectTo = `https://petezahgames.com/auth/callback`; // Updated redirect URL
+  const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
+  const host = req.headers.host;
+  if (!host) {
+    return res.status(400).json({ error: "Host header missing" });
+  }
+  const redirectTo = ${protocol}://${host}/auth/callback;
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
@@ -97,7 +102,7 @@ app.post("/api/upload-profile-pic", async (req, res) => {
       return res.status(400).json({ error: "No file uploaded" });
     }
     const userId = req.session.user.id;
-    const fileName = `${userId}/${Date.now()}-${file.name}`;
+    const fileName = ${userId}/${Date.now()}-${file.name};
     const { data, error } = await supabase.storage
       .from('profile-pics')
       .upload(fileName, file.data, { contentType: file.mimetype });
@@ -178,7 +183,12 @@ app.post("/api/link-account", async (req, res) => {
     return res.status(401).json({ error: "Unauthorized" });
   }
   const { provider } = req.body;
-  const redirectTo = `https://petezahgames.com/auth/callback`; // Updated redirect URL
+  const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
+  const host = req.headers.host;
+  if (!host) {
+    return res.status(400).json({ error: "Host header missing" });
+  }
+  const redirectTo = ${protocol}://${host}/auth/callback;
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
@@ -215,10 +225,10 @@ const port = parseInt(process.env.PORT || "3000");
 
 server.listen({ port }, () => {
   const address = server.address();
-  console.log(`Listening on:`);
-  console.log(`\thttp://localhost:${address.port}`);
-  console.log(`\thttp://${hostname()}:${address.port}`);
-  console.log(`\thttp://${address.family === "IPv6" ? `[${address.address}]` : address.address}:${address.port}`);
+  console.log(Listening on:);
+  console.log(\thttp://localhost:${address.port});
+  console.log(\thttp://${hostname()}:${address.port});
+  console.log(\thttp://${address.family === "IPv6" ? [${address.address}] : address.address}:${address.port});
 });
 
 process.on("SIGINT", shutdown);
