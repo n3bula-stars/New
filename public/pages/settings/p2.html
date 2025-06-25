@@ -1,0 +1,510 @@
+<!-- Google Tag Manager -->
+<script>(function (w, d, s, l, i) {
+    w[l] = w[l] || []; w[l].push({
+      'gtm.start':
+        new Date().getTime(), event: 'gtm.js'
+    }); var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+  })(window, document, 'script', 'dataLayer', 'GTM-WPH7NCG4');</script>
+<!-- End Google Tag Manager -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PeteZah | Settings</title>
+<link rel="icon" type="image/x-icon" href="/storage/images/logo-png-removebg-preview.png" />
+<meta name="description" content="Pete Zah, game on" />
+<link rel="stylesheet" type="text/css" href="/storage/css/themes.css">
+<meta name="keywords" content="Proxy, Unblocker, Pete Zah Unblocker, Pete Zah Games, Pete Zah" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body {
+    background: linear-gradient(135deg, #0a0a23 0%, #1e3a8a 100%);
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    color: #e5e7eb;
+    margin: 0;
+    padding: 2rem;
+    box-sizing: border-box;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  body::-webkit-scrollbar {
+    display: none;
+  }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .btn {
+    transition: all 0.3s ease;
+    background: #2563eb;
+    border: 1px solid #60a5fa;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  .btn:hover {
+    background: #1e40af;
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+  }
+  .delete-btn {
+    background: #dc2626;
+    border: 1px solid #f87171;
+  }
+  .delete-btn:hover {
+    background: #b91c1c;
+    box-shadow: 0 0 15px rgba(248, 113, 113, 0.5);
+  }
+  .link-btn {
+    background: #1f2937;
+    border: 1px solid #4b5563;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+  }
+  .link-btn:hover {
+    background: #374151;
+    border-color: #60a5fa;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+  }
+  input, textarea, select {
+    background: #1f2937;
+    border: 1px solid #4b5563;
+    color: #e5e7eb;
+    padding: 1rem 1.25rem;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+  }
+  input:focus, textarea:focus, select:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+    outline: none;
+  }
+  .profile-pic {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 2px solid #3b82f6;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+  }
+  .profile-pic:hover {
+    transform: scale(1.05);
+  }
+  .file-input-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+  .file-input {
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 1;
+  }
+  .file-input-label {
+    display: block;
+    background: #1f2937;
+    border: 1px solid #4b5563;
+    color: #e5e7eb;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  .file-input-label:hover {
+    background: #374151;
+    border-color: #60a5fa;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+  }
+  .section {
+    background: rgba(31, 41, 55, 0.5);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+  }
+  .glow {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+    z-index: -1;
+    top: 0;
+    left: 0;
+  }
+  @media (max-width: 640px) {
+    body {
+      padding: 1.5rem;
+    }
+    .btn, .link-btn {
+      font-size: 0.95rem;
+      padding: 0.65rem;
+    }
+    input, textarea, select {
+      font-size: 1rem;
+      padding: 0.85rem 1rem;
+    }
+    .profile-pic {
+      width: 80px;
+      height: 80px;
+    }
+    .section {
+      padding: 1.25rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="glow"></div>
+  <div class="container">
+    <h2 class="text-3xl font-bold text-center text-gray-100 mb-8">Your Profile</h2>
+    
+    <!-- Profile Picture -->
+    <div class="section flex items-center gap-6">
+      <img id="profile-pic" src="/storage/images/main/profile.png" alt="Profile Picture" class="profile-pic">
+      <div class="flex-1">
+        <div class="file-input-wrapper">
+          <input type="file" id="profile-pic-upload" accept="image/*" class="file-input">
+          <label for="profile-pic-upload" class="file-input-label">Choose Profile Picture</label>
+        </div>
+        <button id="upload-pic" class="w-full text-white btn mt-3">Update Picture</button>
+      </div>
+    </div>
+
+    <!-- Account Info -->
+    <div class="section">
+      <h3 class="text-lg font-semibold text-gray-100 mb-4">Account Information</h3>
+      <div class="space-y-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-300">Email</label>
+          <p id="email" class="text-gray-400">Loading...</p>
+        </div>
+        <div>
+          <label for="username" class="block text-sm font-medium text-gray-300">Username</label>
+          <input id="username" class="mt-2" placeholder="Enter username">
+        </div>
+        <div>
+          <label for="bio" class="block text-sm font-medium text-gray-300">Bio</label>
+          <textarea id="bio" class="mt-2" rows="4" placeholder="Tell us about yourself"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300">Provider</label>
+          <p id="provider" class="text-gray-400">Loading...</p>
+        </div>
+        <button id="update-profile" class="w-full text-white btn">Update Profile</button>
+      </div>
+    </div>
+
+    <!-- Linked Accounts -->
+    <div class="section">
+      <h3 class="text-lg font-semibold text-gray-100 mb-4">Linked Accounts</h3>
+      <div id="linked-accounts" class="space-y-4">
+        <div id="google-status" class="text-gray-400">Google: Not linked</div>
+        <div id="discord-status" class="text-gray-400">Discord: Not linked</div>
+        <div id="github-status" class="text-gray-400">GitHub: Not linked</div>
+        <div id="twitch-status" class="text-gray-400">Twitch: Not linked</div>
+      </div>
+      <div class="grid grid-cols-2 gap-4 mt-4">
+        <button onclick="linkAccount('google')" class="text-white link-btn">
+          <img src="https://cdn.simpleicons.org/google/ffffff" alt="Google" class="w-5 h-5">
+          Link Google
+        </button>
+        <button onclick="linkAccount('discord')" class="text-white link-btn">
+          <img src="https://cdn.simpleicons.org/discord/ffffff" alt="Discord" class="w-5 h-5">
+          Link Discord
+        </button>
+        <button onclick="linkAccount('github')" class="text-white link-btn">
+          <img src="https://cdn.simpleicons.org/github/ffffff" alt="GitHub" class="w-5 h-5">
+          Link GitHub
+        </button>
+        <button onclick="linkAccount('twitch')" class="text-white link-btn">
+          <img src="https://cdn.simpleicons.org/twitch/ffffff" alt="Twitch" class="w-5 h-5">
+          Link Twitch
+        </button>
+      </div>
+    </div>
+
+    <!-- LocalStorage Sync -->
+    <div class="section">
+      <h3 class="text-lg font-semibold text-gray-100 mb-4">Local Storage Settings</h3>
+      <textarea id="localstorage-data" class="w-full" rows="4" placeholder="LocalStorage data will appear here"></textarea>
+      <div class="grid grid-cols-2 gap-4 mt-4">
+        <button id="save-localstorage" class="text-white btn">Save to Account</button>
+        <button id="load-localstorage" class="text-white btn">Load from Account</button>
+      </div>
+    </div>
+
+    <!-- Theme Settings -->
+    <div class="section">
+      <h3 class="text-lg font-semibold text-gray-100 mb-4">Theme Settings</h3>
+      <select id="theme-select" class="w-full">
+        <option value="dark">Dark (Default)</option>
+        <option value="light">Light</option>
+      </select>
+      <button id="save-theme" class="w-full text-white btn mt-4">Save Theme</button>
+    </div>
+
+    <!-- Export/Import Settings -->
+    <div class="section">
+      <h3 class="text-lg font-semibold text-gray-100 mb-4">Export/Import Settings</h3>
+      <div class="grid grid-cols-2 gap-4">
+        <button id="export-settings" class="text-white btn">Export Settings</button>
+        <div class="file-input-wrapper">
+          <input type="file" id="import-settings-upload" accept=".json" class="file-input">
+          <label for="import-settings-upload" class="file-input-label">Import Settings</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Account -->
+    <div class="section">
+      <h3 class="text-lg font-semibold text-gray-100 mb-4">Danger Zone</h3>
+      <button id="delete-account" class="w-full text-white delete-btn">Delete Account</button>
+    </div>
+  </div>
+
+  <script>
+    async function fetchProfile() {
+      try {
+        const response = await fetch('/api/profile', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const data = await response.json();
+        if (response.ok) {
+          document.getElementById('email').textContent = data.user.email || 'N/A';
+          document.getElementById('username').value = data.user.user_metadata?.name || '';
+          document.getElementById('bio').value = data.user.user_metadata?.bio || '';
+          document.getElementById('provider').textContent = data.user.app_metadata?.provider || 'N/A';
+          const profilePic = document.getElementById('profile-pic');
+          profilePic.src = data.user.user_metadata?.avatar_url || '/storage/images/main/profile.png';
+          profilePic.onerror = () => {
+            profilePic.src = 'https://via.placeholder.com/100?text=Avatar';
+          };
+          updateLinkedAccounts(data.user.app_metadata?.providers || []);
+        } else {
+          alert(data.error);
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    function updateLinkedAccounts(providers) {
+      const statuses = {
+        google: document.getElementById('google-status'),
+        discord: document.getElementById('discord-status'),
+        github: document.getElementById('github-status'),
+        twitch: document.getElementById('twitch-status'),
+      };
+      Object.keys(statuses).forEach(provider => {
+        statuses[provider].textContent = `${provider.charAt(0).toUpperCase() + provider.slice(1)}: ${providers.includes(provider) ? 'Linked' : 'Not linked'}`;
+        statuses[provider].className = providers.includes(provider) ? 'text-green-400' : 'text-gray-400';
+      });
+    }
+
+    async function linkAccount(provider) {
+      try {
+        const response = await fetch('/api/link-account', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ provider }),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          window.location.href = data.url;
+        } else {
+          alert(data.error);
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    document.getElementById('upload-pic').addEventListener('click', async () => {
+      const fileInput = document.getElementById('profile-pic-upload');
+      if (!fileInput.files[0]) {
+        alert('Please select an image');
+        return;
+      }
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+      try {
+        const response = await fetch('/api/upload-profile-pic', {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await response.json();
+        if (response.ok) {
+          document.getElementById('profile-pic').src = data.url;
+          alert('Profile picture updated successfully');
+        } else {
+          alert('Upload failed: ' + data.error);
+        }
+      } catch (error) {
+        alert('Upload error: ' + error.message);
+      }
+    });
+
+    document.getElementById('update-profile').addEventListener('click', async () => {
+      const username = document.getElementById('username').value;
+      const bio = document.getElementById('bio').value;
+      try {
+        const response = await fetch('/api/update-profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, bio }),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          alert('Profile updated');
+        } else {
+          alert(data.error);
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    });
+
+    document.getElementById('save-localstorage').addEventListener('click', async () => {
+      const localStorageData = JSON.stringify(localStorage);
+      try {
+        const response = await fetch('/api/save-localstorage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ data: localStorageData }),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          alert('LocalStorage saved');
+        } else {
+          alert(data.error);
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    });
+
+    document.getElementById('load-localstorage').addEventListener('click', async () => {
+      try {
+        const response = await fetch('/api/load-localstorage', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const data = await response.json();
+        if (response.ok) {
+          const localStorageData = JSON.parse(data.data || '{}');
+          Object.keys(localStorageData).forEach(key => localStorage.setItem(key, localStorageData[key]));
+          document.getElementById('localstorage-data').value = JSON.stringify(localStorageData, null, 2);
+          alert('LocalStorage loaded');
+        } else {
+          alert(data.error);
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    });
+
+    document.getElementById('save-theme').addEventListener('click', () => {
+      const theme = document.getElementById('theme-select').value;
+      document.body.className = theme;
+      localStorage.setItem('theme', theme);
+      alert('Theme saved');
+    });
+
+    document.getElementById('export-settings').addEventListener('click', async () => {
+      try {
+        const response = await fetch('/api/profile', { headers: { 'Content-Type': 'application/json' } });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
+        const settings = {
+          profile: data.user.user_metadata,
+          localStorage: JSON.parse(localStorage.getItem('localStorage') || '{}'),
+          theme: localStorage.getItem('theme') || 'dark',
+        };
+        const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'settings.json';
+        a.click();
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    });
+
+    document.getElementById('import-settings-upload').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const settings = JSON.parse(text);
+        if (settings.profile) {
+          await fetch('/api/update-profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(settings.profile),
+          });
+        }
+        if (settings.localStorage) {
+          Object.keys(settings.localStorage).forEach(key => localStorage.setItem(key, settings.localStorage[key]));
+          await fetch('/api/save-localstorage', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ data: JSON.stringify(settings.localStorage) }),
+          });
+        }
+        if (settings.theme) {
+          document.body.className = settings.theme;
+          localStorage.setItem('theme', settings.theme);
+        }
+        alert('Settings imported');
+        fetchProfile();
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    });
+
+    document.getElementById('delete-account').addEventListener('click', async () => {
+      if (!confirm('Are you sure you want to delete your account? This cannot be undone.')) return;
+      try {
+        const response = await fetch('/api/delete-account', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const data = await response.json();
+        if (response.ok) {
+          alert('Account deleted');
+          window.location.href = '/pages/settings/p.html';
+        } else {
+          alert(data.error);
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    });
+
+    // Initialize theme
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.body.className = savedTheme;
+    document.getElementById('theme-select').value = savedTheme;
+
+    fetchProfile();
+  </script>
+</body>
+</html>

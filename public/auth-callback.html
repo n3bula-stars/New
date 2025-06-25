@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Processing Login...</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #1e3a8a, #60a5fa);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Inter', sans-serif;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="text-center">
+    <h2 class="text-2xl font-bold">Processing Login...</h2>
+    <p class="mt-2">Please wait while we complete your login.</p>
+  </div>
+
+  <script>
+    async function handleCallback() {
+      const hash = window.location.hash.substring(1);
+      const params = new URLSearchParams(hash);
+      const access_token = params.get('access_token');
+      const refresh_token = params.get('refresh_token');
+      const error = params.get('error_description');
+
+      if (error) {
+        alert('Login error: ' + error);
+        window.location.href = '/pages/settings/p.html';
+        return;
+      }
+
+      if (access_token && refresh_token) {
+        try {
+          const response = await fetch('/api/set-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ access_token, refresh_token }),
+          });
+          const data = await response.json();
+          if (response.ok) {
+            window.location.href = '/pages/settings/p2.html';
+          } else {
+            alert('Error: ' + data.error);
+            window.location.href = '/pages/settings/p.html';
+          }
+        } catch (err) {
+          alert('Error: ' + err.message);
+          window.location.href = '/pages/settings/p.html';
+        }
+      } else {
+        alert('Invalid callback parameters');
+        window.location.href = '/pages/settings/p.html';
+      }
+    }
+
+    handleCallback();
+  </script>
+</body>
+</html>
