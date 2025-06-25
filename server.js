@@ -57,6 +57,7 @@ app.post("/api/signin/oauth", async (req, res) => {
   const protocol = req.headers['x-forwarded-proto'] || 'https';
   let host = req.headers['x-forwarded-host'] || req.headers.host || process.env.APP_HOST || 'localhost:3000';
   const redirectTo = `${protocol}://${host}/auth/callback`;
+  req.session.oauth_state = state;
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
@@ -68,7 +69,11 @@ app.post("/api/signin/oauth", async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 });
-app.get("/auth/callback", (req, res) => {
+app.get("/auth/callback", async (req, res) => {
+  const { state } = req.query;
+  if (state !== req.session.oauth_state) {
+    return res.redirect(`/?error=invalid_request&error_code=bad_oauth_state&error_description=OAuth+callback+with+invalid+state`);
+  }
   return res.sendFile(join(__dirname, publicPath, "auth-callback.html"));
 });
 app.post("/api/set-session", async (req, res) => {
@@ -84,6 +89,7 @@ app.post("/api/set-session", async (req, res) => {
     if (error) throw error;
     req.session.user = data.user;
     req.session.access_token = access_token;
+    delete req.session.oauth_state;
     return res.status(200).json({ message: "Session set successfully" });
   } catch (error) {
     return res.status(400).json({ error: error.message });
@@ -180,6 +186,7 @@ app.post("/api/link-account", async (req, res) => {
   const protocol = req.headers['x-forwarded-proto'] || 'https';
   let host = req.headers['x-forwarded-host'] || req.headers.host || process.env.APP_HOST || 'localhost:3000';
   const redirectTo = `${protocol}://${host}/auth/callback`;
+  req.session.oauth_state = state;
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
