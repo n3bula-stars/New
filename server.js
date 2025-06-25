@@ -12,7 +12,7 @@ import fileUpload from "express-fileupload";
 import { signupHandler } from "./server/api/signup.js";
 import { signinHandler } from "./server/api/signin.js";
 
-dotenv.config({ path: .env.${process.env.NODE_ENV || "production"} });
+dotenv.config({ path: `.env.${process.env.NODE_ENV || "development"}` });
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const { SUPABASE_URL, SUPABASE_KEY, SUPABASE_SERVICE_ROLE_KEY } = process.env;
@@ -24,7 +24,7 @@ const publicPath = "public";
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: false } }));
+app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: process.env.NODE_ENV === "production", httpOnly: true, maxAge: 24 * 60 * 60 * 1000, sameSite: 'lax' } }));
 app.use(express.static(publicPath));
 app.use("/petezah/", express.static(uvPath));
 
@@ -37,6 +37,7 @@ app.post("/api/signout", async (req, res) => {
     req.session.destroy();
     return res.status(200).json({ message: "Signout successful" });
   } catch (error) {
+    console.error(`Signout error: ${error.message}`);
     return res.status(400).json({ error: error.message });
   }
 });
@@ -49,35 +50,42 @@ app.get("/api/profile", async (req, res) => {
     if (error) throw error;
     return res.status(200).json({ user: data.user });
   } catch (error) {
+    console.error(`Profile error: ${error.message}`);
     return res.status(400).json({ error: error.message });
   }
 });
 app.post("/api/signin/oauth", async (req, res) => {
-  const { provider } = req.body;
-  const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
-  const host = req.headers.host;
-  if (!host) {
-    return res.status(400).json({ error: "Host header missing" });
-  }
-  const redirectTo = ${protocol}://${host}/auth/callback;
+  const { provider, state } = req.body;
+  const protocol = process.env.NODE_ENV === "production" ? "https" : req.headers['x-forwarded-proto'] || 'http';
+  const host = process.env.APP_HOST || req.headers['x-forwarded-host'] || req.headers.host || 'localhost:3000';
+  const redirectTo = `${protocol}://${host}/auth/callback`;
+  req.session.oauth_state = state;
+  console.log(`OAuth initiated: provider=${provider}, state=${state}, redirectTo=${redirectTo}, sessionID=${req.sessionID}`);
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo }
+      options: { redirectTo, queryParams: { state } }
     });
     if (error) throw error;
     return res.status(200).json({ url: data.url, openInNewTab: true });
   } catch (error) {
+    console.error(`OAuth error: ${error.message}`);
     return res.status(400).json({ error: error.message });
   }
 });
-app.get("/auth/callback", (req, res) => {
+app.get("/auth/callback", async (req, res) => {
+  console.log(`Callback received: state=${req.query.state}, sessionID=${req.sessionID}`);
   return res.sendFile(join(__dirname, publicPath, "auth-callback.html"));
 });
 app.post("/api/set-session", async (req, res) => {
-  const { access_token, refresh_token } = req.body;
+  const { access_token, refresh_token, state } = req.body;
+  console.log(`Set session: state=${state}, session_state=${req.session.oauth_state}, sessionID=${req.sessionID}`);
   if (!access_token || !refresh_token) {
     return res.status(400).json({ error: "Invalid session tokens" });
+  }
+  if (!req.session.oauth_state || state !== req.session.oauth_state) {
+    console.error(`Invalid state: received=${state}, expected=${req.session.oauth_state}`);
+    return res.status(400).json({ error: "OAuth callback with invalid state" });
   }
   try {
     const { data, error } = await supabase.auth.setSession({
@@ -87,8 +95,10 @@ app.post("/api/set-session", async (req, res) => {
     if (error) throw error;
     req.session.user = data.user;
     req.session.access_token = access_token;
+    delete req.session.oauth_state;
     return res.status(200).json({ message: "Session set successfully" });
   } catch (error) {
+    console.error(`Set session error: ${error.message}`);
     return res.status(400).json({ error: error.message });
   }
 });
@@ -102,7 +112,7 @@ app.post("/api/upload-profile-pic", async (req, res) => {
       return res.status(400).json({ error: "No file uploaded" });
     }
     const userId = req.session.user.id;
-    const fileName = ${userId}/${Date.now()}-${file.name};
+    const fileName = `${userId}/${Date.now()}-${file.name}`;
     const { data, error } = await supabase.storage
       .from('profile-pics')
       .upload(fileName, file.data, { contentType: file.mimetype });
@@ -116,6 +126,7 @@ app.post("/api/upload-profile-pic", async (req, res) => {
     if (updateError) throw updateError;
     return res.status(200).json({ url: publicUrlData.publicUrl });
   } catch (error) {
+    console.error(`Upload profile pic error: ${error.message}`);
     return res.status(400).json({ error: error.message });
   }
 });
@@ -131,6 +142,7 @@ app.post("/api/update-profile", async (req, res) => {
     if (error) throw error;
     return res.status(200).json({ message: "Profile updated" });
   } catch (error) {
+    console.error(`Update profile error: ${error.message}`);
     return res.status(400).json({ error: error.message });
   }
 });
@@ -146,6 +158,7 @@ app.post("/api/save-localstorage", async (req, res) => {
     if (error) throw error;
     return res.status(200).json({ message: "LocalStorage saved" });
   } catch (error) {
+    console.error(`Save localStorage error: ${error.message}`);
     return res.status(400).json({ error: error.message });
   }
 });
@@ -162,6 +175,7 @@ app.get("/api/load-localstorage", async (req, res) => {
     if (error) throw error;
     return res.status(200).json({ data: data?.localstorage_data || '{}' });
   } catch (error) {
+    console.error(`Load localStorage error: ${error.message}`);
     return res.status(400).json({ error: error.message });
   }
 });
@@ -175,28 +189,26 @@ app.delete("/api/delete-account", async (req, res) => {
     req.session.destroy();
     return res.status(200).json({ message: "Account deleted" });
   } catch (error) {
+    console.error(`Delete account error: ${error.message}`);
     return res.status(400).json({ error: error.message });
   }
 });
 app.post("/api/link-account", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const { provider } = req.body;
-  const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
-  const host = req.headers.host;
-  if (!host) {
-    return res.status(400).json({ error: "Host header missing" });
-  }
-  const redirectTo = ${protocol}://${host}/auth/callback;
+  const { provider, state } = req.body;
+  const protocol = process.env.NODE_ENV === "production" ? "https" : req.headers['x-forwarded-proto'] || 'http';
+  const host = process.env.APP_HOST || req.headers['x-forwarded-host'] || req.headers.host || 'localhost:3000';
+  const redirectTo = `${protocol}://${host}/auth/callback`;
+  req.session.oauth_state = state;
+  console.log(`Link account initiated: provider=${provider}, state=${state}, redirectTo=${redirectTo}, sessionID=${req.sessionID}`);
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo, skipBrowserRedirect: true }
+      options: { redirectTo, queryParams: { state } }
     });
     if (error) throw error;
     return res.status(200).json({ url: data.url, openInNewTab: true });
   } catch (error) {
+    console.error(`Link account error: ${error.message}`);
     return res.status(400).json({ error: error.message });
   }
 });
@@ -225,10 +237,10 @@ const port = parseInt(process.env.PORT || "3000");
 
 server.listen({ port }, () => {
   const address = server.address();
-  console.log(Listening on:);
-  console.log(\thttp://localhost:${address.port});
-  console.log(\thttp://${hostname()}:${address.port});
-  console.log(\thttp://${address.family === "IPv6" ? [${address.address}] : address.address}:${address.port});
+  console.log(`Listening on:`);
+  console.log(`\thttp://localhost:${address.port}`);
+  console.log(`\thttp://${hostname()}:${address.port}`);
+  console.log(`\thttp://${address.family === "IPv6" ? `[${address.address}]` : address.address}:${address.port}`);
 });
 
 process.on("SIGINT", shutdown);
