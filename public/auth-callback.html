@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Processing Login...</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -15,102 +15,68 @@
       font-family: 'Inter', sans-serif;
       color: white;
     }
-    .error-message {
-      display: none;
-      margin-top: 1rem;
-      padding: 1rem;
-      background: #ef4444;
-      border-radius: 0.5rem;
-    }
   </style>
 </head>
 <body>
   <div class="text-center">
     <h2 class="text-2xl font-bold">Processing Login...</h2>
     <p class="mt-2">Please wait while we complete your login.</p>
-    <div id="error" class="error-message"></div>
   </div>
 
   <script>
     async function handleCallback() {
-      const errorDiv = document.getElementById("error");
-
-      // Validate hash existence
-      if (!window.location.hash) {
-        errorDiv.textContent = "Invalid callback: No hash parameters found";
-        errorDiv.style.display = "block";
-        setTimeout(() => window.close(), 3000);
-        return;
-      }
-
       const hash = window.location.hash.substring(1);
       const params = new URLSearchParams(hash);
-      const access_token = params.get("access_token");
-      const refresh_token = params.get("refresh_token");
-      const error = params.get("error_description") || params.get("error");
-      let state = decodeURIComponent(params.get("state") || "/");
+      const access_token = params.get('access_token');
+      const refresh_token = params.get('refresh_token');
+      const error = params.get('error_description') || params.get('error');
+      const state = decodeURIComponent(params.get('state') || '/');
 
       if (error) {
-        console.error("OAuth error:", error);
-        errorDiv.textContent = `Login error: ${error}`;
-        errorDiv.style.display = "block";
-        setTimeout(() => window.close(), 3000);
+        console.error('OAuth error:', error);
+        alert(`Login error: ${error}`);
+        window.close();
         return;
       }
 
       if (!access_token || !refresh_token) {
-        console.error("Missing tokens:", { access_token, refresh_token });
-        errorDiv.textContent = "Invalid callback parameters";
-        errorDiv.style.display = "block";
-        setTimeout(() => window.close(), 3000);
-        return;
-      }
-
-      // Validate state to prevent open redirect
-      if (!state.match(/^\/[a-zA-Z0-9\-_/]*$/)) {
-        console.error("Invalid state parameter:", state);
-        errorDiv.textContent = "Invalid redirect state";
-        errorDiv.style.display = "block";
-        setTimeout(() => window.close(), 3000);
+        console.error('Missing tokens:', { access_token, refresh_token });
+        alert('Invalid callback parameters');
+        window.close();
         return;
       }
 
       try {
-        const response = await fetch("/api/set-session", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const response = await fetch('/api/set-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ access_token, refresh_token }),
-          credentials: "include",
+          credentials: 'include'
         });
 
         const data = await response.json();
 
         if (response.ok) {
           if (window.opener) {
-            window.opener.postMessage(
-              {
-                type: "oauth_success",
-                redirect: state,
-              },
-              window.location.origin // Explicitly use current origin
-            );
+            window.opener.postMessage({
+              type: 'oauth_success',
+              redirect: state
+            }, window.opener.origin || window.location.origin);
             window.close();
           } else {
-            window.location.href = state.includes("?")
+            window.location.href = state.includes('?')
               ? `${state}&showProfile=true`
               : `${state}?showProfile=true`;
           }
         } else {
-          console.error("Set session error:", data.error);
-          errorDiv.textContent = `Error: ${data.error}`;
-          errorDiv.style.display = "block";
-          setTimeout(() => window.close(), 3000);
+          console.error('Set session error:', data.error);
+          alert(`Error: ${data.error}`);
+          window.close();
         }
       } catch (err) {
-        console.error("Fetch error:", err.message);
-        errorDiv.textContent = `Error: ${err.message}`;
-        errorDiv.style.display = "block";
-        setTimeout(() => window.close(), 3000);
+        console.error('Fetch error:', err.message);
+        alert(`Error: ${err.message}`);
+        window.close();
       }
     }
 
