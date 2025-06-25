@@ -54,16 +54,13 @@ app.get("/api/profile", async (req, res) => {
 });
 app.post("/api/signin/oauth", async (req, res) => {
   const { provider, state } = req.body;
-  const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
-  let host = req.headers.host;
-  if (!host) {
-    host = process.env.APP_HOST || 'localhost:3000';
-  }
+  const protocol = req.headers['x-forwarded-proto'] || 'https';
+  let host = req.headers['x-forwarded-host'] || req.headers.host || process.env.APP_HOST || 'localhost:3000';
   const redirectTo = `${protocol}://${host}/auth/callback`;
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo, scopes: 'email profile', queryParams: { state } }
+      options: { redirectTo, queryParams: { state } }
     });
     if (error) throw error;
     return res.status(200).json({ url: data.url, openInNewTab: true });
@@ -179,17 +176,14 @@ app.delete("/api/delete-account", async (req, res) => {
   }
 });
 app.post("/api/link-account", async (req, res) => {
-  const { provider } = req.body;
-  const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
-  let host = req.headers.host;
-  if (!host) {
-    host = process.env.APP_HOST || 'localhost:3000';
-  }
+  const { provider, state } = req.body;
+  const protocol = req.headers['x-forwarded-proto'] || 'https';
+  let host = req.headers['x-forwarded-host'] || req.headers.host || process.env.APP_HOST || 'localhost:3000';
   const redirectTo = `${protocol}://${host}/auth/callback`;
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo, skipBrowserRedirect: true }
+      options: { redirectTo, queryParams: { state } }
     });
     if (error) throw error;
     return res.status(200).json({ url: data.url, openInNewTab: true });
