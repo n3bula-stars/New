@@ -32,9 +32,10 @@ app.post("/api/signup", async (req, res) => {
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
   const result = await signupHandler(req, res);
   if (result.status === 200 && req.session.user) {
-    await supabase
-      .from('user_settings')
-      .upsert({ user_id: req.session.user.id, ip_address: ip }, { onConflict: 'user_id' });
+    const { error } = await supabase.auth.updateUser({
+      data: { ...req.session.user.user_metadata, ip_address: ip }
+    });
+    if (error) return res.status(400).json({ error: error.message });
   }
   return result;
 });
@@ -42,9 +43,10 @@ app.post("/api/signin", async (req, res) => {
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
   const result = await signinHandler(req, res);
   if (result.status === 200 && req.session.user) {
-    await supabase
-      .from('user_settings')
-      .upsert({ user_id: req.session.user.id, ip_address: ip }, { onConflict: 'user_id' });
+    const { error } = await supabase.auth.updateUser({
+      data: { ...req.session.user.user_metadata, ip_address: ip }
+    });
+    if (error) return res.status(400).json({ error: error.message });
   }
   return result;
 });
@@ -106,9 +108,10 @@ app.post("/api/set-session", async (req, res) => {
     req.session.user = data.user;
     req.session.access_token = access_token;
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    await supabase
-      .from('user_settings')
-      .upsert({ user_id: data.user.id, ip_address: ip }, { onConflict: 'user_id' });
+    const { error: updateError } = await supabase.auth.updateUser({
+      data: { ...data.user.user_metadata, ip_address: ip }
+    });
+    if (updateError) throw updateError;
     return res.status(200).json({ message: "Session set successfully" });
   } catch (error) {
     return res.status(400).json({ error: error.message });
@@ -133,7 +136,7 @@ app.post("/api/upload-profile-pic", async (req, res) => {
       .from('profile-pics')
       .getPublicUrl(fileName);
     const { error: updateError } = await supabase.auth.updateUser({
-      data: { avatar_url: publicUrlData.publicUrl }
+      data: { ...req.session.user.user_metadata, avatar_url: publicUrlData.publicUrl }
     });
     if (updateError) throw updateError;
     return res.status(200).json({ url: publicUrlData.publicUrl });
@@ -148,7 +151,7 @@ app.post("/api/update-profile", async (req, res) => {
   const { username, bio } = req.body;
   try {
     const { error } = await supabase.auth.updateUser({
-      data: { name: username, bio }
+      data: { ...req.session.user.user_metadata, name: username, bio }
     });
     if (error) throw error;
     return res.status(200).json({ message: "Profile updated" });
