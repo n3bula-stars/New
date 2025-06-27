@@ -12,7 +12,6 @@ import fileUpload from "express-fileupload";
 import { signupHandler } from "./server/api/signup.js";
 import { signinHandler } from "./server/api/signin.js";
 import fs from "node:fs/promises";
-import { lock } from "proper-lockfile";
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV || "production"}` });
 const __filename = fileURLToPath(import.meta.url);
@@ -29,33 +28,21 @@ app.use(async (req, res, next) => {
   const timestamp = new Date().toISOString();
   if (!req.session.lastLogged || (new Date() - new Date(req.session.lastLogged)) > 7 * 24 * 60 * 60 * 1000) {
     try {
-      const filePath = join(__dirname, 'data.json');
-      let release;
+      let data = [];
       try {
-        release = await lock(filePath, { retries: { retries: 5, minTimeout: 100 } });
-        let data = [];
-        try {
-          await fs.access(filePath);
-          const fileContent = await fs.readFile(filePath, 'utf8');
-          try {
-            data = JSON.parse(fileContent);
-            if (!Array.isArray(data)) {
-              data = [];
-            }
-          } catch (parseError) {
-            data = [];
-          }
-        } catch (error) {
-          if (error.code !== 'ENOENT') throw error;
+        const fileContent = await fs.readFile(join(__dirname, 'data.json'), 'utf8');
+        data = JSON.parse(fileContent);
+        if (!Array.isArray(data)) {
+          data = [];
         }
-        data.push({ ip, timestamp, path: req.path });
-        await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8');
-        req.session.lastLogged = timestamp;
-      } finally {
-        if (release) await release();
+      } catch (error) {
+        if (error.code !== 'ENOENT') throw error;
       }
+      data.push({ ip, timestamp, path: req.path });
+      await fs.writeFile(join(__dirname, 'data.json'), JSON.stringify(data, null, 2));
+      req.session.lastLogged = timestamp;
     } catch (error) {
-      console.error('Error in IP logging middleware:', error);
+      console.error('Error writing to data.json:', error);
     }
   }
   next();
