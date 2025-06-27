@@ -26,7 +26,7 @@ app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUniniti
 app.use(async (req, res, next) => {
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
   const timestamp = new Date().toISOString();
-  if (!req.session.lastLogged || (new Date() - new Date(req.session.lastLogged)) > 7 * 24 * 60 * 60 * 1000) {
+  if (req.path === '/' && (!req.session.lastLogged || (new Date() - new Date(req.session.lastLogged)) > 7 * 24 * 60 * 60 * 1000)) {
     try {
       let data = [];
       try {
