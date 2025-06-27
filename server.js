@@ -28,8 +28,26 @@ app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUniniti
 app.use(express.static(publicPath));
 app.use("/petezah/", express.static(uvPath));
 
-app.post("/api/signup", signupHandler);
-app.post("/api/signin", signinHandler);
+app.post("/api/signup", async (req, res) => {
+  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  const result = await signupHandler(req, res);
+  if (result.status === 200 && req.session.user) {
+    await supabase
+      .from('user_settings')
+      .upsert({ user_id: req.session.user.id, ip_address: ip }, { onConflict: 'user_id' });
+  }
+  return result;
+});
+app.post("/api/signin", async (req, res) => {
+  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  const result = await signinHandler(req, res);
+  if (result.status === 200 && req.session.user) {
+    await supabase
+      .from('user_settings')
+      .upsert({ user_id: req.session.user.id, ip_address: ip }, { onConflict: 'user_id' });
+  }
+  return result;
+});
 app.post("/api/signout", async (req, res) => {
   try {
     const { error } = await supabase.auth.signOut();
@@ -87,6 +105,10 @@ app.post("/api/set-session", async (req, res) => {
     if (error) throw error;
     req.session.user = data.user;
     req.session.access_token = access_token;
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    await supabase
+      .from('user_settings')
+      .upsert({ user_id: data.user.id, ip_address: ip }, { onConflict: 'user_id' });
     return res.status(200).json({ message: "Session set successfully" });
   } catch (error) {
     return res.status(400).json({ error: error.message });
