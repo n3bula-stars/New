@@ -22,36 +22,35 @@ const bare = createBareServer("/bare/");
 const app = express();
 const publicPath = "public";
 
+app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: false, maxAge: 7 * 24 * 60 * 60 * 1000 } }));
 app.use(async (req, res, next) => {
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
   const timestamp = new Date().toISOString();
-  const logEntry = { ip, timestamp, path: req.path };
-  
-  try {
-    let data = [];
+  if (!req.session.lastLogged || (new Date() - new Date(req.session.lastLogged)) > 7 * 24 * 60 * 60 * 1000) {
     try {
-      const fileContent = await fs.readFile(join(__dirname, 'data.json'), 'utf8');
-      data = JSON.parse(fileContent);
-      if (!Array.isArray(data)) {
-        data = [];
+      let data = [];
+      try {
+        const fileContent = await fs.readFile(join(__dirname, 'data.json'), 'utf8');
+        data = JSON.parse(fileContent);
+        if (!Array.isArray(data)) {
+          data = [];
+        }
+      } catch (error) {
+        if (error.code !== 'ENOENT') throw error;
       }
+      data.push({ ip, timestamp, path: req.path });
+      await fs.writeFile(join(__dirname, 'data.json'), JSON.stringify(data, null, 2));
+      req.session.lastLogged = timestamp;
     } catch (error) {
-      if (error.code !== 'ENOENT') throw error;
+      console.error('Error writing to data.json:', error);
     }
-    
-    data.push(logEntry);
-    await fs.writeFile(join(__dirname, 'data.json'), JSON.stringify(data, null, 2));
-  } catch (error) {
-    console.error('Error writing to data.json:', error);
   }
-  
   next();
 });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: false } }));
 app.use(express.static(publicPath));
 app.use("/petezah/", express.static(uvPath));
 
