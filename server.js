@@ -15,16 +15,33 @@ import { signinHandler } from "./server/api/signin.js";
 dotenv.config({ path: `.env.${process.env.NODE_ENV || "production"}` });
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const { SUPABASE_URL, SUPABASE_KEY, SUPABASE_SERVICE_ROLE_KEY } = process.env;
+const { SUPABASE_URL, SUPABASE_KEY, SUPABASE_SERVICE_ROLE_KEY, SESSION_SECRET } = process.env;
+
+if (!SUPABASE_URL || !SUPABASE_KEY || !SESSION_SECRET) {
+  console.error("Missing required environment variables");
+  process.exit(1);
+}
+
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-const bare = createBareServer("/bare/");
+const bare = createBareServer("/bare/", { logErrors: true });
 const app = express();
 const publicPath = "public";
+
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: true, httpOnly: true, sameSite: 'lax' } }));
+app.use(session({
+  secret: SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: true, httpOnly: true, sameSite: 'lax', maxAge: 24 * 60 * 60 * 1000 }
+}));
 app.use(express.static(publicPath));
 app.use("/petezah/", express.static(uvPath));
 
@@ -34,342 +51,253 @@ app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
-  res.setHeader('Content-Security-Policy', "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval' blob:; style-src * 'unsafe-inline'; img-src * data:; font-src *; connect-src * ws: wss:; media-src *; object-src *; frame-src *; worker-src * blob:; manifest-src *");
+  res.setHeader('Content-Security-Policy', "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval' blob:; style-src * 'unsafe-inline'; img-src * data:; font-src *; connect-src * ws: wss: data:; media-src *; object-src *; frame-src *; worker-src * blob:; manifest-src *");
   next();
 });
 
-app.post("/api/signup", async (req, res) => {
-  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-  const result = await signupHandler(req, res);
-  if (result.status === 200 && req.session.user) {
-    const { error } = await supabase.auth.updateUser({
-      data: { ...req.session.user.user_metadata, ip_address: ip }
-    });
-    if (error) return res.status(400).json({ error: error.message });
-  }
-  return result;
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "OK", timestamp: new Date().toISOString() });
 });
-app.post("/api/signin", async (req, res) => {
-  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-  const result = await signinHandler(req, res);
-  if (result.status === 200 && req.session.user) {
-    const { error } = await supabase.auth.updateUser({
-      data: { ...req.session.user.user_metadata, ip_address: ip }
-    });
-    if (error) return res.status(400).json({ error: error.message });
+
+app.post("/api/signup", async (req, res, next) => {
+  try {
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const result = await signupHandler(req, res);
+    if (result.status === 200 && req.session.user) {
+      const { error } = await supabase.auth.updateUser({
+        data: { ...req.session.user.user_metadata, ip_address: ip }
+      });
+      if (error) throw new Error(error.message);
+    }
+    return result;
+  } catch (error) {
+    console.error(`Signup error: ${error.message}`);
+    next(error);
   }
-  return result;
 });
-app.post("/api/signout", async (req, res) => {
+
+app.post("/api/signin", async (req, res, next) => {
+  try {
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const result = await signinHandler(req, res);
+    if (result.status === 200 && req.session.user) {
+      const { error } = await supabase.auth.updateUser({
+        data: { ...req.session.user.user_metadata, ip_address: ip }
+      });
+      if (error) throw new Error(error.message);
+    }
+    return result;
+  } catch (error) {
+    console.error(`Signin error: ${error.message}`);
+    next(error);
+  }
+});
+
+app.post("/api/signout", async (req, res, next) => {
   try {
     const { error } = await supabase.auth.signOut();
-    if (error) throw error;
-    req.session.destroy();
-    return res.status(200).json({ message: "Signout successful" });
+    if (error) throw new Error(error.message);
+    req.session.destroy((err) => {
+      if (err) throw new Error("Session destruction failed");
+      res.status(200).json({ message: "Signout successful" });
+    });
   } catch (error) {
-    return res.status(400).json({ error: error.message });
+    console.error(`Signout error: ${error.message}`);
+    next(error);
   }
 });
-app.get("/api/profile", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
+
+app.get("/api/profile", async (req, res, next) => {
   try {
+    if (!req.session.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
     const { data, error } = await supabase.auth.getUser(req.session.access_token);
-    if (error) throw error;
+    if (error) throw new Error(error.message);
     return res.status(200).json({ user: data.user });
   } catch (error) {
-    return res.status(400).json({ error: error.message });
+    console.error(`Profile error: ${error.message}`);
+    next(error);
   }
 });
-app.post("/api/signin/oauth", async (req, res) => {
-  const { provider } = req.body;
-  const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
-  const host = req.headers.host;
-  if (!host) {
-    return res.status(400).json({ error: "Host header missing" });
-  }
-  const redirectTo = `${protocol}://${host}/auth/callback`;
+
+app.post("/api/signin/oauth", async (req, res, next) => {
   try {
+    const { provider } = req.body;
+    const protocol = req.headers['x-forwarded-proto'] || 'https';
+    const host = req.headers.host;
+    if (!host) {
+      throw new Error("Host header missing");
+    }
+    const redirectTo = `${protocol}://${host}/auth/callback`;
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
       options: { redirectTo }
     });
-    if (error) throw error;
+    if (error) throw new Error(error.message);
     return res.status(200).json({ url: data.url, openInNewTab: true });
   } catch (error) {
-    return res.status(400).json({ error: error.message });
+    console.error(`OAuth signin error: ${error.message}`);
+    next(error);
   }
 });
-app.get("/auth/callback", (req, res) => {
-  return res.sendFile(join(__dirname, publicPath, "auth-callback.html"));
-});
-app.post("/api/set-session", async (req, res) => {
-  const { access_token, refresh_token } = req.body;
-  if (!access_token || !refresh_token) {
-    return res.status(400).json({ error: "Invalid session tokens" });
-  }
-  try {
-    const { data, error } = await supabase.auth.setSession({
-      access_token,
-      refresh_token
-    });
-    if (error) throw error;
-    req.session.user = data.user;
-    req.session.access_token = access_token;
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    const { error: updateError } = await supabase.auth.updateUser({
-      data: { ...data.user.user_metadata, ip_address: ip }
-    });
-    if (updateError) throw updateError;
-    return res.status(200).json({ message: "Session set successfully" });
-  } catch (error) {
-    return res.status(400).json({ error: error.message });
-  }
-});
-app.post("/api/upload-profile-pic", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  try {
-    const file = req.files?.file;
-    if (!file) {
-      return res.status(400).json({ error: "No file uploaded" });
-    }
-    const userId = req.session.user.id;
-    const fileName = `${userId}/${Date.now()}-${file.name}`;
-    const { data, error } = await supabase.storage
-      .from('profile-pics')
-      .upload(fileName, file.data, { contentType: file.mimetype });
-    if (error) throw error;
-    const { data: publicUrlData } = supabase.storage
-      .from('profile-pics')
-      .getPublicUrl(fileName);
-    const { error: updateError } = await supabase.auth.updateUser({
-      data: { ...req.session.user.user_metadata, avatar_url: publicUrlData.publicUrl }
-    });
-    if (updateError) throw updateError;
-    return res.status(200).json({ url: publicUrlData.publicUrl });
-  } catch (error) {
-    return res.status(400).json({ error: error.message });
-  }
-});
-app.post("/api/update-profile", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const { username, bio } = req.body;
-  try {
-    const { error } = await supabase.auth.updateUser({
-      data: { ...req.session.user.user_metadata, name: username, bio }
-    });
-    if (error) throw error;
-    return res.status(200).json({ message: "Profile updated" });
-  } catch (error) {
-    return res.status(400).json({ error: error.message });
-  }
-});
-app.post("/api/save-localstorage", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const { data } = req.body;
-  try {
-    const { error } = await supabase
-      .from('user_settings')
-      .upsert({ user_id: req.session.user.id, localstorage_data: data }, { onConflict: 'user_id' });
-    if (error) throw error;
-    return res.status(200).json({ message: "LocalStorage saved" });
-  } catch (error) {
-    return res.status(400).json({ error: error.message });
-  }
-});
-app.get("/api/load-localstorage", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  try {
-    const { data, error } = await supabase
-      .from('user_settings')
-      .select('localstorage_data')
-      .eq('user_id', req.session.user.id)
-      .single();
-    if (error) throw error;
-    return res.status(200).json({ data: data?.localstorage_data || '{}' });
-  } catch (error) {
-    return res.status(400).json({ error: error.message });
-  }
-});
-app.delete("/api/delete-account", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  try {
-    const { error } = await supabase.rpc('delete_user', { user_id: req.session.user.id });
-    if (error) throw error;
-    req.session.destroy();
-    return res.status(200).json({ message: "Account deleted" });
-  } catch (error) {
-    return res.status(400).json({ error: error.message });
-  }
-});
-app.post("/api/link-account", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const { provider } = req.body;
-  const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
-  const host = req.headers.host;
-  if (!host) {
-    return res.status(400).json({ error: "Host header missing" });
-  }
-  const redirectTo = `${protocol}://${host}/auth/callback`;
-  try {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider,
-     威尔: { redirect
 
-To, skipBrowserRedirect: true }
-    });
-    if (error) throw error;
-    return res.status(200).json({ url:部分: true });
-  } catch (error) {
-    return res.status(400).json({ error: error.message });
-  }
-});
 app.get("/auth/callback", (req, res) => {
   return res.sendFile(join(__dirname, publicPath, "auth-callback.html"));
 });
-app.post("/api/set-session", async (req, res) => {
-  const { access_token, refresh_token } = req.body;
-  if (!access_token || !refresh_token) {
-    return res.status(400).json({ error: "Invalid session tokens" });
-  }
+
+app.post("/api/set-session", async (req, res, next) => {
   try {
+    const { access_token, refresh_token } = req.body;
+    if (!access_token || !refresh_token) {
+      throw new Error("Invalid session tokens");
+    }
     const { data, error } = await supabase.auth.setSession({
       access_token,
       refresh_token
     });
-    if (error) throw error;
+    if (error) throw new Error(error.message);
     req.session.user = data.user;
     req.session.access_token = access_token;
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const { error: updateError } = await supabase.auth.updateUser({
       data: { ...data.user.user_metadata, ip_address: ip }
     });
-    if (updateError) throw updateError;
+    if (updateError) throw new Error(updateError.message);
     return res.status(200).json({ message: "Session set successfully" });
   } catch (error) {
-    return res.status(400).json({ error: error.message });
+    console.error(`Set session error: ${error.message}`);
+    next(error);
   }
 });
-app.post("/api/upload-profile-pic", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
+
+app.post("/api/upload-profile-pic", async (req, res, next) => {
   try {
+    if (!req.session.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
     const file = req.files?.file;
     if (!file) {
-      return res.status(400).json({ error: "No file uploaded" });
+      throw new Error("No file uploaded");
     }
     const userId = req.session.user.id;
     const fileName = `${userId}/${Date.now()}-${file.name}`;
     const { data, error } = await supabase.storage
       .from('profile-pics')
       .upload(fileName, file.data, { contentType: file.mimetype });
-    if (error) throw error;
+    if (error) throw new Error(error.message);
     const { data: publicUrlData } = supabase.storage
       .from('profile-pics')
       .getPublicUrl(fileName);
     const { error: updateError } = await supabase.auth.updateUser({
       data: { ...req.session.user.user_metadata, avatar_url: publicUrlData.publicUrl }
     });
-    if (updateError) throw updateError;
+    if (updateError) throw new Error(updateError.message);
     return res.status(200).json({ url: publicUrlData.publicUrl });
   } catch (error) {
-    return res.status(400).json({ error: error.message });
+    console.error(`Upload profile pic error: ${error.message}`);
+    next(error);
   }
 });
-app.post("/api/update-profile", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const { username, bio } = req.body;
+
+app.post("/api/update-profile", async (req, res, next) => {
   try {
+    if (!req.session.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    const { username, bio } = req.body;
     const { error } = await supabase.auth.updateUser({
       data: { ...req.session.user.user_metadata, name: username, bio }
     });
-    if (error) throw error;
+    if (error) throw new Error(error.message);
     return res.status(200).json({ message: "Profile updated" });
   } catch (error) {
-    return res.status(400).json({ error: error.message });
+    console.error(`Update profile error: ${error.message}`);
+    next(error);
   }
 });
-app.post("/api/save-localstorage", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const { data } = req.body;
+
+app.post("/api/save-localstorage", async (req, res, next) => {
   try {
+    if (!req.session.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    const { data } = req.body;
     const { error } = await supabase
       .from('user_settings')
       .upsert({ user_id: req.session.user.id, localstorage_data: data }, { onConflict: 'user_id' });
-    if (error) throw error;
+    if (error) throw new Error(error.message);
     return res.status(200).json({ message: "LocalStorage saved" });
   } catch (error) {
-    return res.status(400).json({ error: error.message });
+    console.error(`Save localstorage error: ${error.message}`);
+    next(error);
   }
 });
-app.get("/api/load-localstorage", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
+
+app.get("/api/load-localstorage", async (req, res, next) => {
   try {
+    if (!req.session.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
     const { data, error } = await supabase
       .from('user_settings')
       .select('localstorage_data')
       .eq('user_id', req.session.user.id)
       .single();
-    if (error) throw error;
+    if (error) throw new Error(error.message);
     return res.status(200).json({ data: data?.localstorage_data || '{}' });
   } catch (error) {
-    return res.status(400).json({ error: error.message });
+    console.error(`Load localstorage error: ${error.message}`);
+    next(error);
   }
 });
-app.delete("/api/delete-account", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
+
+app.delete("/api/delete-account", async (req, res, next) => {
   try {
+    if (!req.session.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
     const { error } = await supabase.rpc('delete_user', { user_id: req.session.user.id });
-    if (error) throw error;
-    req.session.destroy();
-    return res.status(200).json({ message: "Account deleted" });
+    if (error) throw new Error(error.message);
+    req.session.destroy((err) => {
+      if (err) throw new Error("Session destruction failed");
+      res.status(200).json({ message: "Account deleted" });
+    });
   } catch (error) {
-    return res.status(400).json({ error: error.message });
+    console.error(`Delete account error: ${error.message}`);
+    next(error);
   }
 });
-app.post("/api/link-account", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const { provider } = req.body;
-  const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
-  const host = req.headers.host;
-  if (!host) {
-    return res.status(400).json({ error: "Host header missing" });
-  }
-  const redirectTo = `${protocol}://${host}/auth/callback`;
+
+app.post("/api/link-account", async (req, res, next) => {
   try {
+    if (!req.session.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    const { provider } = req.body;
+    const protocol = req.headers['x-forwarded-proto'] || 'https';
+    const host = req.headers.host;
+    if (!host) {
+      throw new Error("Host header missing");
+    }
+    const redirectTo = `${protocol}://${host}/auth/callback`;
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
       options: { redirectTo, skipBrowserRedirect: true }
     });
-    if (error) throw error;
+    if (error) throw new Error(error.message);
     return res.status(200).json({ url: data.url, openInNewTab: true });
   } catch (error) {
-    return res.status(400).json({ error: error.message });
+    console.error(`Link account error: ${error.message}`);
+    next(error);
   }
+});
+
+// Error handling middleware
+app.use((err,91, res, next) => {
+  console.error(`[ERROR] ${err.message}`);
+  res.status(500).json({ error: "Internal server error" });
 });
 
 app.use((req, res) => {
@@ -377,17 +305,28 @@ app.use((req, res) => {
 });
 
 const server = createServer((req, res) => {
-  if (bare.shouldRoute(req)) {
-    bare.routeRequest(req, res);
-  } else {
-    app.handle(req, res);
+  try {
+    if (bare.shouldRoute(req)) {
+      bare.routeRequest(req, res);
+    } else {
+      app.handle(req, res);
+    }
+  } catch (error) {
+    console.error(`Server error: ${error.message}`);
+    res.writeStatusCode = 500;
+    res.end("Internal server error");
   }
 });
 
 server.on("upgrade", (req, socket, head) => {
-  if (bare.shouldRoute(req)) {
-    bare.routeUpgrade(req, socket, head);
-  } else {
+  try {
+    if (bare.shouldRoute(req)) {
+      bare.routeUpgrade(req, socket, head);
+    } else {
+      socket.end();
+    }
+  } catch (error) {
+    console.error(`Upgrade error: ${error.message}`);
     socket.end();
   }
 });
