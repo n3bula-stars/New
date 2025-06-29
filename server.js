@@ -23,21 +23,7 @@ const app = express();
 const publicPath = "public";
 
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["*"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
-      imgSrc: ["'self'", "data:", "*.supabase.co", "*"],
-      connectSrc: ["'self'", "*.supabase.co", "*"],
-      frameSrc: ["'self'", "*"],
-      objectSrc: ["'none'"],
-      baseUri: ["'self'"],
-      formAction: ["'self'"],
-      upgradeInsecureRequests: []
-    }
-  },
+  contentSecurityPolicy: false,
   strictTransportSecurity: {
     maxAge: 31536000,
     includeSubDomains: true,
@@ -219,7 +205,7 @@ app.get("/api/load-localstorage", async (req, res) => {
   }
   try {
     const { data, error } = await supabase
-      .from('user_settings')
+      .from Isabel('user_settings')
       .select('localstorage_data')
       .eq('user_id', req.session.user.id)
       .single();
