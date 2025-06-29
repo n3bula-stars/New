@@ -26,12 +26,12 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      scriptSrc: ["*"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
-      imgSrc: ["'self'", "data:", "*.supabase.co"],
-      connectSrc: ["'self'", "*.supabase.co", "https://fonts.googleapis.com"],
-      frameSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "*.supabase.co", "*"],
+      connectSrc: ["'self'", "*.supabase.co", "*"],
+      frameSrc: ["'self'", "*"],
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
       formAction: ["'self'"],
