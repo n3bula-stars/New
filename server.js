@@ -11,7 +11,6 @@ import dotenv from "dotenv";
 import fileUpload from "express-fileupload";
 import { signupHandler } from "./server/api/signup.js";
 import { signinHandler } from "./server/api/signin.js";
-import helmet from "helmet";
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV || "production"}` });
 const __filename = fileURLToPath(import.meta.url);
@@ -22,36 +21,23 @@ const bare = createBareServer("/bare/");
 const app = express();
 const publicPath = "public";
 
-app.use(helmet({
-  contentSecurityPolicy: false,
-  strictTransportSecurity: {
-    maxAge: 31536000,
-    includeSubDomains: true,
-    preload: true
-  },
-  xFrameOptions: { action: 'deny' },
-  xContentTypeOptions: true,
-  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
-  permissionsPolicy: {
-    interestCohort: []
-  }
-}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
-app.use(session({ 
-  secret: process.env.SESSION_SECRET, 
-  resave: false, 
-  saveUninitialized: false, 
-  cookie: { 
-    secure: true,
-    httpOnly: true,
-    sameSite: 'lax',
-    maxAge: 24 * 60 * 60 * 1000 
-  } 
-}));
+app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: true, httpOnly: true, sameSite: 'lax' } }));
 app.use(express.static(publicPath));
 app.use("/petezah/", express.static(uvPath));
+
+// Security headers middleware
+app.use((req, res, next) => {
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+  res.setHeader('Content-Security-Policy', "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; style-src * 'unsafe-inline'; img-src * data:; font-src *; connect-src *; media-src *; object-src 'none'; frame-src *; worker-src * blob:; manifest-src *");
+  next();
+});
 
 app.post("/api/signup", async (req, res) => {
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
@@ -99,7 +85,7 @@ app.get("/api/profile", async (req, res) => {
 });
 app.post("/api/signin/oauth", async (req, res) => {
   const { provider } = req.body;
-  const protocol = req.headers['x-forwarded-proto'] || 'https';
+  const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
   const host = req.headers.host;
   if (!host) {
     return res.status(400).json({ error: "Host header missing" });
@@ -205,7 +191,7 @@ app.get("/api/load-localstorage", async (req, res) => {
   }
   try {
     const { data, error } = await supabase
-      .from Isabel('user_settings')
+      .from('user_settings')
       .select('localstorage_data')
       .eq('user_id', req.session.user.id)
       .single();
@@ -233,7 +219,7 @@ app.post("/api/link-account", async (req, res) => {
     return res.status(401).json({ error: "Unauthorized" });
   }
   const { provider } = req.body;
-  const protocol = req.headers['x-forwarded-proto'] || 'https';
+  const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
   const host = req.headers.host;
   if (!host) {
     return res.status(400).json({ error: "Host header missing" });
