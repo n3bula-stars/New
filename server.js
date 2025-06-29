@@ -24,18 +24,9 @@ const publicPath = "public";
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: true, httpOnly: true, sameSite: 'lax' } }));
+app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: true } }));
 app.use(express.static(publicPath));
 app.use("/petezah/", express.static(uvPath));
-app.use((req, res, next) => {
-  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
-  res.setHeader('X-Frame-Options', 'DENY');
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-  res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
-  res.setHeader('Content-Security-Policy', "default-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src 'self' 'unsafe-inline' *; img-src 'self' data: *; font-src 'self' data: *; connect-src 'self' *; frame-src 'self' *; media-src 'self' *");
-  next();
-});
 
 app.post("/api/signup", async (req, res) => {
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
@@ -134,7 +125,7 @@ app.post("/api/upload-profile-pic", async (req, res) => {
     const file = req.files?.file;
     if (!file) {
       return res.status(400).json({ error: "No file uploaded" });
-  }
+    }
     const userId = req.session.user.id;
     const fileName = `${userId}/${Date.now()}-${file.name}`;
     const { data, error } = await supabase.storage
