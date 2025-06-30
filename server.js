@@ -24,32 +24,12 @@ const publicPath = "public";
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: true } }));
+app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: false } }));
 app.use(express.static(publicPath));
 app.use("/petezah/", express.static(uvPath));
 
-app.post("/api/signup", async (req, res) => {
-  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-  const result = await signupHandler(req, res);
-  if (result.status === 200 && req.session.user) {
-    const { error } = await supabase.auth.updateUser({
-      data: { ...req.session.user.user_metadata, ip_address: ip }
-    });
-    if (error) return res.status(400).json({ error: error.message });
-  }
-  return result;
-});
-app.post("/api/signin", async (req, res) => {
-  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-  const result = await signinHandler(req, res);
-  if (result.status === 200 && req.session.user) {
-    const { error } = await supabase.auth.updateUser({
-      data: { ...req.session.user.user_metadata, ip_address: ip }
-    });
-    if (error) return res.status(400).json({ error: error.message });
-  }
-  return result;
-});
+app.post("/api/signup", signupHandler);
+app.post("/api/signin", signinHandler);
 app.post("/api/signout", async (req, res) => {
   try {
     const { error } = await supabase.auth.signOut();
@@ -107,11 +87,6 @@ app.post("/api/set-session", async (req, res) => {
     if (error) throw error;
     req.session.user = data.user;
     req.session.access_token = access_token;
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    const { error: updateError } = await supabase.auth.updateUser({
-      data: { ...data.user.user_metadata, ip_address: ip }
-    });
-    if (updateError) throw updateError;
     return res.status(200).json({ message: "Session set successfully" });
   } catch (error) {
     return res.status(400).json({ error: error.message });
@@ -136,7 +111,7 @@ app.post("/api/upload-profile-pic", async (req, res) => {
       .from('profile-pics')
       .getPublicUrl(fileName);
     const { error: updateError } = await supabase.auth.updateUser({
-      data: { ...req.session.user.user_metadata, avatar_url: publicUrlData.publicUrl }
+      data: { avatar_url: publicUrlData.publicUrl }
     });
     if (updateError) throw updateError;
     return res.status(200).json({ url: publicUrlData.publicUrl });
@@ -151,7 +126,7 @@ app.post("/api/update-profile", async (req, res) => {
   const { username, bio } = req.body;
   try {
     const { error } = await supabase.auth.updateUser({
-      data: { ...req.session.user.user_metadata, name: username, bio }
+      data: { name: username, bio }
     });
     if (error) throw error;
     return res.status(200).json({ message: "Profile updated" });
