@@ -1,7 +1,10 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+
     <!-- Google Tag Manager -->
     <script>(function (w, d, s, l, i) {
             w[l] = w[l] || []; w[l].push({
@@ -13,6 +16,7 @@
         })(window, document, 'script', 'dataLayer', 'GTM-WPH7NCG4');</script>
     <!-- End Google Tag Manager -->
 
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Google tag (gtag.js) -->
@@ -21,14 +25,18 @@
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
+
         gtag('config', 'G-SHE360M0YP');
     </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6640595376330309"
         crossorigin="anonymous"></script>
 
+
+
     <title>PeteZah | Games</title>
     <link rel="icon" type="icon/x-icon" href="/storage/images/logo-png-removebg-preview.png" />
     <link rel="stylesheet" type="text/css" href="/storage/css/themes2.css">
+
 
     <meta name="description" content="Pete Zah, game on" />
     <meta name="keywords" content="Proxy, Unblocker, Pete Zah Unblocker, Pete Zah Games, Pete Zah" />
@@ -41,14 +49,18 @@
             height: 100vh;
             margin: 0;
             background-color: #0A1D37;
+            /* Dark Blue background */
             color: white;
             font-family: 'Poppins', sans-serif;
             padding: 0;
             overflow: auto;
+            
         }
 
+        
         body::-webkit-scrollbar {
             display: none;
+            
         }
 
         .god-rays {
@@ -80,6 +92,7 @@
             mix-blend-mode: difference;
         }
 
+        
         .search-container {
             position: fixed;
             top: 0;
@@ -89,13 +102,14 @@
             padding: 15px 0;
             text-align: center;
             z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            transition: background-color 0.3s;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); 
+            transition: background-color 0.3s; 
         }
 
+        
         .search-container input {
             font-family: "Poppins", sans-serif;
-            width: 50vw;
+            width: 50vw; 
             padding: 12px 20px;
             font-size: 18px;
             border: 2px solid #fff;
@@ -109,17 +123,263 @@
         .search-container input:focus {
             background: #333;
             outline: none;
-            box-shadow: 0 0 15px rgba(0, 102, 204, 0.4);
-            border-color: #0066cc;
+            box-shadow: 0 0 15px rgba(0, 102, 204, 0.4); 
+            border-color: #0066cc; 
         }
 
+     
         .game-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            gap: 30px; 
+            padding-top: 120px; 
+            padding-bottom: 30px; 
+        }
+
+        
+        .image-item {
+            position: relative;
+            width: 250px; 
+            height: 220px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            border-radius: 10px;
+            background-color: #222;
+            border: 2px solid #fff;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        .image-item:hover {
+            transform: scale(1.05); 
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7); 
+        }
+
+        .image-item a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-decoration: none;
+            color: inherit;
+            border-radius: 10px;
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            
+        }
+
+        .image-item img:hover {
+            transform: scale(1.1);
+            
+        }
+
+        
+        .label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.7); 
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s; 
+        }
+
+        .image-item:hover .label {
+            background-color: rgba(0, 0, 0, 0.9); 
+        }
+
+       
+        .game-container {
             gap: 30px;
-            padding-top: 120px;
-            padding-bottom: 30px;
+            
+        }
+
+        .appImage {
+            opacity: 0;
+            animation: fade-in-bottom 1s;
+        }
+
+        .appsContainer {
+            top: 65px;
+            position: absolute;
+            width: 1070px;
+            display: inline-flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            gap: 20px;
+            justify-content: flex-start;
+        }
+
+        .appsContainer img {
+            width: 198px;
+            height: 128px;
+            object-fit: cover;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.2s ease-in-out !important;
+        }
+
+        .appsContainer img:hover {
+            transform: scale(1.05);
+            transition: 0.2s ease-in-out !important;
+        }
+
+        .appsContainer img:active {
+            transition: 0s;
+            outline: 2px solid var(--image-outline-color);
+        }
+
+        .gameImage {
+            opacity: 0;
+            animation: fade-in-bottom 1s;
+        }
+
+        .appsContainer {
+            opacity: 1;
+        }
+
+        .gameContain {
+            top: 65px;
+            position: absolute;
+            width: 1070px;
+            display: inline-flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            gap: 20px;
+            justify-content: flex-start;
+        }
+
+        .gameContain img {
+            width: 198px;
+            height: 128px;
+            object-fit: cover;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.2s ease-in-out !important;
+        }
+
+        .gameContain img:hover {
+            transform: scale(1.05);
+            transition: 0.2s ease-in-out !important;
+        }
+
+        .gameContain img:active {
+            transition: 0s;
+            outline: 2px solid var(--image-outline-color);
+        }
+
+        .scrolltop {
+            background-color: var(--scrolltop-background-color);
+            backdrop-filter: var(--scrolltop-backdrop-filter);
+            width: 49px;
+            height: 49px;
+            border-radius: 50%;
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 9999;
+            transition: 0.3s ease-in-out all;
+            opacity: 0;
+        }
+
+        .scrolltop:hover {
+            transform: scale(1.1);
+        }
+
+        .scrolltop span.material-symbols-outlined {
+            justify-content: center;
+            transform: translateY(-10px);
+            font-size: 30px;
+        }
+
+        .gameSearchInput,
+        .appsSearchInput,
+        #gointospace {
+            padding-left: 40px;
+        }
+
+        .search-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-align: center;
+            border-radius: 30px;
+        }
+
+        .search-header__input {
+            font-family: 'DM Sans';
+            font-size: 16px;
+            background-color: var(--input-background-color);
+            border: solid 0.5px var(--border-color);
+            color: var(--text-color);
+            padding: 0.7rem 1rem;
+            border-radius: 25px;
+            width: 240px;
+            height: 20px;
+            transition: all ease-in-out 0.5s;
+            margin-right: -2rem;
+            opacity: 1;
+            text-align: center;
+        }
+
+        .search-header__input:not(#gointospace2):hover,
+        .search-header__input:not(#gointospace2):focus {
+            box-shadow:
+                10px 5px 40px -10px var(--dshadow1),
+                -14px -4px 40px -10px var(--dshadow2);
+            padding-left: calc(+50px) !important;
+            padding-right: calc(+50px) !important;
+        }
+
+        .search-header__input:focus {
+            outline: none;
+            background-color: #0a0a0af0;
+        }
+
+        .search-header__input::-webkit-input-placeholder {
+            font-weight: 200;
+            color: #868686;
+            font-family: 'DM Sans';
+        }
+
+        .search-header__input:focus+.search-header__button {
+            background-color: transparent;
+        }
+
+        .search-header__button {
+            border: none;
+            background-color: transparent;
+            margin-top: 0.1em;
+        }
+
+        .search-header__button:hover {
+            cursor: pointer;
+        }
+
+        .search-header__icon {
+            height: 1.3em;
+            width: 1.3em;
+            fill: #3a3a3a;
+        }
+
+        .searchEngineIcon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            object-fit: cover;
+            position: relative;
+            z-index: 9999999;
+            margin-right: -35px;
         }
 
         .image-item {
@@ -183,6 +443,7 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
         }
 
+        /* Filter Dropdown Styles */
         .filter-container {
             position: fixed;
             top: 5px;
@@ -216,32 +477,11 @@
             background-color: #000e24;
             z-index: -2;
         }
-
-        .load-more-btn {
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #141414;
-            color: white;
-            border: 2px solid white;
-            border-radius: 16px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .load-more-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
-        }
-
-        .load-more-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
     </style>
 </head>
 
 <body>
+
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WPH7NCG4" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>
@@ -272,8 +512,6 @@
     <div class="game-container" id="imageContainer">
     </div>
 
-    <button id="loadMoreBtn" class="load-more-btn">Load More</button>
-
     <div class="ad-container-horizantal">
         <script async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6640595376330309"
@@ -285,121 +523,112 @@
             (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
     </div>
-    <script src="https://partner.senty.com.au/partner-a11f34f2.js"></script>
+     <script src="https://partner.senty.com.au/partner-a11f34f2.js"></script>
 
     <script>
         let games = [];
-        let currentPage = 0;
-        const gamesPerPage = 20;
+let observer;
 
-        async function loadGames() {
-            try {
-                const response = await fetch('/storage/data/games.json');
-                games = (await response.json()).games;
-                displayGames(getCurrentGames());
-                setupIntersectionObserver();
-            } catch (error) {
-                console.error('Error loading games:', error);
-            }
+function setupLazyLoading() {
+  observer = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target.querySelector('img');
+          const src = img.getAttribute('data-src');
+          if (src) {
+            img.src = src;
+            img.removeAttribute('data-src');
+          }
+          observer.unobserve(entry.target);
         }
+      });
+    },
+    {
+      rootMargin: '200px',
+      threshold: 0.01,
+    }
+  );
+}
 
-        function getCurrentGames() {
-            const start = currentPage * gamesPerPage;
-            const end = start + gamesPerPage;
-            return games.slice(0, end);
-        }
+async function loadGames() {
+  try {
+    const response = await fetch('/storage/data/games.json');
+    games = (await response.json()).games;
+    displayGames(games);
+    setupLazyLoading();
+  } catch (error) {
+    console.error('Error loading games:', error);
+  }
+}
 
-        function displayGames(gamesToShow) {
-            const container = document.getElementById('imageContainer');
-            if (currentPage === 0) {
-                container.innerHTML = '';
-            }
+function displayGames(gamesToShow) {
+  const container = document.getElementById('imageContainer');
+  container.innerHTML = '';
+  gamesToShow.forEach(game => {
+    const div = document.createElement('div');
+    div.className = 'image-item';
+    div.setAttribute('data-label', game.label);
+    if (game.categories.length > 0) {
+      div.setAttribute('data-category', game.categories[0]);
+    }
+    div.innerHTML = `
+      <a href="${game.url}" class="game-link">
+        <img data-src="${game.imageUrl}" alt="${game.label}">
+        <div class="label">${game.label}</div>
+      </a>
+    `;
+    const link = div.querySelector('.game-link');
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = game.url;
+    });
+    container.appendChild(div);
+    observer.observe(div);
+  });
+}
 
-            gamesToShow.slice(currentPage * gamesPerPage).forEach(game => {
-                const div = document.createElement('div');
-                div.className = 'image-item';
-                div.setAttribute('data-label', game.label);
-                if (game.categories && game.categories.length > 0) {
-                    div.setAttribute('data-category', game.categories[0]);
-                }
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 
-                div.innerHTML = `
-                    <a href="${game.url}">
-                        <img src="${game.imageUrl}">
-                        <div class="label">${game.label}</div>
-                    </a>
-                `;
-                container.appendChild(div);
-            });
+function filterItems() {
+  const searchInput = document.getElementById('search-games').value.toLowerCase();
+  const filteredGames = games.filter(game =>
+    game.label.toLowerCase().includes(searchInput)
+  );
+  displayGames(filteredGames);
+}
 
-            const loadMoreBtn = document.getElementById('loadMoreBtn');
-            loadMoreBtn.disabled = (currentPage + 1) * gamesPerPage >= games.length;
-        }
+function randomGameOpen() {
+  if (games.length > 0) {
+    const randomIndex = Math.floor(Math.random() * games.length);
+    const randomGame = games[randomIndex];
+    window.location.href = randomGame.url;
+  }
+}
 
-        function loadMoreGames() {
-            currentPage++;
-            const filteredGames = getFilteredGames();
-            displayGames(filteredGames);
-        }
+function filterByCategory() {
+  const category = document.getElementById('gameFilter').value.toLowerCase();
+  const filteredGames = category
+    ? games.filter(game => game.categories.includes(category))
+    : games;
+  displayGames(filteredGames);
+}
 
-        function getFilteredGames() {
-            const searchInput = document.getElementById('search-games').value.toLowerCase();
-            const category = document.getElementById('gameFilter').value.toLowerCase();
-            let filteredGames = games;
+document.addEventListener('DOMContentLoaded', () => {
+  loadGames();
+});
 
-            if (searchInput) {
-                filteredGames = filteredGames.filter(game => 
-                    game.label.toLowerCase().includes(searchInput)
-                );
-            }
-
-            if (category) {
-                filteredGames = filteredGames.filter(game => 
-                    game.categories.includes(category)
-                );
-            }
-
-            return filteredGames;
-        }
-
-        function filterItems() {
-            currentPage = 0;
-            const filteredGames = getFilteredGames();
-            games = filteredGames; // Update games array to reflect filtered results
-            displayGames(getCurrentGames());
-        }
-
-        function filterByCategory() {
-            currentPage = 0;
-            const filteredGames = getFilteredGames();
-            games = filteredGames; // Update games array to reflect filtered results
-            displayGames(getCurrentGames());
-        }
-
-        function randomGameOpen() {
-            if (games.length > 0) {
-                const randomIndex = Math.floor(Math.random() * games.length);
-                window.location.href = games[randomIndex].url;
-            }
-        }
-
-        function setupIntersectionObserver() {
-            const loadMoreBtn = document.getElementById('loadMoreBtn');
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    if (entries[0].isIntersecting && !loadMoreBtn.disabled) {
-                        loadMoreGames();
-                    }
-                },
-                { threshold: 0.1 }
-            );
-            observer.observe(loadMoreBtn);
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadGames();
-            document.getElementById('loadMoreBtn').addEventListener('click', loadMoreGames);
-        });
+document.getElementById('search-games').addEventListener('input', debounce(filterItems, 300));
     </script>
     <script src="/storage/js/settings.js"></script>
 </body>
