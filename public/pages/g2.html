@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -527,44 +525,24 @@
 
     <script>
         let games = [];
-let observer;
-
-function setupLazyLoading() {
-  observer = new IntersectionObserver(
-    (entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const img = entry.target.querySelector('img');
-          const src = img.getAttribute('data-src');
-          if (src) {
-            img.src = src;
-            img.removeAttribute('data-src');
-          }
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    {
-      rootMargin: '200px',
-      threshold: 0.01,
-    }
-  );
-}
+let currentPage = 1;
+const gamesPerPage = 50;
 
 async function loadGames() {
   try {
     const response = await fetch('/storage/data/games.json');
     games = (await response.json()).games;
-    displayGames(games);
-    setupLazyLoading();
+    displayGames(games.slice(0, gamesPerPage));
+    updateLoadMoreButton();
   } catch (error) {
     console.error('Error loading games:', error);
   }
 }
 
-function displayGames(gamesToShow) {
+function displayGames(gamesToShow, append = false) {
   const container = document.getElementById('imageContainer');
-  container.innerHTML = '';
+  if (!append) container.innerHTML = '';
+  const fragment = document.createDocumentFragment();
   gamesToShow.forEach(game => {
     const div = document.createElement('div');
     div.className = 'image-item';
@@ -573,19 +551,38 @@ function displayGames(gamesToShow) {
       div.setAttribute('data-category', game.categories[0]);
     }
     div.innerHTML = `
-      <a href="${game.url}" class="game-link">
-        <img data-src="${game.imageUrl}" alt="${game.label}">
+      <a href="${game.url}" class="game-link" data-url="${game.url}">
+        <img src="${game.imageUrl}" alt="${game.label}">
         <div class="label">${game.label}</div>
       </a>
     `;
-    const link = div.querySelector('.game-link');
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.location.href = game.url;
-    });
-    container.appendChild(div);
-    observer.observe(div);
+    fragment.appendChild(div);
   });
+  container.appendChild(fragment);
+}
+
+function updateLoadMoreButton() {
+  let loadMoreBtn = document.getElementById('loadMoreBtn');
+  if (!loadMoreBtn) {
+    loadMoreBtn = document.createElement('button');
+    loadMoreBtn.id = 'loadMoreBtn';
+    loadMoreBtn.textContent = 'Load More';
+    loadMoreBtn.style.cssText = `
+      padding: 10px 20px; margin: 20px auto; display: block;
+      background-color: #141414; color: white; border: 1px solid white;
+      font-size: 16px; cursor: pointer; border-radius: 16px;
+    `;
+    loadMoreBtn.addEventListener('click', () => {
+      const start = currentPage * gamesPerPage;
+      const end = start + gamesPerPage;
+      const filteredGames = getFilteredGames();
+      displayGames(filteredGames.slice(start, end), true);
+      currentPage++;
+      if (end >= filteredGames.length) loadMoreBtn.style.display = 'none';
+    });
+    document.getElementById('imageContainer').after(loadMoreBtn);
+  }
+  loadMoreBtn.style.display = currentPage * gamesPerPage < getFilteredGames().length ? 'block' : 'none';
 }
 
 function debounce(func, wait) {
@@ -600,35 +597,49 @@ function debounce(func, wait) {
   };
 }
 
-function filterItems() {
+function getFilteredGames() {
   const searchInput = document.getElementById('search-games').value.toLowerCase();
-  const filteredGames = games.filter(game =>
-    game.label.toLowerCase().includes(searchInput)
-  );
-  displayGames(filteredGames);
+  const category = document.getElementById('gameFilter').value.toLowerCase();
+  let filteredGames = games;
+  if (searchInput) {
+    filteredGames = filteredGames.filter(game => game.label.toLowerCase().includes(searchInput));
+  }
+  if (category) {
+    filteredGames = filteredGames.filter(game => game.categories.includes(category));
+  }
+  return filteredGames;
+}
+
+function filterItems() {
+  currentPage = 1;
+  const filteredGames = getFilteredGames();
+  displayGames(filteredGames.slice(0, gamesPerPage));
+  updateLoadMoreButton();
 }
 
 function randomGameOpen() {
   if (games.length > 0) {
     const randomIndex = Math.floor(Math.random() * games.length);
-    const randomGame = games[randomIndex];
-    window.location.href = randomGame.url;
+    window.location.href = games[randomIndex].url;
   }
 }
 
 function filterByCategory() {
-  const category = document.getElementById('gameFilter').value.toLowerCase();
-  const filteredGames = category
-    ? games.filter(game => game.categories.includes(category))
-    : games;
-  displayGames(filteredGames);
+  filterItems();
 }
+
+document.getElementById('imageContainer').addEventListener('click', (e) => {
+  const link = e.target.closest('.game-link');
+  if (link) {
+    e.preventDefault();
+    window.location.href = link.getAttribute('data-url');
+  }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   loadGames();
+  document.getElementById('search-games').addEventListener('input', debounce(filterItems, 300));
 });
-
-document.getElementById('search-games').addEventListener('input', debounce(filterItems, 300));
     </script>
     <script src="/storage/js/settings.js"></script>
 </body>
