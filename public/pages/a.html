@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,9 +55,8 @@ body {
     overflow: auto;  
 }
 
-
 body::-webkit-scrollbar {
-    display: none; 
+    display: none;  
 }
 
 	    	.god-rays {
@@ -96,49 +96,50 @@ body::-webkit-scrollbar {
     background-color: #0A1D37;  
     padding: 15px 0;
     text-align: center;
-    z-index: 1000;  
+    z-index: 1000; 
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);  
 }
-
 
 .search-container input {
     font-family: "Nunito", serif;
     width: 40vw;
     padding: 12px 20px;
     font-size: 18px;
-    border: 2px solid #fff;  
+    border: 2px solid #fff; 
     color: #fff;
     background: #141414;
     border-radius: 50px;
     transition: 0.3s;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);  
+}
 
 .search-container input:focus {
     background: #333;
     outline: none;
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);  
-    border-color: #0066cc; 
+    border-color: #0066cc;  
 }
 
+/* Game Container */
 .game-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 30px;
-    padding-top: 120px; 
+    padding-top: 120px;  
     padding-bottom: 30px; 
 }
 
 
 .image-item {
     position: relative;
-    width: 250px;  
+    width: 250px; 
     height: 220px;
     overflow: hidden;
-    border-radius: 10px; 
+    border-radius: 10px;  
     background-color: #222;
     border: 2px solid #fff;  
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); 
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);  
     animation: fade-in 1s forwards;  
     transition: transform 0.3s;
 }
@@ -156,13 +157,11 @@ body::-webkit-scrollbar {
     animation: row-fade-in 1s forwards;
 }
 
-
 @keyframes row-fade-in {
     to {
         opacity: 1;
     }
 }
-
 
 .game-container .row:nth-child(1) {
     animation-delay: 0s;
@@ -176,7 +175,6 @@ body::-webkit-scrollbar {
 .game-container .row:nth-child(4) {
     animation-delay: 0.9s;
 }
-
 
 .game-container .row .image-item {
     opacity: 0;
@@ -214,7 +212,7 @@ body::-webkit-scrollbar {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 10px; 
+    border-radius: 10px;  
     transition: transform 0.3s ease-in-out;
 }
 
@@ -222,13 +220,12 @@ body::-webkit-scrollbar {
     transform: scale(1.1);  
 }
 
-
 .label {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: rgba(0, 0, 0, 0.6); 
+    background-color: rgba(0, 0, 0, 0.6);  
     color: white;
     text-align: center;
     padding: 10px;
@@ -239,9 +236,8 @@ body::-webkit-scrollbar {
 }
 
 .image-item:hover .label {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.8);  
 }
-
 
 .game-container {
     gap: 30px;  
@@ -534,7 +530,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
 
 	<div class="image-item" data-label="pete ai">
-            <a href="/pages/other/ai/iframe.html" >
+            <a href="/pages/other/ai/" >
                 <img src="/storage/images/logo-png-removebg-preview.png">
                 <div class="label">PeteAI</div>
             </a>
