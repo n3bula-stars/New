@@ -2,7 +2,6 @@ import { createBareServer } from "@tomphttp/bare-server-node";
 import express from "express";
 import { createServer } from "node:http";
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
-import { libcurlPath } from "@mercuryworkshop/libcurl-transport";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 import { server as wisp, logging } from "@mercuryworkshop/wisp-js/server";
 import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
