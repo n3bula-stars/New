@@ -1,3 +1,4 @@
+
 // dumb hack to allow firefox to work (please dont do this in prod)
 if (navigator.userAgent.includes("Firefox")) {
 	Object.defineProperty(globalThis, "crossOriginIsolated", {
@@ -6,18 +7,35 @@ if (navigator.userAgent.includes("Firefox")) {
 	});
 }
 
-importScripts(
-	"/static/scramjet/scram/scramjet.wasm.js",
-	"/static/scramjet/scram/scramjet.shared.js",
-	"/static/scramjet/scram/scramjet.worker.js",
-);
+importScripts("/scram/scramjet.shared.js", "/scram/scramjet.worker.js");
 
 const scramjet = new ScramjetServiceWorker();
 
 async function handleRequest(event) {
 	await scramjet.loadConfig();
 	if (scramjet.route(event)) {
-		return scramjet.fetch(event);
+		const response = await scramjet.fetch(event);
+
+		const contentType = response.headers.get("content-type") || "";
+		if (contentType.includes("text/html")) {
+			const originalText = await response.text();
+			const modifiedHtml = originalText.replace(
+				/<head[^>]*>/i,
+				(match) =>
+					`${match}<!-- pr0x1ed by PeteZah's static sw -->`
+			);
+
+			const newHeaders = new Headers(response.headers);
+			newHeaders.set("content-length", modifiedHtml.length.toString());
+
+			return new Response(modifiedHtml, {
+				status: response.status,
+				statusText: response.statusText,
+				headers: newHeaders,
+			});
+		}
+
+		return response;
 	}
 
 	return fetch(event.request);
