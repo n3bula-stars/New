@@ -1034,11 +1034,15 @@ function __wbg_get_imports() {
       state0.a = state0.b = 0;
     }
   };
-  imports.wbg.__wbg_send_fe006eb24f5e2694 = function() {
+    imports.wbg.__wbg_send_fe006eb24f5e2694 = function() {
     return handleError(function(arg0, arg1, arg2) {
-      arg0.send(getArrayU8FromWasm0(arg1, arg2));
+        if (arg0.readyState === WebSocket.OPEN) {
+            arg0.send(getArrayU8FromWasm0(arg1, arg2));
+        } else {
+            throw new Error("WebSocket is not in OPEN state");
+        }
     }, arguments);
-  };
+};
   imports.wbg.__wbindgen_is_function = function(arg0) {
     const ret = typeof arg0 === "function";
     return ret;
