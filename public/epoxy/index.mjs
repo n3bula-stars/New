@@ -1042,7 +1042,7 @@ function __wbg_get_imports() {
             throw new Error("WebSocket is not in OPEN state");
         }
     }, arguments);
-};
+  };
   imports.wbg.__wbindgen_is_function = function(arg0) {
     const ret = typeof arg0 === "function";
     return ret;
