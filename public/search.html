@@ -13,20 +13,15 @@
     rel="stylesheet" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
     rel="stylesheet" />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer" />
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <style>
     body,
@@ -50,6 +45,7 @@
         opacity: 0;
         transform: translateY(-10px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -63,9 +59,12 @@
     }
 
     @keyframes pulse {
-      0%, 100% {
+
+      0%,
+      100% {
         transform: scale(1);
       }
+
       50% {
         transform: scale(1.05);
       }
@@ -76,6 +75,7 @@
         transform: translateX(-20px);
         opacity: 0;
       }
+
       to {
         transform: translateX(0);
         opacity: 1;
@@ -111,12 +111,12 @@
       right: 0;
       bottom: 0;
       background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-                  radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
       pointer-events: none;
       z-index: 1;
     }
 
-    .browser-container > * {
+    .browser-container>* {
       position: relative;
       z-index: 2;
     }
@@ -643,6 +643,86 @@
       color: white;
       background: black;
     }
+
+    /* Suggestion List Styles */
+    .suggestion-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--fourth-bg);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      z-index: 1000;
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+      flex-direction: column;
+      padding: 0.5rem;
+    }
+
+    .suggestion-list::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .suggestion-list::-webkit-scrollbar-thumb {
+      background: var(--active-blue);
+      border-radius: 5px;
+    }
+
+    .search-section {
+      margin-bottom: 0.5rem;
+    }
+
+    .search-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .search-title img {
+      width: 16px;
+      height: 16px;
+    }
+
+    .search-results {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .search-results div {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .search-results div:hover {
+      background: var(--hover-blue);
+    }
+
+    .search-results div.selected {
+      background: var(--active-blue);
+    }
+
+    .search-results div i {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .suggestion-text {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   </style>
   <style>
     @import url("https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
@@ -897,7 +977,7 @@
       tabsContainer.innerHTML = "";
 
       tabs.forEach((tab, index) => {
-        if (!tab || !tab.frame) return; 
+        if (!tab || !tab.frame) return;
         const tabElement = document.createElement("div");
         tabElement.className = `tab ${tab.id === activeTabId ? "active" : ""}`;
         tabElement.setAttribute("data-tab-id", tab.id);
@@ -990,7 +1070,7 @@
 
       if (!url.startsWith("http") && !url.includes(".")) {
         url = "https://duckduckgo.com/?q=" + encodeURIComponent(url);
-      } else if (!url.startsWith("http")) {
+      } else if (!url.startsWith("http") && !url.startsWith("petezah://")) {
         url = "https://" + url;
       }
 
@@ -1088,6 +1168,239 @@
       toggleMenu();
     }
 
+    class Search {
+      constructor(scramjet, store) {
+        this.scramjet = scramjet;
+        this.store = store;
+        this.currentSectionIndex = 0;
+        this.maxResults = 8;
+        this.sections = {};
+        this.selectedSuggestionIndex = -1;
+      }
+
+      init() {
+        const addressBar = document.getElementById("address-bar");
+        const nav = document.querySelector(".nav");
+        const suggestionList = document.createElement("div");
+        suggestionList.id = "suggestion-list";
+        suggestionList.className = "suggestion-list";
+        nav.appendChild(suggestionList);
+
+        this.sections = {
+          searchResults: this.createSection("Search Results"),
+          history: this.createSection("History"),
+        };
+
+        Object.values(this.sections).forEach(({ section }) => suggestionList.appendChild(section));
+
+        addressBar.addEventListener("input", async (event) => {
+          suggestionList.style.display = "flex";
+          const query = event.target.value.trim();
+          if (query === "" && event.inputType === "deleteContentBackward") {
+            this.clearSuggestions();
+            suggestionList.style.display = "none";
+            return;
+          }
+
+          let cleanedQuery = query.replace(/^(petezah:\/\/|petezah:\/|petezah:)/, "");
+          const suggestions = await this.generateSuggestions(cleanedQuery);
+          this.clearSuggestions();
+          this.populateSections(suggestions, query);
+        });
+
+        addressBar.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" || event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+            suggestionList.style.display = "none";
+            this.clearSuggestions();
+            return;
+          }
+
+          const suggestionItems = this.getCurrentSuggestionItems();
+          const numSuggestions = suggestionItems.length;
+
+          if (event.key === "ArrowDown") {
+            event.preventDefault();
+            if (this.selectedSuggestionIndex + 1 >= numSuggestions) {
+              this.moveToNextSection();
+              this.selectedSuggestionIndex = 0;
+            } else {
+              this.selectedSuggestionIndex = (this.selectedSuggestionIndex + 1) % numSuggestions;
+            }
+            this.updateSelectedSuggestion();
+          } else if (event.key === "ArrowUp") {
+            event.preventDefault();
+            if (this.selectedSuggestionIndex <= 0) {
+              this.moveToPreviousSection();
+            } else {
+              this.selectedSuggestionIndex = (this.selectedSuggestionIndex - 1 + numSuggestions) % numSuggestions;
+            }
+            this.updateSelectedSuggestion();
+          } else if (event.key === "Tab" || event.key === "ArrowRight") {
+            if (this.selectedSuggestionIndex !== -1) {
+              event.preventDefault();
+              const selectedSuggestion = suggestionItems[this.selectedSuggestionIndex].querySelector(".suggestion-text").textContent;
+              addressBar.value = selectedSuggestion;
+              this.clearSuggestions();
+              suggestionList.style.display = "none";
+            }
+          } else if (event.key === "Enter") {
+            event.preventDefault();
+            if (this.selectedSuggestionIndex !== -1) {
+              const selectedSuggestion = suggestionItems[this.selectedSuggestionIndex].querySelector(".suggestion-text").textContent;
+              addressBar.value = selectedSuggestion;
+              this.clearSuggestions();
+              suggestionList.style.display = "none";
+              handleSubmit();
+            } else {
+              this.clearSuggestions();
+              suggestionList.style.display = "none";
+              handleSubmit();
+            }
+          } else if (event.key === "Backspace" && addressBar.value === "") {
+            suggestionList.style.display = "none";
+            this.clearSuggestions();
+          }
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!addressBar.contains(e.target) && !suggestionList.contains(e.target)) {
+            suggestionList.style.display = "none";
+            this.clearSuggestions();
+          }
+        });
+      }
+
+      createSection(titleText) {
+        const section = document.createElement("div");
+        section.className = "search-section";
+        const searchTitle = document.createElement("div");
+        searchTitle.className = "search-title";
+        const icon = document.createElement("img");
+        icon.src = "/storage/images/logo-png-removebg-preview.png";
+        icon.className = "searchEngineIcon";
+        const title = document.createElement("span");
+        title.textContent = titleText;
+        searchTitle.appendChild(icon);
+        searchTitle.appendChild(title);
+        const searchResults = document.createElement("div");
+        searchResults.className = "search-results";
+        section.appendChild(searchTitle);
+        section.appendChild(searchResults);
+        return { section, searchResults };
+      }
+
+      async generateSuggestions(query) {
+        try {
+          const response = await fetch(`/results/${encodeURIComponent(query)}`);
+          if (!response.ok) throw new Error("Network response was not ok");
+          const data = await response.json();
+          return data.map((item) => item.phrase);
+        } catch (error) {
+          console.error("Error fetching suggestions:", error);
+          return [];
+        }
+      }
+
+      populateSections(suggestions, query) {
+        this.populateSearchResults(suggestions);
+        this.populateHistory(query);
+      }
+
+      populateSearchResults(suggestions) {
+        const { searchResults, section } = this.sections.searchResults;
+        if (suggestions.length > 0) {
+          section.style.display = "block";
+          suggestions.slice(0, this.maxResults).forEach((suggestion) => {
+            const listItem = this.createSuggestionItem(suggestion);
+            searchResults.appendChild(listItem);
+          });
+        } else {
+          section.style.display = "none";
+        }
+      }
+
+      populateHistory(query) {
+        const { searchResults, section } = this.sections.history;
+        const lowerQuery = query.toLowerCase();
+        const filteredHistory = this.store.history
+          .filter((item) => item.url.toLowerCase().includes(lowerQuery) || item.title.toLowerCase().includes(lowerQuery))
+          .slice(0, this.maxResults);
+
+        if (filteredHistory.length > 0) {
+          section.style.display = "block";
+          filteredHistory.forEach((item) => {
+            const listItem = this.createSuggestionItem(item.url, item.title);
+            searchResults.appendChild(listItem);
+          });
+        } else {
+          section.style.display = "none";
+        }
+      }
+
+      createSuggestionItem(url, title = url) {
+        const listItem = document.createElement("div");
+        const listIcon = document.createElement("i");
+        listIcon.className = "fas fa-search";
+        const listSuggestion = document.createElement("span");
+        listSuggestion.className = "suggestion-text";
+        listSuggestion.textContent = title;
+        listItem.appendChild(listIcon);
+        listItem.appendChild(listSuggestion);
+        listItem.addEventListener("click", () => {
+          const addressBar = document.getElementById("address-bar");
+          addressBar.value = url;
+          this.clearSuggestions();
+          document.getElementById("suggestion-list").style.display = "none";
+          handleSubmit();
+        });
+        return listItem;
+      }
+
+      clearSuggestions() {
+        Object.values(this.sections).forEach(({ searchResults, section }) => {
+          searchResults.innerHTML = "";
+          section.style.display = "none";
+        });
+        this.selectedSuggestionIndex = -1;
+        this.currentSectionIndex = 0;
+      }
+
+      getCurrentSuggestionItems() {
+        return Object.values(this.sections)[this.currentSectionIndex].searchResults.querySelectorAll("div");
+      }
+
+      moveToNextSection() {
+        const sectionsArray = Object.values(this.sections);
+        this.currentSectionIndex = (this.currentSectionIndex + 1) % sectionsArray.length;
+        while (sectionsArray[this.currentSectionIndex].searchResults.children.length === 0) {
+          this.currentSectionIndex = (this.currentSectionIndex + 1) % sectionsArray.length;
+        }
+        this.selectedSuggestionIndex = -1;
+        this.updateSelectedSuggestion();
+      }
+
+      moveToPreviousSection() {
+        const sectionsArray = Object.values(this.sections);
+        this.currentSectionIndex = (this.currentSectionIndex - 1 + sectionsArray.length) % sectionsArray.length;
+        while (sectionsArray[this.currentSectionIndex].searchResults.children.length === 0) {
+          this.currentSectionIndex = (this.currentSectionIndex - 1 + sectionsArray.length) % sectionsArray.length;
+        }
+        const previousSectionItems = this.getCurrentSuggestionItems();
+        this.selectedSuggestionIndex = previousSectionItems.length - 1;
+        this.updateSelectedSuggestion();
+      }
+
+      updateSelectedSuggestion() {
+        const suggestionItems = this.getCurrentSuggestionItems();
+        document.querySelectorAll(".search-results div.selected").forEach((item) => {
+          item.classList.remove("selected");
+        });
+        suggestionItems.forEach((item, index) => {
+          item.classList.toggle("selected", index === this.selectedSuggestionIndex);
+        });
+      }
+    }
+
     window.addEventListener("load", async () => {
       const root = document.getElementById("app");
 
@@ -1174,6 +1487,9 @@
       }
       switchTab(initialTab.id);
       updateTabsUI();
+
+      const search = new Search(scramjet, store);
+      search.init();
 
       document.getElementById("wisp_url_input").addEventListener("change", (e) => {
         store.wispurl = e.target.value;
