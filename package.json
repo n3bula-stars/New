@@ -24,7 +24,8 @@
     "proper-lockfile": "^4.1.2",
     "helmet": "^8.0.0",
     "express-rate-limit": "^7.4.0",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "node": "^18.20.4"
