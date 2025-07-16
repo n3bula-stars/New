@@ -47,10 +47,11 @@ app.get("/results/:query", async (req, res) => {
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
     const data = await response.json();
     const suggestions = data.map(item => ({ phrase: item.phrase })).slice(0, 8);
-    // Optionally fetch from Supabase (example: search user history or bookmarks)
+    // We can also save with account.  That's so tuff. (example: search user history or bookmarks)
+    // ;alkjsdfja;klsj;sfldkjfasl;djfadksl;jfa;slj;lafdksja;lsdf :D
     /*
     const { data, error } = await supabase
-      .from('user_history') // Ensure you have a table for history or suggestions
+      .from('user_history') 
       .select('url')
       .ilike('url', `%${query}%`)
       .limit(8);
