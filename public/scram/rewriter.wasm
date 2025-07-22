@@ -1,0 +1,17 @@
+#include <emscripten.h>
+#include <string.h>
+#include <stdlib.h>
+
+EMSCRIPTEN_KEEPALIVE
+char* rewrite(const char* input) {
+    // Simple rewriting: prepends "Rewritten: " to input
+    char* result = malloc(strlen(input) + 20);
+    strcpy(result, "Rewritten: ");
+    strcat(result, input);
+    return result;
+}
+
+EMSCRIPTEN_KEEPALIVE
+void free_memory(char* ptr) {
+    free(ptr);
+}

@@ -138,14 +138,6 @@
       ]
     },
     {
-      "label": "Resent Client",
-      "url": "/iframe.html?url=/storage/ag/g/ResentCli/iframe.html",
-      "imageUrl": "/storage/images/main/resent.jpeg",
-      "categories": [
-        "strategy"
-      ]
-    },
-    {
       "label": "Race Survival Car",
       "url": "/iframe.html?url=/storage/ag/g/racesurvival",
       "imageUrl": "/storage/ag/g/racesurvival/logo.jpeg",
@@ -525,14 +517,6 @@
       ]
     },
     {
-      "label": "Minecraft",
-      "url": "/iframe.html?url=/storage/ag/g/mc",
-      "imageUrl": "/storage/images/main/minecraft.jpg",
-      "categories": [
-        "action"
-      ]
-    },
-    {
       "label": "Eggy Car",
       "url": "/iframe.html?url=/storage/ag/g/eggycar",
       "imageUrl": "/storage/images/main/eggy.jpg",
@@ -903,14 +887,6 @@
       ]
     },
     {
-      "label": "Eaglercraft",
-      "url": "/iframe.html?url=/storage/ag/g/eaglercraft/",
-      "imageUrl": "/storage/ag/g/eaglercraft/buddyholly.jpg",
-      "categories": [
-        "action"
-      ]
-    },
-    {
       "label": "Diggy",
       "url": "/iframe.html?url=/storage/ag/g/diggy/",
       "imageUrl": "/storage/images/main/diggy.jprg..jpeg",
@@ -956,14 +932,6 @@
       "imageUrl": "/storage/ag/g/totm/splash.webp",
       "categories": [
         "skill"
-      ]
-    },
-    {
-      "label": "Paper Minecraft",
-      "url": "/iframe.html?url=/storage/ag/g/paperminecraft/Paper Minecraft v11.html",
-      "imageUrl": "/storage/ag/g/paperminecraft/IMG_5319.jpeg",
-      "categories": [
-        "action"
       ]
     },
     {
@@ -1486,14 +1454,6 @@
       "imageUrl": "/storage/images/main2/googlefeud.webp",
       "categories": [
         "skill"
-      ]
-    },
-    {
-      "label": "Minecraft Classic",
-      "url": "/iframe.html?url=/static/embed.html#https://classic.minecraft.net",
-      "imageUrl": "/storage/images/main2/mc.webp",
-      "categories": [
-        "2 player"
       ]
     },
     {

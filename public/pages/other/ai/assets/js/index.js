@@ -565,7 +565,7 @@ function regenerateResponse(regenPrompt, oldMessage, attempt = 0) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "Bearer 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"
+      "Authorization": "Bearer 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"
     },
     body: JSON.stringify(payload),
     signal: abortController.signal

@@ -41,11 +41,13 @@
         align-items: flex-start;
         height: 100vh;
         margin: 0;
-        background-color: #0A1D37;
+        background: linear-gradient(135deg, rgba(10, 29, 55, 0.9), rgba(30, 50, 90, 0.7));
         color: white;
         font-family: 'Poppins', sans-serif;
         padding: 20px 0;
         overflow: hidden;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
     }
 
     .god-rays {
@@ -53,28 +55,22 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 550px;
-        --stripes: repeating-linear-gradient(100deg, rgba(20, 40, 60, 0.8) 0%, rgba(20, 40, 60, 0.8) 7%, transparent 10%, transparent 12%, rgba(20, 40, 60, 0.8) 16%);
-        --rays: repeating-linear-gradient(100deg, rgba(30, 50, 90, 0.9) 10%, rgba(20, 40, 80, 0.9) 15%, rgba(30, 50, 90, 0.9) 20%, rgba(20, 40, 80, 0.9) 25%, rgba(30, 50, 90, 0.9) 30%);
-        background-image: var(--stripes), var(--rays);
-        background-size: 300%, 200%;
-        background-position: 50% 50%, 50% 50%;
-        animation: fadeIn 2s ease;
-        mask-image: radial-gradient(ellipse at 100% 0%, rgba(255, 255, 255, 0) 40%, transparent 70%);
-        -webkit-mask-image: radial-gradient(ellipse at 100% 0%, white 40%, transparent 70%);
+        height: 100%;
+        background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
+        animation: liquidFlow 20s ease-in-out infinite;
+        mix-blend-mode: overlay;
         pointer-events: none;
         z-index: -1;
+        box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.3);
     }
 
     .god-rays::after {
         content: "";
         position: absolute;
         inset: 0;
-        background-image: var(--stripes), var(--rays);
-        background-size: 200%, 100%;
-        animation: god-rays 40s linear infinite;
-        background-attachment: fixed;
-        mix-blend-mode: difference;
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), transparent, rgba(255, 255, 255, 0.1));
+        animation: shimmer 15s linear infinite;
+        mix-blend-mode: screen;
     }
 
     h1 {
@@ -84,7 +80,7 @@
         color: #ffffff;
         text-transform: uppercase;
         letter-spacing: 1px;
-        text-shadow: 0px 4px 10px rgba(255, 255, 255, 0.15);
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
         width: 100%;
         text-align: center;
     }
@@ -94,14 +90,16 @@
         align-items: center;
         width: 60%;
         max-width: 800px;
-        border-radius: 12px;
+        border-radius: 15px;
         overflow: hidden;
-        background-color: #1e1e2d;
+        background: rgba(255, 255, 255, 0.1);
         padding: 14px;
         position: relative;
-        box-shadow: 0 12px 35px rgba(255, 255, 255, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.2);
         margin: 0 auto;
-        border: 1px solid white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
     }
 
     .image-wrapper {
@@ -130,16 +128,17 @@
         height: 80px;
         object-fit: cover;
         margin-right: 8px;
-        border-radius: 8px;
-        border: 3px solid #ffffff;
-        box-shadow: 0 7px 20px rgba(255, 255, 255, 0.2);
-        transition: transform 0.3s, box-shadow 0.3s, filter 0.3s;
+        border-radius: 10px;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), inset 0 0 5px rgba(255, 255, 255, 0.5);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), transparent);
     }
 
     .image:hover, .image.glow {
-        transform: scale(1.08);
-        box-shadow: 0 10px 25px rgba(255, 255, 255, 0.4);
-        filter: brightness(1.2);
+        transform: scale(1.1);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.7);
+        filter: brightness(1.3) saturate(1.2);
     }
 
     .caption {
@@ -151,14 +150,16 @@
         font-size: 12px;
         font-weight: 600;
         letter-spacing: 0.5px;
-        background: linear-gradient(45deg, rgba(10, 29, 55, 0.9), rgba(40, 40, 40, 0.8));
+        background: linear-gradient(45deg, rgba(10, 29, 55, 0.7), rgba(40, 40, 40, 0.6));
         color: #ffffff;
         padding: 6px 0;
-        border-radius: 0 0 8px 8px;
-        box-shadow: 0 3px 8px rgba(255, 255, 255, 0.1);
+        border-radius: 0 0 10px 10px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
         visibility: hidden;
         opacity: 0;
         transition: opacity 0.3s ease-in-out, visibility 0s 0.3s;
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
     }
 
     .image-box:hover .caption {
@@ -168,21 +169,22 @@
     }
 
     .arrow {
-        background-color: #2a3c5f;
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(60, 91, 142, 0.7));
         border: none;
         padding: 12px 18px;
         font-size: 1.2em;
         cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         color: white;
-        border-radius: 6px;
-        box-shadow: 0 3px 7px rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4), inset 0 0 5px rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
     }
 
     .arrow:hover {
-        background-color: #3c5b8e;
         transform: scale(1.1);
-        box-shadow: 0 5px 12px rgba(255, 255, 255, 0.5);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), inset 0 0 8px rgba(255, 255, 255, 0.7);
     }
 
     .welcome-section {
@@ -194,6 +196,12 @@
         text-align: left;
         font-family: 'Poppins', sans-serif;
         z-index: 10;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
     }
 
     .welcome-section h2 {
@@ -201,32 +209,33 @@
         font-weight: 700;
         margin-bottom: 10px;
         color: #ffffff;
-        text-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
     }
 
     .welcome-section p {
         font-size: 18px;
         font-weight: 400;
-        color: #dcdcdc;
+        color: #e0e0e0;
         margin-bottom: 20px;
     }
 
     .start-btn {
-        background-color: #3c5b8e;
+        background: linear-gradient(45deg, rgba(60, 91, 142, 0.8), rgba(255, 255, 255, 0.2));
         padding: 12px 24px;
         font-size: 16px;
         color: white;
         border: none;
         border-radius: 8px;
         cursor: pointer;
-        transition: background-color 0.3s, transform 0.2s;
-        box-shadow: 0 3px 7px rgba(255, 255, 255, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4), inset 0 0 5px rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
     }
 
     .start-btn:hover {
-        background-color: #2a3c5f;
         transform: scale(1.05);
-        box-shadow: 0 5px 12px rgba(255, 255, 255, 0.4);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), inset 0 0 8px rgba(255, 255, 255, 0.7);
     }
 
     .large-image-container {
@@ -237,32 +246,35 @@
         text-align: center;
         z-index: 5;
         padding: 20px;
-        border-radius: 12px;
-        background: rgba(0, 0, 0, 0.5);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.3);
         animation: slideInFromRight 0.8s ease-out forwards;
         animation-delay: 0.4s;
         opacity: 0;
         cursor: pointer;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
     }
 
     .large-image-container:hover {
         transform: translateY(-50%) scale(1.05);
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.5);
     }
 
     .large-image {
         height: 200px;
         width: auto;
-        border: 5px solid #ffffff;
+        border: 3px solid rgba(255, 255, 255, 0.4);
         border-radius: 12px;
-        box-shadow: 0 12px 35px rgba(255, 255, 255, 0.3);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), inset 0 0 5px rgba(255, 255, 255, 0.5);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), transparent);
     }
 
     .large-image:hover {
         transform: scale(1.1);
-        box-shadow: 0 15px 40px rgba(255, 255, 255, 0.6);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.7);
     }
 
     .large-image-caption {
@@ -270,9 +282,12 @@
         color: #fff;
         font-weight: 600;
         font-size: 18px;
-        background: rgba(10, 29, 55, 0.8);
+        background: rgba(10, 29, 55, 0.7);
         padding: 8px;
         border-radius: 8px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
     }
 
     .popup {
@@ -282,26 +297,31 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.6);
         justify-content: center;
         align-items: center;
         z-index: 1000;
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
     }
 
     .popup-content {
-        background-color: #1e1e2d;
+        background: rgba(255, 255, 255, 0.1);
         padding: 20px;
-        border-radius: 10px;
+        border-radius: 12px;
         width: 300px;
         text-align: center;
         color: white;
-        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.3);
         position: relative;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
     }
 
     .popup h2 {
         font-size: 24px;
         margin-bottom: 15px;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     }
 
     .popup p {
@@ -311,16 +331,20 @@
 
     .discord-btn {
         display: inline-block;
-        background-color: #7289da;
+        background: linear-gradient(45deg, rgba(114, 137, 218, 0.8), rgba(255, 255, 255, 0.2));
         padding: 10px 20px;
         color: white;
         text-decoration: none;
         border-radius: 8px;
-        transition: background-color 0.3s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
     }
 
     .discord-btn:hover {
-        background-color: #5b6e8e;
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), inset 0 0 8px rgba(255, 255, 255, 0.7);
     }
 
     .close-btn {
@@ -330,7 +354,7 @@
         font-size: 24px;
         cursor: pointer;
         color: white;
-        background-color: #ff0000;
+        background: linear-gradient(45deg, rgba(255, 0, 0, 0.8), rgba(255, 255, 255, 0.2));
         width: 30px;
         height: 30px;
         border-radius: 50%;
@@ -338,20 +362,25 @@
         align-items: center;
         justify-content: center;
         line-height: 1;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
     }
 
     .info-box {
         position: fixed;
         bottom: 20px;
         left: 20px;
-        background-color: #1e1e2d;
+        background: rgba(255, 255, 255, 0.1);
         color: white;
         padding: 8px 12px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(255, 255, 255, 0.3);
         z-index: 999;
         font-size: 12px;
         width: 103px;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
     }
 
     .info-row {
@@ -372,22 +401,24 @@
 
     .discord-btn-two {
         display: block;
-        background-color: #3c5b8e;
+        background: linear-gradient(45deg, rgba(60, 91, 142, 0.8), rgba(255, 255, 255, 0.2));
         padding: 6px;
         color: white;
         text-decoration: none;
         border-radius: 6px;
         margin-top: 8px;
         text-align: center;
-        transition: background-color 0.3s ease;
-        font-size: 12px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
     }
 
     .discord-btn-two:hover {
-        background-color: #5b6e8e;
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), inset 0 0 8px rgba(255, 255, 255, 0.7);
     }
 
-    /* Use Font Awesome, cloudflare being annoying af */
     .battery-container {
         display: inline-flex;
         align-items: center;
@@ -400,19 +431,19 @@
     }
 
     .battery-low {
-        color: #F44336; /* Red */
+        color: #F44336;
     }
 
     .battery-medium {
-        color: #FF9800; /* Orange */
+        color: #FF9800;
     }
 
     .battery-good {
-        color: #FFEB3B; /* Yellow */
+        color: #FFEB3B;
     }
 
     .battery-full {
-        color: #4CAF50; /* Green */
+        color: #4CAF50;
     }
 
     @keyframes fadeIn {
@@ -440,6 +471,17 @@
             transform: translateX(0);
             opacity: 1;
         }
+    }
+
+    @keyframes liquidFlow {
+        0% { background-position: 0% 0%; }
+        50% { background-position: 100% 100%; }
+        100% { background-position: 0% 0%; }
+    }
+
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
     }
 
     .welcome-section {
@@ -471,72 +513,6 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WPH7NCG4"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
-
-    <!-- Blob Effect -->
-<div class="blob-container">
-  <div class="blob blob1"></div>
-  <div class="blob blob2"></div>
-  <div class="blob blob3"></div>
-</div>
-
-<!-- Inline CSS for Blob Effect -->
-<style>
-  .blob-container {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    z-index: -998;
-    width: 200px;
-    height: 200px;
-    overflow: hidden;
-  }
-
-  .blob {
-    position: absolute;
-    background: radial-gradient(circle, rgba(0, 128, 255, 0.2) 0%, rgba(0, 128, 255, 0) 70%);
-    border-radius: 50%;
-    filter: blur(50px);
-    animation: blobMove 12s ease-in-out infinite;
-  }
-
-  .blob1 {
-    width: 100px;
-    height: 100px;
-    bottom: 30px;
-    left: 20px;
-    opacity: 0.4;
-  }
-
-  .blob2 {
-    width: 80px;
-    height: 80px;
-    bottom: 50px;
-    left: 60px;
-    opacity: 0.3;
-    animation-delay: 3s;
-  }
-
-  .blob3 {
-    width: 90px;
-    height: 90px;
-    bottom: 20px;
-    left: 40px;
-    opacity: 0.35;
-    animation-delay: 6s;
-  }
-
-  @keyframes blobMove {
-    0% {
-      transform: translate(0, 0) scale(1);
-    }
-    50% {
-      transform: translate(15px, -15px) scale(1.05);
-    }
-    100% {
-      transform: translate(0, 0) scale(1);
-    }
-  }
-</style>
     
     <div class="god-rays"></div>
     <div class="welcome-section">
@@ -603,7 +579,6 @@
         <button id="next-btn" class="arrow">></button>
     </div>
 
-
     <div id="discord-popup" class="popup">
         <div class="popup-content">
             <span id="close-popup" class="close-btn">×</span>
@@ -612,7 +587,6 @@
             <a href="https://discord.gg/arcgZTV9zX" target="_blank" class="discord-btn">Join Discord</a>
         </div>
     </div>
-
 
     <div id="info-box" class="info-box">
         <div class="info-row">
@@ -815,7 +789,6 @@
             let frameCount = 0;
             let lastUpdateTime = performance.now();
 
-            // Function to update time
             function updateTime() {
                 const now = new Date();
                 const timeString = now.toLocaleTimeString([], { 
@@ -825,18 +798,14 @@
                 timeDisplay.textContent = ` ${timeString}`;
             }
 
-            // Function to update battery
             function updateBattery() {
                 if ('getBattery' in navigator) {
                     navigator.getBattery().then(function(battery) {
                         const level = battery.level * 100;
                         const percentage = Math.round(level);
-                        
-
                         batteryPercentage.textContent = `${percentage}%`;
 
-                        // this took forever
-                        batteryIcon.className = 'fas battery-icon'; // Reset classes
+                        batteryIcon.className = 'fas battery-icon';
                         if (percentage >= 90) {
                             batteryIcon.classList.add('fa-battery-full', 'battery-full');
                         } else if (percentage >= 70) {
@@ -845,8 +814,6 @@
                             batteryIcon.classList.add('fa-battery-half', 'battery-good');
                         } else if (percentage >= 30) {
                             batteryIcon.classList.add('fa-battery-quarter', 'battery-medium');
-                        } else if (percentage >= 10) {
-                            batteryIcon.classList.add('fa-battery-empty', 'battery-low');
                         } else {
                             batteryIcon.classList.add('fa-battery-empty', 'battery-low');
                         }
@@ -857,7 +824,6 @@
                 }
             }
 
-            
             function calculateFPS() {
                 frameCount++;
                 const now = performance.now();
@@ -872,12 +838,10 @@
                 requestAnimationFrame(calculateFPS);
             }
 
-            
             updateTime();
             updateBattery();
             requestAnimationFrame(calculateFPS);
 
-            
             setInterval(updateTime, 60000);   
             setInterval(updateBattery, 30000); 
         });
