@@ -1,4 +1,4 @@
 let _CONFIG = {
-  wispurl: localStorage.getItem("proxServer") || `wss://${window.location.host}/wisp/`,
+  wispurl: localStorage.getItem("proxServer") || `ws://${window.location.host}/wisp/`,
   bareurl: "/bare/",
 };

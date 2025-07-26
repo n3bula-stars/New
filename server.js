@@ -47,17 +47,6 @@ app.get("/results/:query", async (req, res) => {
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
     const data = await response.json();
     const suggestions = data.map(item => ({ phrase: item.phrase })).slice(0, 8);
-    // We can also save with account.  That's so tuff. (example: search user history or bookmarks)
-    // ;alkjsdfja;klsj;sfldkjfasl;djfadksl;jfa;slj;lafdksja;lsdf :D
-    /*
-    const { data, error } = await supabase
-      .from('user_history') 
-      .select('url')
-      .ilike('url', `%${query}%`)
-      .limit(8);
-    if (error) throw error;
-    const suggestions = data.map(item => ({ phrase: item.url }));
-    */
     return res.status(200).json(suggestions);
   } catch (error) {
     console.error("Error generating suggestions:", error.message);
@@ -66,7 +55,22 @@ app.get("/results/:query", async (req, res) => {
 });
 
 app.post("/api/signup", signupHandler);
-app.post("/api/signin", signinHandler);
+app.post("/api/signin", async (req, res) => {
+  try {
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const { email, password } = req.body;
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    req.session.user = data.user;
+    req.session.access_token = data.session.access_token;
+    await supabase
+      .from('user_logins')
+      .insert({ user_id: data.user.id, ip_address: ip });
+    return res.status(200).json({ user: data.user });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+});
 app.post("/api/signout", async (req, res) => {
   try {
     const { error } = await supabase.auth.signOut();
@@ -124,6 +128,10 @@ app.post("/api/set-session", async (req, res) => {
     if (error) throw error;
     req.session.user = data.user;
     req.session.access_token = access_token;
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    await supabase
+      .from('user_logins')
+      .insert({ user_id: data.user.id, ip_address: ip });
     return res.status(200).json({ message: "Session set successfully" });
   } catch (error) {
     return res.status(400).json({ error: error.message });
