@@ -27,8 +27,8 @@ Links- Your can visit [https://petezahgames.com](), and you can get more links i
 To host this example on your server/pc, you must run the following commands:
 
 ```bash
-git clone https://github.com/gustambolopez/proxy-example
-cd proxy-example
+git clone https://github.com/PeteZah-G/PeteZahGames
+cd PeteZahGames
 ```
 
 ### npm
