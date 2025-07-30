@@ -1,10 +1,10 @@
+
 import { createBareServer } from "@tomphttp/bare-server-node";
 import express from "express";
 import { createServer } from "node:http";
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
-import { libcurlPath } from "@mercuryworkshop/libcurl-transport";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
-import { server as wisp } from "@mercuryworkshop/wisp-js/server";
+import { server as wisp, logging } from "@mercuryworkshop/wisp-js/server";
 import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
 import path, { join } from "node:path";
 import { hostname } from "node:os";
@@ -15,8 +15,6 @@ import dotenv from "dotenv";
 import fileUpload from "express-fileupload";
 import { signupHandler } from "./server/api/signup.js";
 import { signinHandler } from "./server/api/signin.js";
-import cors from "cors";
-import fetch from "node-fetch";
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV || "production"}` });
 const __filename = fileURLToPath(import.meta.url);
@@ -27,11 +25,6 @@ const bare = createBareServer("/bare/");
 const app = express();
 const publicPath = "public";
 
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'DELETE'],
-  allowedHeaders: ['Content-Type']
-}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
@@ -40,37 +33,8 @@ app.use(express.static(publicPath));
 app.use("/petezah/", express.static(uvPath));
 app.use("/baremux/", express.static(baremuxPath));
 
-app.get("/results/:query", async (req, res) => {
-  try {
-    const query = req.params.query.toLowerCase();
-    const response = await fetch(`http://api.duckduckgo.com/ac?q=${encodeURIComponent(query)}&format=json`);
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-    const data = await response.json();
-    const suggestions = data.map(item => ({ phrase: item.phrase })).slice(0, 8);
-    return res.status(200).json(suggestions);
-  } catch (error) {
-    console.error("Error generating suggestions:", error.message);
-    return res.status(500).json({ error: "Failed to fetch suggestions" });
-  }
-});
-
 app.post("/api/signup", signupHandler);
-app.post("/api/signin", async (req, res) => {
-  try {
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    const { email, password } = req.body;
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-    req.session.user = data.user;
-    req.session.access_token = data.session.access_token;
-    await supabase
-      .from('user_logins')
-      .insert({ user_id: data.user.id, ip_address: ip });
-    return res.status(200).json({ user: data.user });
-  } catch (error) {
-    return res.status(400).json({ error: error.message });
-  }
-});
+app.post("/api/signin", signinHandler);
 app.post("/api/signout", async (req, res) => {
   try {
     const { error } = await supabase.auth.signOut();
@@ -128,10 +92,6 @@ app.post("/api/set-session", async (req, res) => {
     if (error) throw error;
     req.session.user = data.user;
     req.session.access_token = access_token;
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    await supabase
-      .from('user_logins')
-      .insert({ user_id: data.user.id, ip_address: ip });
     return res.status(200).json({ message: "Session set successfully" });
   } catch (error) {
     return res.status(400).json({ error: error.message });
@@ -168,8 +128,8 @@ app.post("/api/update-profile", async (req, res) => {
   if (!req.session.user) {
     return res.status(401).json({ error: "Unauthorized" });
   }
+  const { username, bio } = req.body;
   try {
-    const { username, bio } = req.body;
     const { error } = await supabase.auth.updateUser({
       data: { name: username, bio }
     });
@@ -183,8 +143,8 @@ app.post("/api/save-localstorage", async (req, res) => {
   if (!req.session.user) {
     return res.status(401).json({ error: "Unauthorized" });
   }
+  const { data } = req.body;
   try {
-    const { data } = req.body;
     const { error } = await supabase
       .from('user_settings')
       .upsert({ user_id: req.session.user.id, localstorage_data: data }, { onConflict: 'user_id' });
@@ -227,14 +187,14 @@ app.post("/api/link-account", async (req, res) => {
   if (!req.session.user) {
     return res.status(401).json({ error: "Unauthorized" });
   }
+  const { provider } = req.body;
+  const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
+  const host = req.headers.host;
+  if (!host) {
+    return res.status(400).json({ error: "Host header missing" });
+  }
+  const redirectTo = `${protocol}://${host}/auth/callback`;
   try {
-    const { provider } = req.body;
-    const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
-    const host = req.headers.host;
-    if (!host) {
-      return res.status(400).json({ error: "Host header missing" });
-    }
-    const redirectTo = `${protocol}://${host}/auth/callback`;
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
       options: { redirectTo, skipBrowserRedirect: true }
