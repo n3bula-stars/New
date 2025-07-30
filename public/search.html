@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,7 +10,7 @@
   <link rel="prefetch" href="/scram/scramjet.worker.js" />
   <link rel="prefetch" href="/scram/scramjet.shared.js" />
   <link
-    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&display=swap&"
     rel="stylesheet" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,13 +24,6 @@
     integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-  <script src="/petezah/bundle.js" defer></script>
-  <script src="/petezah/config.js" defer></script>
-  <script src="/petezah/rizz.sw.js" defer></script>
-  <script src="/petezah/sw.js" defer></script>
-  <script src="/petezah/handler.js" defer></script>
-  <script src="/baremux/index.js"></script>
-  <script src="/scram/scramjet.controller.js"></script>
   <style>
     body,
     html,
@@ -67,10 +60,12 @@
     }
 
     @keyframes pulse {
+
       0%,
       100% {
         transform: scale(1);
       }
+
       50% {
         transform: scale(1.05);
       }
@@ -81,6 +76,7 @@
         transform: translateX(-20px);
         opacity: 0;
       }
+
       to {
         transform: translateX(0);
         opacity: 1;
@@ -808,6 +804,9 @@
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/dreamland"></script>
+  <script src="/baremux/index.js"></script>
+  <script src="/scram/scramjet.controller.js"></script>
+  <script src="config.js"></script>
 </head>
 
 <body>
@@ -824,55 +823,53 @@
     });
 
     scramjet.init();
-    navigator.serviceWorker.register("/petezah/sw.js");
+    navigator.serviceWorker.register("./sw.js");
 
     const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
 
     const store = {
       url: "https://",
-      wispurl: _CONFIG?.wispurl || (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/",
-      bareurl: _CONFIG?.bareurl || (location.protocol === "https:" ? "https" : "http") + "://" + location.host + "/bare/",
-      proxy: localStorage.getItem("proxy") || "ultraviolet",
+      wispurl:
+        _CONFIG?.wispurl ||
+        (location.protocol === "https:" ? "wss" : "ws") +
+        "://" +
+        location.host +
+        "/wisp/",
+      bareurl:
+        _CONFIG?.bareurl ||
+        (location.protocol === "https:" ? "https" : "http") +
+        "://" +
+        location.host +
+        "/bare/",
+      proxy: "",
       theme: "dark",
-      homepage: localStorage.getItem("proxy") === "scramjet" ? "/newpage.html" : "/static/index.html",
+      homepage: "petezah://newtab",
       history: JSON.parse(localStorage.getItem("browserHistory") || "[]"),
       zoomLevel: 1,
     };
+
+    connection.setTransport("/epoxy/index.mjs", [{ wisp: store.wispurl }]);
 
     let tabs = [];
     let activeTabId = 1;
     let nextTabId = 2;
     let sortableInstance = null;
 
-    function setProxy(proxy) {
-      store.proxy = proxy;
-      localStorage.setItem("proxy", proxy);
-      store.homepage = proxy === "scramjet" ? "/newpage.html" : "/static/index.html";
-      document.getElementById("homepage_input").value = store.homepage;
-      if (proxy === "scramjet") {
-        connection.setTransport("/epoxy/index.mjs", [{ wisp: store.wispurl }]);
-      }
-      // Close all tabs and open a new one with the updated homepage
-      closeAllTabs();
-    }
-
     function getFaviconUrl(url) {
       try {
         const domain = new URL(url).origin;
-        return `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(domain)}`;
+        return `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(
+          domain
+        )}`;
       } catch {
-        return `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(url)}`;
+        return `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(
+          url
+        )}`;
       }
     }
 
     function createTab(url = store.homepage) {
-      let frame;
-      if (store.proxy === "scramjet") {
-        frame = scramjet.createFrame();
-      } else {
-        frame = { frame: document.createElement("iframe"), go: (newUrl) => frame.frame.src = newUrl };
-      }
-
+      const frame = scramjet.createFrame();
       const tab = {
         id: nextTabId++,
         title: "New Tab",
@@ -882,58 +879,34 @@
         zoomLevel: store.zoomLevel,
       };
 
-      if (store.proxy === "scramjet") {
-        frame.frame.src = url === "/newpage.html" ? url : url;
-        frame.frame.style.transform = `scale(${tab.zoomLevel})`;
-        frame.frame.style.transformOrigin = "0 0";
-        frame.frame.style.width = `${100 / tab.zoomLevel}%`;
-        frame.frame.style.height = `${100 / tab.zoomLevel}%`;
+      frame.frame.src = url === "petezah://newtab" ? "/newpage.html" : url;
+      frame.frame.style.transform = `scale(${tab.zoomLevel})`;
+      frame.frame.style.transformOrigin = "0 0";
+      frame.frame.style.width = `${100 / tab.zoomLevel}%`;
+      frame.frame.style.height = `${100 / tab.zoomLevel}%`;
 
-        frame.addEventListener("urlchange", (e) => {
-          if (!e.url) return;
-          tab.url = e.url;
-          tab.favicon = getFaviconUrl(e.url);
+      frame.addEventListener("urlchange", (e) => {
+        if (!e.url) return;
+        tab.url = e.url;
+        tab.favicon = getFaviconUrl(e.url);
 
-          try {
-            const title = frame.frame.contentWindow?.document?.title || new URL(e.url).hostname;
-            tab.title = title || "...";
-          } catch (err) {
-            tab.title = new URL(e.url).hostname || "...";
-          }
+        try {
+          const title =
+            frame.frame.contentWindow?.document?.title ||
+            new URL(e.url).hostname;
+          tab.title = title || "...";
+        } catch (err) {
+          tab.title = new URL(e.url).hostname || "...";
+        }
 
-          if (e.url !== "/newpage.html") {
-            store.history.push({ url: e.url, title: tab.title, timestamp: new Date() });
-            localStorage.setItem("browserHistory", JSON.stringify(store.history));
-          }
+        if (e.url !== "petezah://newtab") {
+          store.history.push({ url: e.url, title: tab.title, timestamp: new Date() });
+          localStorage.setItem("browserHistory", JSON.stringify(store.history));
+        }
 
-          updateTabsUI();
-          updateAddressBar();
-        });
-      } else {
-        frame.frame.src = url === "/static/index.html" ? url : __uv$config.prefix + __uv$config.encodeUrl(url);
-        frame.frame.style.transform = `scale(${tab.zoomLevel})`;
-        frame.frame.style.transformOrigin = "0 0";
-        frame.frame.style.width = `${100 / tab.zoomLevel}%`;
-        frame.frame.style.height = `${100 / tab.zoomLevel}%`;
-
-        frame.frame.addEventListener("load", () => {
-          try {
-            const title = frame.frame.contentDocument?.title || new URL(url).hostname;
-            tab.title = title || "...";
-            tab.favicon = getFaviconUrl(url);
-          } catch (err) {
-            tab.title = new URL(url).hostname || "...";
-          }
-
-          if (url !== "/static/index.html") {
-            store.history.push({ url: url, title: tab.title, timestamp: new Date() });
-            localStorage.setItem("browserHistory", JSON.stringify(store.history));
-          }
-
-          updateTabsUI();
-          updateAddressBar();
-        });
-      }
+        updateTabsUI();
+        updateAddressBar();
+      });
 
       tabs.push(tab);
       return tab;
@@ -970,7 +943,7 @@
         tab.frame.frame.parentNode.removeChild(tab.frame.frame);
       }
 
-      if (store.proxy === "scramjet" && tab.frame && typeof tab.frame.destroy === "function") {
+      if (tab.frame && typeof tab.frame.destroy === "function") {
         try {
           tab.frame.destroy();
         } catch (e) {
@@ -1062,9 +1035,11 @@
         dragClass: "sortable-drag",
         filter: ".new-tab",
         onStart: () => {
-          tabsContainer.querySelectorAll(".tab:not(.sortable-ghost)").forEach((t) => {
-            t.style.opacity = "0.5";
-          });
+          tabsContainer
+            .querySelectorAll(".tab:not(.sortable-ghost)")
+            .forEach((t) => {
+              t.style.opacity = "0.5";
+            });
         },
         onEnd: (evt) => {
           tabsContainer.querySelectorAll(".tab").forEach((t) => {
@@ -1083,7 +1058,7 @@
       const addressBar = document.getElementById("address-bar");
       const activeTab = getActiveTab();
       if (addressBar && activeTab) {
-        addressBar.value = activeTab.url.replace(/^https?:\/\//, "");
+        addressBar.value = activeTab.url;
       }
     }
 
@@ -1093,26 +1068,16 @@
       if (!activeTab || !addressBar) return;
 
       let url = addressBar.value.trim();
-      const isAUrl = url.includes(".");
 
-      if (isAUrl) {
-        if (!url.startsWith("http://") && !url.startsWith("https://")) {
-          url = "https://" + url;
-        }
-      } else {
+      if (!url.startsWith("http") && !url.includes(".")) {
         url = "https://duckduckgo.com/?q=" + encodeURIComponent(url);
+      } else if (!url.startsWith("http") && !url.startsWith("petezah://")) {
+        url = "https://" + url;
       }
 
       activeTab.url = url;
       activeTab.favicon = getFaviconUrl(url);
-
-      if (store.proxy === "scramjet") {
-        activeTab.frame.go(url);
-      } else {
-        navigator.serviceWorker.register("/petezah/sw.js", { scope: __uv$config.prefix }).then(() => {
-          activeTab.frame.go(__uv$config.prefix + __uv$config.encodeUrl(url));
-        });
-      }
+      return activeTab.frame.go(url);
     }
 
     function showConfig() {
@@ -1138,7 +1103,7 @@
         if (tab.frame && tab.frame.frame && tab.frame.frame.parentNode) {
           tab.frame.frame.parentNode.removeChild(tab.frame.frame);
         }
-        if (store.proxy === "scramjet" && tab.frame && typeof tab.frame.destroy === "function") {
+        if (tab.frame && typeof tab.frame.destroy === "function") {
           tab.frame.destroy();
         }
       });
@@ -1205,7 +1170,8 @@
     }
 
     class Search {
-      constructor(store) {
+      constructor(scramjet, store) {
+        this.scramjet = scramjet;
         this.store = store;
         this.currentSectionIndex = 0;
         this.maxResults = 8;
@@ -1237,7 +1203,8 @@
             return;
           }
 
-          const suggestions = await this.generateSuggestions(query);
+          let cleanedQuery = query.replace(/^(petezah:\/\/|petezah:\/|petezah:)/, "");
+          const suggestions = await this.generateSuggestions(cleanedQuery);
           this.clearSuggestions();
           this.populateSections(suggestions, query);
         });
@@ -1301,16 +1268,6 @@
             suggestionList.style.display = "none";
             this.clearSuggestions();
           }
-        });
-
-        addressBar.addEventListener("focus", function () {
-          if (this.value && this.value.indexOf(".") !== -1) {
-            this.value = "https://" + this.value;
-          }
-        });
-
-        addressBar.addEventListener("blur", function () {
-          this.value = this.value.replace(/^https?:\/\//, "");
         });
       }
 
@@ -1464,16 +1421,10 @@
                 <label for="homepage_input">Homepage:</label>
                 <input id="homepage_input" value="${store.homepage}" spellcheck="false">
               </div>
-              <div class="flex col input_row">
-                <label for="proxy_select">Proxy:</label>
-                <select id="proxy_select">
-                  <option value="ultraviolet" ${store.proxy === "ultraviolet" ? "selected" : ""}>Ultraviolet</option>
-                  <option value="scramjet" ${store.proxy === "scramjet" ? "selected" : ""}>Scramjet</option>
-                </select>
-              </div>
               <div class="flex buttons">
-                <button onclick="setProxy('ultraviolet')">Use Ultraviolet</button>
-                <button onclick="setProxy('scramjet')">Use Scramjet</button>
+                <button onclick="connection.setTransport('/epoxy/index.mjs', [{ wisp: store.wispurl }])">Use Epoxy</button>
+                <button style="display:none;" onclick="connection.setTransport('/baremod/index.mjs', [store.bareurl])">Use Bare Server 3</button>
+                <button style="display:none;" onclick="connection.setTransport('/libcurl/index.mjs', [{ wisp: store.wispurl }])">Use libcurl.js</button>
               </div>
               <div class="flex buttons centered">
                 <button onclick="closeConfig()">x</button>
@@ -1493,12 +1444,12 @@
 
             <div class="flex nav">
               <button onclick="showConfig()" title="Settings"><i class="fas fa-cog"></i></button>
-              <button onclick="store.proxy === 'scramjet' ? getActiveTab()?.frame.back() : getActiveTab()?.frame.frame.contentWindow.history.back()" title="Back"><i class="fas fa-chevron-left"></i></button>
-              <button onclick="store.proxy === 'scramjet' ? getActiveTab()?.frame.forward() : getActiveTab()?.frame.frame.contentWindow.history.forward()" title="Forward"><i class="fas fa-chevron-right"></i></button>
-              <button onclick="store.proxy === 'scramjet' ? getActiveTab()?.frame.reload() : getActiveTab()?.frame.frame.contentWindow.location.reload()" title="Reload"><i class="fas fa-rotate-right"></i></button>
+              <button onclick="getActiveTab()?.frame.back()" title="Back"><i class="fas fa-chevron-left"></i></button>
+              <button onclick="getActiveTab()?.frame.forward()" title="Forward"><i class="fas fa-chevron-right"></i></button>
+              <button onclick="getActiveTab()?.frame.reload()" title="Reload"><i class="fas fa-rotate-right"></i></button>
               <input class="bar" id="address-bar" autocomplete="off" autocapitalize="off" autocorrect="off"
                 onkeyup="event.keyCode === 13 && handleSubmit()" placeholder="Enter URL or search query">
-              <button onclick="window.open(store.proxy === 'scramjet' ? scramjet.encodeUrl(getActiveTab()?.url) : __uv$config.prefix + __uv$config.encodeUrl(getActiveTab()?.url))" title="Open in new window"><i class="fas fa-arrow-up-right-from-square"></i></button>
+              <button onclick="window.open(scramjet.encodeUrl(getActiveTab()?.url))" title="Open in new window"><i class="fas fa-arrow-up-right-from-square"></i></button>
               <button class="menu-btn" onclick="toggleMenu()" title="Menu"><i class="fas fa-ellipsis-v"></i></button>
               <div class="menu-dropdown" id="menu-dropdown">
                 <button onclick="createTab(); document.getElementById('iframe-container').appendChild(tabs[tabs.length-1].frame.frame); switchTab(tabs[tabs.length-1].id); toggleMenu()">
@@ -1538,7 +1489,7 @@
       switchTab(initialTab.id);
       updateTabsUI();
 
-      const search = new Search(store);
+      const search = new Search(scramjet, store);
       search.init();
 
       document.getElementById("wisp_url_input").addEventListener("change", (e) => {
@@ -1549,10 +1500,6 @@
       });
       document.getElementById("homepage_input").addEventListener("change", (e) => {
         store.homepage = e.target.value;
-      });
-
-      document.getElementById("proxy_select").addEventListener("change", (e) => {
-        setProxy(e.target.value);
       });
 
       document.addEventListener("click", (e) => {
@@ -1573,7 +1520,9 @@
           }
           return btoa(binary);
         }
-        const arraybuffer = await (await fetch("/assets/scramjet.png")).arrayBuffer();
+        const arraybuffer = await (
+          await fetch("/assets/scramjet.png")
+        ).arrayBuffer();
         console.log(
           "%cb",
           `
@@ -1586,10 +1535,10 @@
               background-repeat: no-repeat;
           `
         );
-      } catch (e) {}
+      } catch (e) {
+      }
     });
   </script>
 </body>
 
 </html>
-```
