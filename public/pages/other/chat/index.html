@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            background: #0A1D37;
+            color: #E6E6FA;
+            overflow: hidden;
+        }
+        .god-rays {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 550px;
+            --stripes: repeating-linear-gradient(100deg, rgba(20, 40, 60, 0.8) 0%, rgba(20, 40, 60, 0.8) 7%, transparent 10%, transparent 12%, rgba(20, 40, 60, 0.8) 16%);
+            --rays: repeating-linear-gradient(100deg, rgba(30, 50, 90, 0.9) 10%, rgba(20, 40, 80, 0.9) 15%, rgba(30, 50, 90, 0.9) 20%, rgba(20, 40, 80, 0.9) 25%, rgba(30, 50, 90, 0.9) 30%);
+            background-image: var(--stripes), var(--rays);
+            background-size: 300%, 200%;
+            background-position: 50% 50%, 50% 50%;
+            animation: fadeIn 2s ease;
+            mask-image: radial-gradient(ellipse at 100% 0%, rgba(255, 255, 255, 0) 40%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at 100% 0%, white 40%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        .god-rays::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: var(--stripes), var(--rays);
+            background-size: 200%, 100%;
+            animation: god-rays 40s linear infinite;
+            background-attachment: fixed;
+            mix-blend-mode: difference;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes god-rays {
+            0% { background-position: 0% 0%, 0% 0%; }
+            100% { background-position: 300% 300%, 200% 200%; }
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .sidebar {
+            width: 250px;
+            background: rgba(10, 29, 55, 0.95);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .sidebar button {
+            background: none;
+            border: none;
+            color: #E6E6FA;
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #1E3A8A, #3B82F6);
+        }
+        .sidebar button:hover {
+            background: linear-gradient(45deg, #2563EB, #60A5FA);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+        }
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            background: rgba(10, 29, 55, 0.95);
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: rgba(8, 24, 45, 0.95);
+        }
+        .message {
+            margin: 10px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #1E3A8A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .message-content {
+            background: #1E3A8A;
+            padding: 10px 15px;
+            border-radius: 8px;
+            max-width: 70%;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .message-content:hover {
+            background: #2563EB;
+            transform: translateX(5px);
+        }
+        .input-area {
+            background: rgba(10, 29, 55, 0.95);
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .input-area input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #1E3A8A;
+            color: #E6E6FA;
+            transition: all 0.3s ease;
+        }
+        .input-area input:focus {
+            outline: none;
+            background: #2563EB;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+        .input-area button {
+            background: linear-gradient(45deg, #1E3A8A, #3B82F6);
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .input-area button:hover {
+            background: linear-gradient(45deg, #2563EB, #60A5FA);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+        }
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .popup-content {
+            background: #0A1D37;
+            padding: 30px;
+            border-radius: 12px;
+            width: 400px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #E6E6FA;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .close-btn:hover {
+            color: #EF4444;
+            transform: scale(1.2);
+        }
+        .popup-content input, .popup-content select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            background: #1E3A8A;
+            color: #E6E6FA;
+            transition: all 0.3s ease;
+        }
+        .popup-content input:focus, .popup-content select:focus {
+            outline: none;
+            background: #2563EB;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+        .popup-content button {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(45deg, #1E3A8A, #3B82F6);
+            border: none;
+            border-radius: 8px;
+            color: #E6E6FA;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .popup-content button:hover {
+            background: linear-gradient(45deg, #2563EB, #60A5FA);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+        }
+        .emoji-picker {
+            background: #0A1D37;
+            padding: 10px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            position: absolute;
+            bottom: 60px;
+            left: 10px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .emoji-picker span {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .emoji-picker span:hover {
+            background: #2563EB;
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="god-rays"></div>
+    <div id="login-popup" class="popup">
+        <div class="popup-content">
+            <button class="close-btn">✕</button>
+            <h2>Login</h2>
+            <button id="google-login">🔒 Login with Google</button>
+        </div>
+    </div>
+    <div id="username-popup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <button class="close-btn">✕</button>
+            <h2>Choose Username and Avatar</h2>
+            <input type="text" id="username-input" placeholder="Enter username">
+            <select id="avatar-select">
+                <option value="😀">😀</option>
+                <option value="😺">😺</option>
+                <option value="🦁">🦁</option>
+                <option value="🦄">🦄</option>
+                <option value="🐸">🐸</option>
+                <option value="🐼">🐼</option>
+            </select>
+            <button id="submit-username">✅ Submit</button>
+        </div>
+    </div>
+    <div id="group-chat-popup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <button class="close-btn">✕</button>
+            <h2>Create Group Chat</h2>
+            <input type="text" id="group-name" placeholder="Group name">
+            <select id="group-members" multiple>
+            </select>
+            <button id="create-group">✅ Create</button>
+        </div>
+    </div>
+    <div class="container" style="display: none;">
+        <div class="sidebar">
+            <button id="new-dm">💬 New DM</button>
+            <button id="new-group">👥 New Group</button>
+            <button id="logout">🚪 Logout</button>
+        </div>
+        <div class="main">
+            <div class="chat-header">
+                <h2 id="chat-title">General Chat</h2>
+            </div>
+            <div class="chat-area" id="chat-area">
+            </div>
+            <div class="input-area">
+                <input type="text" id="message-input" placeholder="Type a message...">
+                <button id="emoji-btn">😊</button>
+                <div id="emoji-picker" class="emoji-picker" style="display: none;">
+                    <span>😀</span><span>😂</span><span>😍</span><span>😎</span><span>😊</span><span>👍</span>
+                    <span>❤️</span><span>🔥</span><span>🎉</span><span>🌟</span><span>🐱</span><span>🚀</span>
+                </div>
+                <button id="send-btn">➤</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const socket = new WebSocket('ws://' + window.location.host + '/wisp/');
+        let currentUser = null;
+        let currentChatId = 'general';
+        let currentChatType = 'public';
+        const usernames = new Set();
+        const avatars = new Map();
+        const badWords = [];
+        let isAdmin = false;
+
+        fetch('https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/en')
+            .then(res => res.text())
+            .then(data => badWords.push(...data.split('\n').filter(word => word.trim())));
+
+        function filterMessage(text) {
+            let filtered = text;
+            badWords.forEach(word => {
+                const regex = new RegExp(`\\b${word}\\b`, 'gi');
+                filtered = filtered.replace(regex, '*'.repeat(word.length));
+            });
+            return filtered;
+        }
+
+        document.getElementById('google-login').addEventListener('click', async () => {
+            const res = await fetch('/api/signin/oauth', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ provider: 'google' })
+            });
+            const { url } = await res.json();
+            window.location.href = url;
+        });
+
+        if (window.location.pathname === '/auth/callback') {
+            const params = new URLSearchParams(window.location.search);
+            const access_token = params.get('access_token');
+            const refresh_token = params.get('refresh_token');
+            if (access_token && refresh_token) {
+                fetch('/api/set-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ access_token, refresh_token })
+                }).then(res => res.json()).then(data => {
+                    if (data.message === 'Session set successfully') {
+                        isAdmin = data.user.email === 'petezahgames@gmail.com';
+                        document.getElementById('login-popup').style.display = 'none';
+                        document.getElementById('username-popup').style.display = 'flex';
+                    }
+                });
+            }
+        }
+
+        document.getElementById('submit-username').addEventListener('click', () => {
+            const username = document.getElementById('username-input').value.trim();
+            const avatar = document.getElementById('avatar-select').value;
+            if (username && !usernames.has(username)) {
+                socket.send(JSON.stringify({
+                    type: 'register',
+                    username,
+                    avatar,
+                    admin: isAdmin
+                }));
+            } else {
+                const error = document.createElement('p');
+                error.textContent = 'Username taken or invalid';
+                error.style.color = '#EF4444';
+                document.querySelector('#username-popup .popup-content').appendChild(error);
+                setTimeout(() => error.remove(), 3000);
+            }
+        });
+
+        document.getElementById('new-dm').addEventListener('click', () => {
+            const select = document.getElementById('group-members');
+            select.innerHTML = '';
+            usernames.forEach(user => {
+                if (user !== currentUser) {
+                    const option = document.createElement('option');
+                    option.value = user;
+                    option.textContent = user;
+                    select.appendChild(option);
+                }
+            });
+            document.getElementById('group-chat-popup').style.display = 'flex';
+            document.getElementById('group-name').style.display = 'none';
+            document.getElementById('create-group').onclick = () => {
+                const recipient = select.value;
+                if (recipient) {
+                    socket.send(JSON.stringify({
+                        type: 'start-dm',
+                        recipient
+                    }));
+                    document.getElementById('group-chat-popup').style.display = 'none';
+                }
+            };
+        });
+
+        document.getElementById('new-group').addEventListener('click', () => {
+            const select = document.getElementById('group-members');
+            select.innerHTML = '';
+            usernames.forEach(user => {
+                if (user !== currentUser) {
+                    const option = document.createElement('option');
+                    option.value = user;
+                    option.textContent = user;
+                    select.appendChild(option);
+                }
+            });
+            document.getElementById('group-chat-popup').style.display = 'flex';
+            document.getElementById('group-name').style.display = 'block';
+            document.getElementById('create-group').onclick = () => {
+                const groupName = document.getElementById('group-name').value.trim();
+                const members = Array.from(select.selectedOptions).map(opt => opt.value);
+                if (groupName && members.length > 0) {
+                    socket.send(JSON.stringify({
+                        type: 'create-group',
+                        groupName,
+                        members: [currentUser, ...members]
+                    }));
+                    document.getElementById('group-chat-popup').style.display = 'none';
+                }
+            };
+        });
+
+        document.getElementById('logout').addEventListener('click', () => {
+            fetch('/api/signout', { method: 'POST' }).then(() => {
+                socket.close();
+                window.location.reload();
+            });
+        });
+
+        document.getElementById('emoji-btn').addEventListener('click', () => {
+            const picker = document.getElementById('emoji-picker');
+            picker.style.display = picker.style.display === 'none' ? 'grid' : 'none';
+        });
+
+        document.querySelectorAll('.emoji-picker span').forEach(span => {
+            span.addEventListener('click', () => {
+                document.getElementById('message-input').value += span.textContent;
+                document.getElementById('emoji-picker').style.display = 'none';
+            });
+        });
+
+        document.getElementById('send-btn').addEventListener('click', () => {
+            const input = document.getElementById('message-input');
+            const message = filterMessage(input.value.trim());
+            if (message) {
+                socket.send(JSON.stringify({
+                    type: 'message',
+                    chatId: currentChatId,
+                    chatType: currentChatType,
+                    content: message,
+                    sender: currentUser
+                }));
+                input.value = '';
+            }
+        });
+
+        document.getElementById('message-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('send-btn').click();
+            }
+        });
+
+        document.querySelectorAll('.close-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.closest('.popup').style.display = 'none';
+            });
+        });
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'register') {
+                currentUser = data.username;
+                usernames.add(data.username);
+                avatars.set(data.username, data.avatar);
+                document.getElementById('username-popup').style.display = 'none';
+                document.querySelector('.container').style.display = 'flex';
+                data.existingUsers.forEach(user => {
+                    usernames.add(user.username);
+                    avatars.set(user.username, user.avatar);
+                });
+            } else if (data.type === 'message') {
+                const chatArea = document.getElementById('chat-area');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message';
+                messageDiv.innerHTML = `
+                    <div class="avatar">${avatars.get(data.sender)}</div>
+                    <div class="message-content">
+                        <strong>${data.sender}</strong>: ${data.content}
+                    </div>
+                `;
+                chatArea.appendChild(messageDiv);
+                chatArea.scrollTop = chatArea.scrollHeight;
+            } else if (data.type === 'start-dm') {
+                currentChatId = data.chatId;
+                currentChatType = 'dm';
+                document.getElementById('chat-title').textContent = `DM with ${data.recipient}`;
+                document.getElementById('chat-area').innerHTML = '';
+            } else if (data.type === 'create-group') {
+                currentChatId = data.chatId;
+                currentChatType = 'group';
+                document.getElementById('chat-title').textContent = data.groupName;
+                document.getElementById('chat-area').innerHTML = '';
+            } else if (data.type === 'user-joined') {
+                usernames.add(data.username);
+                avatars.set(data.username, data.avatar);
+            }
+        };
+
+        socket.onclose = () => {
+            const popup = document.createElement('div');
+            popup.className = 'popup';
+            popup.innerHTML = `
+                <div class="popup-content">
+                    <h2>Connection Lost</h2>
+                    <button onclick="window.location.reload()">🔄 Reconnect</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+        };
+    </script>
+</body>
+</html>
