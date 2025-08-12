@@ -3,248 +3,112 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PeteZah | Settings</title>
-  <link rel="icon" type="image/x-icon" href="/storage/images/logo-png-removebg-preview.png" />
-  <meta name="description" content="Pete Zah, game on" />
-  <link rel="stylesheet" type="text/css" href="/storage/css/themes.css">
-  <meta name="keywords" content="Proxy, Unblocker, Pete Zah Unblocker, Pete Zah Games, Pete Zah" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>PeteZah OAuth | Login</title>
+  <link rel="icon" type="image/x-icon" href="/storage/images/logo-png-removebg-preview.png">
+  <meta name="description" content="Pete Zah, game on">
+  <link rel="stylesheet" href="/storage/css/themes.css">
+  <meta name="keywords" content="Proxy, Unblocker, Pete Zah Unblocker, Pete Zah Games, Pete Zah">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      background: #0A1D37; 
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Poppins', sans-serif;
-      color: #fff;
-      margin: 0;
-      padding: 1rem;
-      box-sizing: border-box;
+    body { background: #0A1D37; min-height: 100vh; display: flex; justify-content: center; align-items: center; font-family: 'Roboto', sans-serif; color: #fff; margin: 0; padding: 1rem; }
+    .main-card { background: linear-gradient(135deg, #111117, #182129); border-radius: 24px; width: 100%; max-width: 440px; height: 500px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 12px 25px rgba(0,0,0,0.7); border: 1px solid #3a4a5a; }
+    .left-panel { height: 160px; background-image: url('bg_alt.jpeg'); background-size: cover; background-position: center; }
+    .right-panel { padding: 2rem; display: flex; flex-direction: column; justify-content: center; }
+    .header { text-align: left; margin-bottom: 1rem; }
+    .brand { display: flex; align-items: center; gap: 0.5rem; font-size: 1rem; font-weight: 500; color: #fff; margin-bottom: 1rem; }
+    .moon-icon { width: 18px; height: 18px; background: #fff; border-radius: 50%; position: relative; }
+    .moon-icon::after { content: ''; position: absolute; top: 3px; right: 3px; width: 12px; height: 12px; background: #1e1e2d; border-radius: 50%; }
+    .welcome-title { font-size: 1.75rem; font-weight: 600; margin: 0 0 0.25rem 0; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+    .welcome-subtitle { color: #99aabb; font-size: 0.9rem; margin: 0 0 1rem 0; }
+    .form-group { margin-bottom: 1rem; }
+    .form-label { display: block; color: #ccddee; font-size: 0.85rem; margin-bottom: 0.25rem; font-weight: 500; }
+    .form-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid #445566; color: #fff; padding: 0.5rem 0; font-size: 0.95rem; outline: none; transition: border-color 0.3s ease; }
+    .form-input:focus { border-bottom-color: #fff; box-shadow: 0 2px 5px rgba(255,255,255,0.1); }
+    .form-input::placeholder { color: #667788; }
+    .form-options { display: flex; justify-content: space-between; align-items: center; margin: 1rem 0; font-size: 0.85rem; }
+    .remember-me { display: flex; align-items: center; gap: 0.25rem; color: #ccddee; }
+    .remember-me input { width: 16px; height: 16px; appearance: none; background: #334455; border: 2px solid #556677; border-radius: 50%; cursor: pointer; position: relative; }
+    .remember-me input:checked { background: linear-gradient(135deg, #667788, #8899aa); }
+    .remember-me input:checked::after { content: '✔'; color: #fff; font-size: 0.9rem; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .signup-link { color: #ccddee; text-decoration: none; transition: color 0.3s ease; }
+    .signup-link:hover { color: #fff; }
+    .sign-in-btn { width: 100%; background: linear-gradient(135deg, #fff, #f0f0f0); color: #0A1D37; border: none; padding: 0.75rem; border-radius: 16px; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; margin-bottom: 0.75rem; }
+    .sign-in-btn:hover { background: linear-gradient(135deg, #f0f0f0, #ddd); transform: translateY(-2px) scale(1.02); box-shadow: 0 5px 15px rgba(255,255,255,0.3); }
+    .oauth-btn { flex: 1; background: linear-gradient(135deg, #2a3a4a, #334455); color: #fff; border: 1px solid #445566; padding: 0.75rem; border-radius: 12px; font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease; margin: 0 0rem; display: flex; align-items: center; justify-content: center; gap: 0.3rem; }
+    .oauth-btn:hover { border-color: #667788; background: linear-gradient(135deg, #334455, #445566); transform: translateY(-2px) scale(1.02); box-shadow: 0 4px 12px rgba(255,255,255,0.25); }
+    .oauth-container { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+    @media (max-width: 768px) { .main-card { max-width: 400px; height: 480px; } .left-panel { height: 140px; } .right-panel { padding: 1.5rem; } .oauth-container { flex-direction: column; } .oauth-btn { width: 100%; margin: 0 0 0.5rem 0; } }
+  </style>
+  <style>
+    .god-rays {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 550px;
+        --stripes: repeating-linear-gradient(100deg, rgba(20, 40, 60, 0.8) 0%, rgba(20, 40, 60, 0.8) 7%, transparent 10%, transparent 12%, rgba(20, 40, 60, 0.8) 16%);
+        --rays: repeating-linear-gradient(100deg, rgba(30, 50, 90, 0.9) 10%, rgba(20, 40, 80, 0.9) 15%, rgba(30, 50, 90, 0.9) 20%, rgba(20, 40, 80, 0.9) 25%, rgba(30, 50, 90, 0.9) 30%);
+        background-image: var(--stripes), var(--rays);
+        background-size: 300%, 200%;
+        background-position: 50% 50%, 50% 50%;
+        animation: fadeIn 2s ease;
+        mask-image: radial-gradient(ellipse at 100% 0%, rgba(255, 255, 255, 0) 40%, transparent 70%);
+        -webkit-mask-image: radial-gradient(ellipse at 100% 0%, white 40%, transparent 70%);
+        pointer-events: none;
+        z-index: -1;
     }
-    .card {
-      background: rgba(17, 24, 39, 0.95);
-      border: 1px solid #ffffff;
-      border-radius: 1rem;
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-      padding: 2rem;
-      width: 100%;
-      max-width: 700px;
-      backdrop-filter: blur(10px);
-      transition: transform 0.3s ease;
-    }
-    .card:hover {
-      transform: translateY(-3px);
-    }
-    .btn {
-      transition: all 0.3s ease;
-      background: #2563eb;
-      border: 1px solid #60a5fa;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      font-size: 1.1rem;
-    }
-    .btn:hover {
-      background: #1e40af;
-      transform: translateY(-2px);
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
-    }
-    .oauth-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      background: #1f2937;
-      border: 1px solid #4b5563;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-    }
-    .oauth-btn:hover {
-      background: #374151;
-      border-color: #60a5fa;
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
-    }
-    .oauth-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-    }
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin: 2rem 0;
-    }
-    .divider::before, .divider::after {
-      content: '';
-      flex: 1;
-      border-bottom: 1px solid #4b5563;
-    }
-    input {
-      background: #1f2937;
-      border: 1px solid #4b5563;
-      color: #e5e7eb;
-      padding: 0.75rem 1.5rem; 
-      border-radius: 0.5rem;
-      font-size: 1rem; 
-      width: 100%;
-      height: 40px;
-      box-sizing: border-box;
-      transition: all 0.3s ease;
-    }
-    input:focus {
-      border-color: #60a5fa;
-      box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
-      outline: none;
-    }
-    .link {
-      color: #60a5fa;
-      transition: color 0.3s ease;
-    }
-    .link:hover {
-      color: #3b82f6;
-      text-decoration: underline;
-    }
-    .glow {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
-      z-index: -1;
-      top: 0;
-      left: 0;
-    }
-    @media (max-width: 640px) {
-      .card {
-        padding: 1.5rem;
-        max-width: 95vw; 
-      }
-      .btn, .oauth-btn {
-        font-size: 0.95rem;
-        padding: 0.65rem;
-      }
-      input {
-        font-size: 0.95rem;
-        padding: 0.65rem 1.25rem;
-      }
-      .oauth-grid {
-        grid-template-columns: 1fr;
-      }
+
+    .god-rays::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: var(--stripes), var(--rays);
+        background-size: 200%, 100%;
+        animation: god-rays 40s linear infinite;
+        background-attachment: fixed;
+        mix-blend-mode: difference;
     }
   </style>
 </head>
 <body>
-  <div class="glow"></div>
-  <div class="card">
-    <h2 class="text-2xl font-bold text-center text-gray-100 mb-6">Sign In</h2>
-    
-    <form id="login-form" class="space-y-6">
-      <div>
-        <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
-        <input type="email" id="email" required class="mt-2" placeholder="  you@example.com">
+  <div class="god-rays"></div>
+  <div class="main-card">
+    <div class="left-panel"></div>
+    <div class="right-panel">
+      <div class="header">
+        <div class="brand"><div class="moon-icon"></div>PeteZah OAuth</div>
+        <h1 class="welcome-title">Welcome back</h1>
+        <p class="welcome-subtitle">Sign in for premium features!</p>
       </div>
-      <div>
-        <label for="password" class="block text-sm font-medium text-gray-300">Password</label>
-        <input type="password" id="password" required class="mt-2" placeholder="  ••••••••">
-      </div>
-      <button type="submit" class="w-full text-white btn">Sign In</button>
-    </form>
-
-    <div class="divider">
-      <span class="text-gray-400">or</span>
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label">Email address</label>
+          <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+        </div>
+        <div class="form-options">
+          <label class="remember-me"><input type="checkbox" id="remember">Remember me</label>
+          <a href="/pages/settings/p3.html" class="signup-link">Sign up</a>
+        </div>
+        <button type="submit" class="sign-in-btn">Sign In</button>
+        <div class="oauth-container">
+          <button onclick="signInWithOAuth('google')" class="oauth-btn"><img src="https://cdn.simpleicons.org/google/ffffff" alt="Google" style="width: 16px; height: 16px;">Google</button>
+          <button onclick="signInWithOAuth('discord')" class="oauth-btn"><img src="https://cdn.simpleicons.org/discord/ffffff" alt="Discord" style="width: 16px; height: 16px;">Discord</button>
+        </div>
+      </form>
     </div>
-    <div class="oauth-grid">
-      <button onclick="signInWithOAuth('google')" class="text-gray-300 oauth-btn">
-        <img src="https://cdn.simpleicons.org/google/ffffff" alt="Google" class="w-5 h-5">
-        Sign in with Google
-      </button>
-      <button onclick="signInWithOAuth('discord')" class="text-gray-300 oauth-btn">
-        <img src="https://cdn.simpleicons.org/discord/ffffff" alt="Discord" class="w-5 h-5">
-        Sign in with Discord
-      </button>
-      <button onclick="signInWithOAuth('github')" class="text-gray-300 oauth-btn">
-        <img src="https://cdn.simpleicons.org/github/ffffff" alt="GitHub" class="w-5 h-5">
-        Sign in with GitHub
-      </button>
-      <button onclick="signInWithOAuth('twitch')" class="text-gray-300 oauth-btn">
-        <img src="https://cdn.simpleicons.org/twitch/ffffff" alt="Twitch" class="w-5 h-5">
-        Sign in with Twitch
-      </button>
-    </div>
-
-    <p class="text-center text-sm text-gray-400 mt-6">
-      Don't have an account yet? <a href="/pages/settings/p3.html" class="link">Sign up here</a>
-    </p>
   </div>
-
   <script>
-    function generateState() {
-      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    }
-
-    window.addEventListener('message', (event) => {
-      if (event.origin !== window.location.origin) {
-        console.error('Invalid origin:', event.origin);
-        return;
-      }
-      const storedState = localStorage.getItem('oauth_state');
-      if (event.data.type === 'oauth_success' && event.data.state === storedState) {
-        localStorage.removeItem('oauth_state');
-        window.location.href = '/pages/settings/p2.html';
-      } else {
-        console.error('State mismatch or invalid message:', event.data);
-      }
-    });
-
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      try {
-        const response = await fetch('/api/signin', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-          credentials: 'include'
-        });
-        const data = await response.json();
-        if (response.ok) {
-          alert(data.message);
-          window.location.href = '/pages/settings/p2.html';
-        } else {
-          alert(`Error: ${data.error}`);
-        }
-      } catch (error) {
-        alert(`Error: ${error.message}`);
-      }
-    });
-
-    async function signInWithOAuth(provider) {
-      try {
-        const state = generateState();
-        localStorage.setItem('oauth_state', state);
-        const response = await fetch('/api/signin/oauth', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ provider, state }),
-          credentials: 'include'
-        });
-        const data = await response.json();
-        if (response.ok && data.url) {
-          console.log('Opening OAuth URL:', data.url);
-          window.open(data.url, '_blank', 'noopener,noreferrer');
-        } else {
-          alert(`Error: ${data.error}`);
-        }
-      } catch (error) {
-        console.error('OAuth error:', error);
-        alert(`Error: ${error.message}`);
-      }
-    }
+    let oauthVisible = false;
+    function generateState(){return Math.random().toString(36).substring(2,15)+Math.random().toString(36).substring(2,15);}
+    window.addEventListener('message',(e)=>{if(e.origin!==window.location.origin){console.error('Invalid origin:',e.origin);return;}const t=localStorage.getItem('oauth_state');e.data.type==='oauth_success'&&e.data.state===t?(localStorage.removeItem('oauth_state'),window.location.href='/pages/settings/p2.html'):console.error('State mismatch or invalid message:',e.data);});
+    document.getElementById('login-form').addEventListener('submit',async e=>{e.preventDefault();const t=document.getElementById('email').value,o=document.getElementById('password').value;try{const e=await fetch('/api/signin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:t,password:o}),credentials:'include'}),a=await e.json();e.ok?(alert(a.message),window.location.href='/pages/settings/p2.html'):alert(`Error: ${a.error}`)}catch(e){alert(`Error: ${e.message}`)}});
+    async function signInWithOAuth(e){try{const t=generateState();localStorage.setItem('oauth_state',t);const o=await fetch('/api/signin/oauth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({provider:e,state:t}),credentials:'include'}),a=await o.json();o.ok&&a.url?(console.log('Opening OAuth URL:',a.url),window.open(a.url,'_blank','noopener,noreferrer')):alert(`Error: ${a.error}`)}catch(e){console.error('OAuth error:',e),alert(`Error: ${e.message}`)}}
   </script>
+  <script src="/storage/js/settings.js"></script>
 </body>
 </html>

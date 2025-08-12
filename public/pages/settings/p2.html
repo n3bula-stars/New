@@ -1,272 +1,321 @@
-<!-- Google Tag Manager -->
-<script>(function (w, d, s, l, i) {
-    w[l] = w[l] || []; w[l].push({
-      'gtm.start':
-        new Date().getTime(), event: 'gtm.js'
-    }); var f = d.getElementsByTagName(s)[0],
-      j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-  })(window, document, 'script', 'dataLayer', 'GTM-WPH7NCG4');</script>
-<!-- End Google Tag Manager -->
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PeteZah | Settings</title>
-<link rel="icon" type="image/x-icon" href="/storage/images/logo-png-removebg-preview.png" />
-<meta name="description" content="Pete Zah, game on" />
-<link rel="stylesheet" type="text/css" href="/storage/css/themes.css">
-<meta name="keywords" content="Proxy, Unblocker, Pete Zah Unblocker, Pete Zah Games, Pete Zah" />
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-  body {
-    background: #0a0a23;
-    min-height: 100vh;
-    font-family: 'Poppins', sans-serif;
-    color: #e5e7eb;
-    margin: 0;
-    padding: 2rem;
-    box-sizing: border-box;
-    overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  body::-webkit-scrollbar {
-    display: none;
-  }
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  .btn {
-    transition: all 0.3s ease;
-    background: #2563eb;
-    border: 1px solid #60a5fa;
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    font-size: 1.1rem;
-  }
-  .btn:hover {
-    background: #1e40af;
-    transform: translateY(-2px);
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
-  }
-  .delete-btn {
-    background: #dc2626;
-    border: 1px solid #f87171;
-  }
-  .delete-btn:hover {
-    background: #b91c1c;
-    box-shadow: 0 0 15px rgba(248, 113, 113, 0.5);
-  }
-  .link-btn {
-    background: #1f2937;
-    border: 1px solid #4b5563;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-  }
-  .link-btn:hover {
-    background: #374151;
-    border-color: #60a5fa;
-    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
-  }
-  input, textarea, select {
-    background: #1f2937;
-    border: 1px solid #4b5563;
-    color: #e5e7eb;
-    padding: 1rem 1.25rem;
-    border-radius: 0.5rem;
-    font-size: 1.1rem;
-    width: 100%;
-    height: 40px;
-    box-sizing: border-box;
-    transition: all 0.3s ease;
-  }
-  input:focus, textarea:focus, select:focus {
-    border-color: #60a5fa;
-    box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
-    outline: none;
-  }
-  .profile-pic {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border: 2px solid #3b82f6;
-    border-radius: 50%;
-    transition: transform 0.3s ease;
-  }
-  .profile-pic:hover {
-    transform: scale(1.05);
-  }
-  .file-input-wrapper {
-    position: relative;
-    display: inline-block;
-    width: 100%;
-  }
-  .file-input {
-    opacity: 0;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    z-index: 1;
-  }
-  .file-input-label {
-    display: block;
-    background: #1f2937;
-    border: 1px solid #4b5563;
-    color: #e5e7eb;
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-    text-align: center;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-  }
-  .file-input-label:hover {
-    background: #374151;
-    border-color: #60a5fa;
-    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
-  }
-  .section {
-    background: rgba(31, 41, 55, 0.5);
-    border-radius: 0.75rem;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
-  }
-  .glow {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
-    z-index: -1;
-    top: 0;
-    left: 0;
-  }
-  @media (max-width: 640px) {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Tag Manager -->
+  <script>
+    (function (w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-WPH7NCG4');
+  </script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PeteZah | Profile Settings</title>
+  <link rel="icon" type="image/x-icon" href="/storage/images/logo-png-removebg-preview.png" />
+  <meta name="description" content="Manage your PeteZah profile and settings" />
+  <meta name="keywords" content="PeteZah, Profile, Settings, Gaming, Account Management" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
     body {
-      padding: 1.5rem;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: #f8fafc;
+      margin: 0;
+      padding: 2rem;
+      box-sizing: border-box;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #3b82f6 #1e293b;
     }
-    .btn, .link-btn {
+    body::-webkit-scrollbar {
+      width: 8px;
+    }
+    body::-webkit-scrollbar-track {
+      background: #1e293b;
+    }
+    body::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      border-radius: 4px;
+    }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: rgba(15, 23, 42, 0.8);
+      border-radius: 1rem;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+    }
+    .btn {
+      transition: all 0.3s ease;
+      background: linear-gradient(90deg, #192e4f 0%, #152f4e 100%);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #ffffff;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: linear-gradient(90deg, #1d366e 0%, #1b3763 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+    }
+    .delete-btn {
+      background: linear-gradient(90deg, #dc2626 0%, #f87171 100%);
+    }
+    .delete-btn:hover {
+      background: linear-gradient(90deg, #b91c1c 0%, #dc2626 100%);
+      box-shadow: 0 4px 20px rgba(248, 113, 113, 0.4);
+    }
+    .link-btn {
+      background: rgba(31, 41, 55, 0.7);
+      border: 1px solid #4b5563;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
       font-size: 0.95rem;
-      padding: 0.65rem;
+      color: #f8fafc;
+      transition: all 0.3s ease;
+    }
+    .link-btn:hover {
+      background: rgba(55, 65, 81, 0.9);
+      border-color: #60a5fa;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
     }
     input, textarea, select {
-      font-size: 1rem;
-      padding: 0.85rem 1rem;
+      background: rgba(31, 41, 55, 0.7);
+      border: 1px solid #4b5563;
+      color: #f8fafc;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      width: 100%;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: #60a5fa;
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+      outline: none;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 100px;
     }
     .profile-pic {
-      width: 80px;
-      height: 80px;
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border: 3px solid #3b82f6;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+    .profile-pic:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+    }
+    .file-input-wrapper {
+      position: relative;
+      width: 100%;
+    }
+    .file-input {
+      opacity: 0;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      z-index: 1;
+    }
+    .file-input-label {
+      display: block;
+      background: linear-gradient(90deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      text-align: center;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+    .file-input-label:hover {
+      background: linear-gradient(90deg, #0f172a 0%, #1e293b 100%);
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
     }
     .section {
-      padding: 1.25rem;
+      background: rgba(31, 41, 55, 0.3);
+      border-radius: 0.75rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      transition: all 0.3s ease;
     }
-    .delete {
-      height: 40px;
+    .section:hover {
+      background: rgba(31, 41, 55, 0.5);
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2);
     }
-  }
-</style>
+    .glow {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+      z-index: -1;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #f8fafc;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -0.5rem;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      border-radius: 2px;
+    }
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+      .container {
+        padding: 1.5rem;
+      }
+      .btn, .link-btn {
+        font-size: 0.9rem;
+        padding: 0.65rem 1rem;
+      }
+      input, textarea, select {
+        font-size: 0.9rem;
+        padding: 0.65rem 0.85rem;
+      }
+      .profile-pic {
+        width: 100px;
+        height: 100px;
+      }
+      .section {
+        padding: 1.5rem;
+      }
+      .section-title {
+        font-size: 1.25rem;
+      }
+    }
+    @media (max-width: 640px) {
+      .grid-cols-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="glow"></div>
   <div class="container">
-    <h2 class="text-3xl font-bold text-center text-gray-100 mb-8">Your Profile</h2>
-    
-    <!-- Profile Picture -->
-    <div class="section flex items-center gap-6">
-      <img id="profile-pic" src="/storage/images/main/profile.png" alt="Profile Picture" class="profile-pic">
-      <div class="flex-1">
-        <div class="file-input-wrapper">
-          <input type="file" id="profile-pic-upload" accept="image/*" class="file-input">
-          <label for="profile-pic-upload" class="file-input-label">Choose Profile Picture</label>
+    <h1 class="text-4xl font-bold text-center text-white mb-10">Profile Settings</h1>
+
+    <div class="section">
+      <h2 class="section-title">Profile Picture</h2>
+      <div class="flex items-center gap-8">
+        <img id="profile-pic" src="/storage/images/main/profile.png" alt="Profile Picture" class="profile-pic">
+        <div class="flex-1 space-y-4">
+          <div class="file-input-wrapper">
+            <input type="file" id="profile-pic-upload" accept="image/*" class="file-input">
+            <label for="profile-pic-upload" class="file-input-label">Choose New Picture</label>
+          </div>
+          <button id="upload-pic" class="w-full btn">Update Picture</button>
         </div>
-        <button id="upload-pic" class="w-full text-white btn mt-3">Update Picture</button>
       </div>
     </div>
 
-    <!-- Account Info -->
     <div class="section">
-      <h3 class="text-lg font-semibold text-gray-100 mb-4">Account Information</h3>
+      <h2 class="section-title">Account Information</h2>
       <div class="space-y-6">
         <div>
-          <label class="block text-sm font-medium text-gray-300">Email</label>
-          <p id="email" class="text-gray-400">Loading...</p>
+          <label class="block text-sm font-medium text-gray-200">Email</label>
+          <p id="email" class="text-gray-300 mt-1">Loading...</p>
         </div>
         <div>
-          <label for="username" class="block text-sm font-medium text-gray-300">Username</label>
-          <input id="username" class="mt-2" placeholder="Enter username">
+          <label for="username" class="block text-sm font-medium text-gray-200">Username</label>
+          <input id="username" class="mt-2" placeholder="Enter your username">
         </div>
         <div>
-          <label for="bio" class="block text-sm font-medium text-gray-300">Bio</label>
-          <textarea id="bio" class="mt-2" rows="4" placeholder="Tell us about yourself"></textarea>
+          <label for="bio" class="block text-sm font-medium text-gray-200">Bio</label>
+          <textarea id="bio" class="mt-2" rows="5" placeholder="Tell us about yourself"></textarea>
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-300">Provider</label>
-          <p id="provider" class="text-gray-400">Loading...</p>
+          <label class="block text-sm font-medium text-gray-200">Provider</label>
+          <p id="provider" class="text-gray-300 mt-1">Loading...</p>
         </div>
-        <button id="update-profile" class="w-full text-white btn">Update Profile</button>
+        <button id="update-profile" class="w-full btn">Update Profile</button>
       </div>
     </div>
 
-    <!-- Linked Accounts -->
     <div class="section">
-      <h3 class="text-lg font-semibold text-gray-100 mb-4">Linked Accounts</h3>
-      <div id="linked-accounts" class="space-y-4">
-        <div id="google-status" class="text-gray-400">Google: Not linked</div>
-        <div id="discord-status" class="text-gray-400">Discord: Not linked</div>
-        <div id="github-status" class="text-gray-400">GitHub: Not linked</div>
-        <div id="twitch-status" class="text-gray-400">Twitch: Not linked</div>
+      <h2 class="section-title">Linked Accounts</h2>
+      <div id="linked-accounts" class="space-y-4 mb-6">
+        <div id="google-status" class="text-gray-300">Google: Not linked</div>
+        <div id="discord-status" class="text-gray-300">Discord: Not linked</div>
+        <div id="github-status" class="text-gray-300">GitHub: Not linked</div>
+        <div id="twitch-status" class="text-gray-300">Twitch: Not linked</div>
       </div>
-      <div class="grid grid-cols-2 gap-4 mt-4">
-        <button onclick="linkAccount('google')" class="text-white link-btn">
+      <div class="grid grid-cols-2 gap-4">
+        <button onclick="linkAccount('google')" class="link-btn">
           <img src="https://cdn.simpleicons.org/google/ffffff" alt="Google" class="w-5 h-5">
           Link Google
         </button>
-        <button onclick="linkAccount('discord')" class="text-white link-btn">
+        <button onclick="linkAccount('discord')" class="link-btn">
           <img src="https://cdn.simpleicons.org/discord/ffffff" alt="Discord" class="w-5 h-5">
           Link Discord
         </button>
-        <button onclick="linkAccount('github')" class="text-white link-btn">
+        <button onclick="linkAccount('github')" class="link-btn">
           <img src="https://cdn.simpleicons.org/github/ffffff" alt="GitHub" class="w-5 h-5">
           Link GitHub
         </button>
-        <button onclick="linkAccount('twitch')" class="text-white link-btn">
+        <button onclick="linkAccount('twitch')" class="link-btn">
           <img src="https://cdn.simpleicons.org/twitch/ffffff" alt="Twitch" class="w-5 h-5">
           Link Twitch
         </button>
       </div>
     </div>
 
-    <!-- LocalStorage Sync -->
     <div class="section">
-      <h3 class="text-lg font-semibold text-gray-100 mb-4">Local Storage Settings</h3>
-      <textarea id="localstorage-data" class="w-full" rows="4" placeholder="LocalStorage data will appear here"></textarea>
+      <h2 class="section-title">Local Storage Settings</h2>
+      <textarea id="localstorage-data" class="w-full" rows="5" placeholder="LocalStorage data will appear here"></textarea>
       <div class="grid grid-cols-2 gap-4 mt-4">
-        <button id="save-localstorage" class="text-white btn">Save to Account</button>
-        <button id="load-localstorage" class="text-white btn">Load from Account</button>
+        <button id="save-localstorage" class="btn">Save to Account</button>
+        <button id="load-localstorage" class="btn">Load from Account</button>
       </div>
     </div>
 
-    <!-- Theme Settings -->
     <div class="section">
-      <h3 class="text-lg font-semibold text-gray-100 mb-4">Theme Settings</h3>
+      <h2 class="section-title">Theme Settings</h2>
       <select id="theme-select" class="w-full">
         <option value="dark">Dark (Default)</option>
         <option value="light">Light</option>
       </select>
-      <button id="save-theme" class="w-full text-white btn mt-4">Save Theme</button>
+      <button id="save-theme" class="w-full btn mt-4">Save Theme</button>
     </div>
 
-    <!-- Export/Import Settings -->
     <div class="section">
-      <h3 class="text-lg font-semibold text-gray-100 mb-4">Export/Import Settings</h3>
+      <h2 class="section-title">Export/Import Settings</h2>
       <div class="grid grid-cols-2 gap-4">
-        <button id="export-settings" class="text-white btn">Export Settings</button>
+        <button id="export-settings" class="btn">Export Settings</button>
         <div class="file-input-wrapper">
           <input type="file" id="import-settings-upload" accept=".json" class="file-input">
           <label for="import-settings-upload" class="file-input-label">Import Settings</label>
@@ -274,10 +323,9 @@
       </div>
     </div>
 
-    <!-- Delete Account -->
     <div class="section">
-      <h3 class="text-lg font-semibold text-gray-100 mb-4 delete">Danger Zone</h3>
-      <button id="delete-account" class="w-full text-white delete-btn">Delete Account</button>
+      <h2 class="section-title text-red-400">Danger Zone</h2>
+      <button id="delete-account" class="w-full delete-btn">Delete Account</button>
     </div>
   </div>
 
@@ -317,7 +365,7 @@
       };
       Object.keys(statuses).forEach(provider => {
         statuses[provider].textContent = `${provider.charAt(0).toUpperCase() + provider.slice(1)}: ${providers.includes(provider) ? 'Linked' : 'Not linked'}`;
-        statuses[provider].className = providers.includes(provider) ? 'text-green-400' : 'text-gray-400';
+        statuses[provider].className = providers.includes(provider) ? 'text-green-400' : 'text-gray-300';
       });
     }
 

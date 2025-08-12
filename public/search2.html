@@ -1,0 +1,1541 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PeteZah | Proxy</title>
+  <link rel="icon" href="storage/images/logo-png-removebg-preview.png" />
+  <link rel="prefetch" href="/scram/scramjet.worker.js" />
+  <link rel="prefetch" href="/scram/scramjet.shared.js" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&display=swap&"
+    rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <style>
+    body,
+    html,
+    #app {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #0a0f1c 0%, #1a1f2e 50%, #0f1419 100%);
+      overflow: hidden;
+      --bg: linear-gradient(135deg, #0a0f1c 0%, #1a1f2e 50%, #0f1419 100%);
+      --fourth-bg: linear-gradient(135deg, #1e2a3a 0%, #2a3744 100%);
+      --active-blue: linear-gradient(135deg, #1e2a5a 0%, #1e3a8a 100%);
+      --hover-blue: linear-gradient(135deg, #1e293b 0%, #1e3a8a 100%);
+    }
+
+    @keyframes fade {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(-20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .col {
+      flex-direction: column;
+    }
+
+    .browser-container {
+      width: 100%;
+      height: 100%;
+      color: rgba(255, 255, 255, 0.9);
+      display: flex;
+      flex-direction: column;
+      padding: 0.5em;
+      padding-top: 0;
+      box-sizing: border-box;
+      background: var(--bg);
+      position: relative;
+    }
+
+    .browser-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .browser-container>* {
+      position: relative;
+      z-index: 2;
+    }
+
+    .browser-container a {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .browser-container input,
+    .browser-container button {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .browser-container h1 {
+      font-family: "Inter Tight", "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      margin-bottom: 0;
+      color: white;
+      text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    }
+
+    .browser-container iframe {
+      background-color: #fff;
+      border: none;
+      border-radius: 12px;
+      flex: 1;
+      width: 100%;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .browser-container iframe:hover {
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+    }
+
+    input.bar {
+      font-family: "Inter";
+      padding: 0.6rem 2rem;
+      border: none;
+      outline: none;
+      color: white;
+      height: 40px;
+      border-radius: 20px;
+      flex: 1;
+      background: var(--fourth-bg);
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    input.bar:focus {
+      outline: none;
+      box-shadow: 0 0 15px rgba(0, 102, 204, 0.4);
+      border-color: #151a2d;
+      border-width: thick;
+    }
+
+    .input_row>label {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      margin: 0;
+      margin-top: 0.2em;
+    }
+
+    .nav {
+      padding: 0.6rem 0;
+      gap: 0.5rem;
+      animation: slideIn 0.5s ease;
+      align-items: center;
+      z-index: 3;
+    }
+
+    .nav button {
+      color: white;
+      outline: none;
+      border: none;
+      border-radius: 50%;
+      background: var(--fourth-bg);
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav button:hover {
+      background: var(--hover-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .nav button:active {
+      transform: translateY(0);
+      animation: pulse 0.2s ease;
+    }
+
+    .tabs {
+      padding: 0.6rem 0 0;
+      gap: 0.3rem;
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
+      animation: slideIn 0.5s ease;
+    }
+
+    .tabs::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .tabs::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .tabs::-webkit-scrollbar-thumb {
+      background: var(--active-blue);
+      border-radius: 2px;
+    }
+
+    .tab {
+      color: white;
+      outline: none;
+      border: none;
+      border-radius: 8px 8px 0 0;
+      background: var(--fourth-bg);
+      padding: 0.5rem 1rem;
+      width: 245px;
+      min-width: 245px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      position: relative;
+    }
+
+    .tab::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--hover-blue);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .tab:hover::before {
+      opacity: 0.3;
+    }
+
+    .tab.active {
+      background: #151a2d;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .tab:hover:not(.active) {
+      background: var(--hover-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .tab-favicon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      border-radius: 4px;
+      transition: transform 0.3s ease;
+    }
+
+    .tab:hover .tab-favicon {
+      transform: scale(1.1);
+    }
+
+    .tab-title {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .tab-close {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+      padding: 0;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+      font-size: 1.2rem;
+      position: relative;
+    }
+
+    .tab-close:hover {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.5), rgba(220, 38, 38, 0.5));
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .tab-close:hover::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: 50%;
+      background: rgba(239, 68, 68, 0.3);
+      z-index: -1;
+    }
+
+    .new-tab {
+      color: white;
+      outline: none;
+      border: none;
+      border-radius: 50%;
+      background: var(--fourth-bg);
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+      font-size: 1.3rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .new-tab:hover {
+      background: var(--hover-blue);
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .iframe-container {
+      flex: 1;
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 0.3rem;
+    }
+
+    .iframe-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .iframe-container iframe.hidden {
+      display: none;
+    }
+
+    .cfg {
+      background: var(--fourth-bg);
+      color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .cfg[open] {
+      animation: fade 0.3s ease normal;
+    }
+
+    .cfg::backdrop {
+      backdrop-filter: blur(12px);
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(30, 42, 58, 0.6) 100%);
+    }
+
+    .cfg h2 {
+      margin: 0 0 1rem;
+      font-size: 1.5rem;
+      color: white;
+      text-align: center;
+      text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    }
+
+    .buttons {
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      justify-content: center;
+    }
+
+    .buttons button {
+      border: none;
+      background: var(--fourth-bg);
+      border-radius: 50%;
+      color: white;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .buttons button:hover {
+      background: var(--hover-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .input_row input {
+      background: var(--fourth-bg);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      outline: none;
+      padding: 0.7rem 1rem;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .input_row input:focus {
+      outline: none;
+      box-shadow: 0 0 15px rgba(0, 102, 204, 0.4);
+      border-color: #151a2d;
+      border-width: thick;
+    }
+
+    .input_row {
+      margin-bottom: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .input_row input {
+      flex-grow: 1;
+    }
+
+    .centered {
+      justify-content: center;
+      align-items: center;
+    }
+
+    .sortable-ghost {
+      opacity: 0.5 !important;
+      transform: scale(0.95);
+    }
+
+    .sortable-drag {
+      transform: rotate(2deg) scale(1.02);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      background: var(--active-blue);
+    }
+
+    .menu-btn {
+      position: relative;
+    }
+
+    .menu-dropdown {
+      display: none;
+      position: absolute;
+      top: 50px;
+      right: 0.5rem;
+      background: var(--fourth-bg);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      z-index: 1000;
+      min-width: 200px;
+      padding: 0.5rem 0;
+    }
+
+    .menu-dropdown button {
+      width: 100%;
+      border-radius: 0;
+      background: none;
+      border: none;
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-size: 1rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .menu-dropdown button:hover {
+      background: var(--hover-blue);
+    }
+
+    .menu-dropdown.show {
+      display: block;
+      animation: fade 0.3s ease;
+    }
+
+    .menu-dropdown button i {
+      width: 16px;
+      text-align: left;
+      flex-shrink: 0;
+    }
+
+    .menu-dropdown button span {
+      flex: 1;
+      text-align: left;
+    }
+
+    .menu-dropdown .zoom-controls {
+      justify-content: center;
+      width: 100%;
+    }
+
+    .config-btn {
+      display: none;
+    }
+
+    .history-modal {
+      background: var(--fourth-bg);
+      color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .history-modal[open] {
+      animation: fade 0.3s ease normal;
+    }
+
+    .history-modal::backdrop {
+      backdrop-filter: blur(12px);
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(30, 42, 58, 0.6) 100%);
+    }
+
+    .history-item {
+      padding: 0.5rem;
+      border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+      cursor: pointer;
+    }
+
+    .history-item:hover {
+      background: var(--hover-blue);
+    }
+
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+    }
+
+    .zoom-controls button {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--fourth-bg);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: white;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .zoom-controls button:hover {
+      background: var(--hover-blue);
+      transform: scale(1.1);
+    }
+
+    .zoom-controls span {
+      font-size: 1rem;
+      color: white;
+    }
+
+    ::-moz-selection {
+      color: white;
+      background: black;
+    }
+
+    ::selection {
+      color: white;
+      background: black;
+    }
+
+    /* Suggestion List Styles */
+    .suggestion-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--fourth-bg);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      z-index: 1000;
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+      flex-direction: column;
+      padding: 0.5rem;
+    }
+
+    .suggestion-list::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .suggestion-list::-webkit-scrollbar-thumb {
+      background: var(--active-blue);
+      border-radius: 5px;
+    }
+
+    .search-section {
+      margin-bottom: 0.5rem;
+    }
+
+    .search-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .search-title img {
+      width: 16px;
+      height: 16px;
+    }
+
+    .search-results {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .search-results div {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .search-results div:hover {
+      background: var(--hover-blue);
+    }
+
+    .search-results div.selected {
+      background: var(--active-blue);
+    }
+
+    .search-results div i {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .suggestion-text {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  </style>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+    @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+    @import url("global.css");
+
+    :root {
+      --bg: linear-gradient(135deg, #0a111d 0%, #1a1f2e 50%, #0f1419 100%);
+      --secondary-bg: linear-gradient(135deg, #2b384d 0%, #3c4a5d 100%);
+      --third-bg: linear-gradient(135deg, #444f60 0%, #5a6a7a 100%);
+      --fourth-bg: linear-gradient(135deg, #1e2a3a 0%, #2a3744 100%);
+      --primary: #a4b8db;
+      --secondary: #7d93ba;
+      --text-color: #d5dce8;
+      --secondary-text-color: #d5dce8;
+      --button-bg: var(--fourth-bg);
+      --button-hover: linear-gradient(135deg, #3c4a5d 0%, #4d5a6d 100%);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter";
+      transition: all 0.3s ease;
+    }
+
+    body {
+      height: 100vh;
+      background: var(--bg);
+      color: var(--text-color);
+      font-family: "Inter", sans-serif;
+      overflow: hidden;
+    }
+
+    img {
+      pointer-events: none;
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px;
+      padding: 2px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      border-radius: 5px;
+      background: var(--active-blue);
+      transition: 0.3s;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+    }
+
+    .badge {
+      text-transform: uppercase;
+      font-size: 12px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
+      border-radius: 5px;
+      opacity: 0.8;
+      padding: 1px 3px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .redbadge {
+      text-transform: uppercase;
+      font-size: 12px;
+      color: #e54848;
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.3));
+      border-radius: 5px;
+      opacity: 0.8;
+      padding: 1px 3px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/dreamland"></script>
+  <script src="/baremux/index.js"></script>
+  <script src="/scram/scramjet.controller.js"></script>
+  <script src="config.js"></script>
+</head>
+
+<body>
+  <div id="app"></div>
+  <script>
+    const scramjet = new ScramjetController({
+      files: {
+        wasm: "/scram/scramjet.wasm.wasm",
+        client: "/scram/scramjet.client.js",
+        shared: "/scram/scramjet.shared.js",
+        sync: "/scram/scramjet.sync.js",
+      },
+    });
+
+    scramjet.init();
+
+    const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+
+    const store = {
+      url: "https://",
+      wispurl:
+        _CONFIG?.wispurl ||
+        (location.protocol === "https:" ? "wss" : "ws") +
+        "://" +
+        location.host +
+        "//",
+      bareurl:
+        _CONFIG?.bareurl ||
+        (location.protocol === "https:" ? "https" : "http") +
+        "://" +
+        location.host +
+        "/bare/",
+      proxy: "",
+      theme: "dark",
+      homepage: "petezah://newtab",
+      history: JSON.parse(localStorage.getItem("browserHistory") || "[]"),
+      zoomLevel: 1,
+    };
+
+
+    let tabs = [];
+    let activeTabId = 1;
+    let nextTabId = 2;
+    let sortableInstance = null;
+
+    function getFaviconUrl(url) {
+      try {
+        const domain = new URL(url).origin;
+        return `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(
+          domain
+        )}`;
+      } catch {
+        return `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(
+          url
+        )}`;
+      }
+    }
+
+    function createTab(url = store.homepage) {
+      const frame = scramjet.createFrame();
+      const tab = {
+        id: nextTabId++,
+        title: "New Tab",
+        url: url,
+        frame: frame,
+        favicon: getFaviconUrl(url),
+        zoomLevel: store.zoomLevel,
+      };
+
+      frame.frame.src = url === "petezah://newtab" ? "/newpage.html" : url;
+      frame.frame.style.transform = `scale(${tab.zoomLevel})`;
+      frame.frame.style.transformOrigin = "0 0";
+      frame.frame.style.width = `${100 / tab.zoomLevel}%`;
+      frame.frame.style.height = `${100 / tab.zoomLevel}%`;
+
+      frame.addEventListener("urlchange", (e) => {
+        if (!e.url) return;
+        tab.url = e.url;
+        tab.favicon = getFaviconUrl(e.url);
+
+        try {
+          const title =
+            frame.frame.contentWindow?.document?.title ||
+            new URL(e.url).hostname;
+          tab.title = title || "...";
+        } catch (err) {
+          tab.title = new URL(e.url).hostname || "...";
+        }
+
+        if (e.url !== "petezah://newtab") {
+          store.history.push({ url: e.url, title: tab.title, timestamp: new Date() });
+          localStorage.setItem("browserHistory", JSON.stringify(store.history));
+        }
+
+        updateTabsUI();
+        updateAddressBar();
+      });
+
+      tabs.push(tab);
+      return tab;
+    }
+
+    function getActiveTab() {
+      return tabs.find((tab) => tab.id === activeTabId);
+    }
+
+    function switchTab(tabId) {
+      tabs.forEach((tab) => {
+        if (tab.frame && tab.frame.frame) {
+          tab.frame.frame.classList.add("hidden");
+        }
+      });
+
+      activeTabId = tabId;
+      const activeTab = getActiveTab();
+      if (activeTab && activeTab.frame && activeTab.frame.frame) {
+        activeTab.frame.frame.classList.remove("hidden");
+      }
+
+      updateTabsUI();
+      updateAddressBar();
+    }
+
+    function closeTab(tabId) {
+      const tabIndex = tabs.findIndex((tab) => tab.id === tabId);
+      if (tabIndex === -1) return;
+
+      const tab = tabs[tabIndex];
+
+      if (tab.frame && tab.frame.frame && tab.frame.frame.parentNode) {
+        tab.frame.frame.parentNode.removeChild(tab.frame.frame);
+      }
+
+      if (tab.frame && typeof tab.frame.destroy === "function") {
+        try {
+          tab.frame.destroy();
+        } catch (e) {
+          console.error("Error destroying frame:", e);
+        }
+      }
+
+      tabs.splice(tabIndex, 1);
+
+      if (tabs.length === 0) {
+        const newTab = createTab();
+        const iframeContainer = document.getElementById("iframe-container");
+        if (iframeContainer) {
+          iframeContainer.appendChild(newTab.frame.frame);
+        }
+        activeTabId = newTab.id;
+      } else if (activeTabId === tabId) {
+        const newActiveIndex = Math.min(tabIndex, tabs.length - 1);
+        activeTabId = tabs[newActiveIndex]?.id;
+        if (activeTabId) {
+          switchTab(activeTabId);
+        }
+      }
+
+      updateTabsUI();
+    }
+
+    function updateTabsUI() {
+      const tabsContainer = document.getElementById("tabs-container");
+      if (!tabsContainer) return;
+
+      tabsContainer.innerHTML = "";
+
+      tabs.forEach((tab, index) => {
+        if (!tab || !tab.frame) return;
+        const tabElement = document.createElement("div");
+        tabElement.className = `tab ${tab.id === activeTabId ? "active" : ""}`;
+        tabElement.setAttribute("data-tab-id", tab.id);
+        tabElement.onclick = () => switchTab(tab.id);
+        tabElement.style.animationDelay = `${index * 0.1}s`;
+
+        const faviconImg = document.createElement("img");
+        faviconImg.className = "tab-favicon";
+        faviconImg.src = tab.favicon;
+        faviconImg.alt = "";
+        faviconImg.onerror = () => {
+          faviconImg.style.display = "none";
+        };
+
+        const titleSpan = document.createElement("span");
+        titleSpan.className = "tab-title";
+        titleSpan.textContent = tab.title;
+
+        const closeButton = document.createElement("button");
+        closeButton.className = "tab-close";
+        closeButton.innerHTML = '<i class="fas fa-times"></i>';
+        closeButton.onclick = (e) => {
+          e.stopPropagation();
+          closeTab(tab.id);
+        };
+
+        tabElement.appendChild(faviconImg);
+        tabElement.appendChild(titleSpan);
+        tabElement.appendChild(closeButton);
+        tabsContainer.appendChild(tabElement);
+      });
+
+      const newTabButton = document.createElement("button");
+      newTabButton.className = "new-tab";
+      newTabButton.textContent = "+";
+      newTabButton.onclick = () => {
+        const newTab = createTab();
+        const iframeContainer = document.getElementById("iframe-container");
+        if (iframeContainer) {
+          iframeContainer.appendChild(newTab.frame.frame);
+        }
+        switchTab(newTab.id);
+      };
+      tabsContainer.appendChild(newTabButton);
+
+      if (sortableInstance) {
+        sortableInstance.destroy();
+      }
+
+      sortableInstance = new Sortable(tabsContainer, {
+        animation: 300,
+        direction: "horizontal",
+        ghostClass: "sortable-ghost",
+        dragClass: "sortable-drag",
+        filter: ".new-tab",
+        onStart: () => {
+          tabsContainer
+            .querySelectorAll(".tab:not(.sortable-ghost)")
+            .forEach((t) => {
+              t.style.opacity = "0.5";
+            });
+        },
+        onEnd: (evt) => {
+          tabsContainer.querySelectorAll(".tab").forEach((t) => {
+            t.style.opacity = "1";
+          });
+
+          if (evt.oldIndex !== evt.newIndex) {
+            const movedTab = tabs.splice(evt.oldIndex, 1)[0];
+            tabs.splice(evt.newIndex, 0, movedTab);
+          }
+        },
+      });
+    }
+
+    function updateAddressBar() {
+      const addressBar = document.getElementById("address-bar");
+      const activeTab = getActiveTab();
+      if (addressBar && activeTab) {
+        addressBar.value = activeTab.url;
+      }
+    }
+
+    function handleSubmit() {
+      const activeTab = getActiveTab();
+      const addressBar = document.getElementById("address-bar");
+      if (!activeTab || !addressBar) return;
+
+      let url = addressBar.value.trim();
+
+      if (!url.startsWith("http") && !url.includes(".")) {
+        url = "https://duckduckgo.com/?q=" + encodeURIComponent(url);
+      } else if (!url.startsWith("http") && !url.startsWith("petezah://")) {
+        url = "https://" + url;
+      }
+
+      activeTab.url = url;
+      activeTab.favicon = getFaviconUrl(url);
+      return activeTab.frame.go(url);
+    }
+
+    function showConfig() {
+      document.getElementById("config-modal").showModal();
+    }
+
+    function closeConfig() {
+      const modal = document.getElementById("config-modal");
+      modal.style.opacity = 0;
+      setTimeout(() => {
+        modal.close();
+        modal.style.opacity = 1;
+      }, 250);
+    }
+
+    function toggleMenu() {
+      const menu = document.getElementById("menu-dropdown");
+      menu.classList.toggle("show");
+    }
+
+    function closeAllTabs() {
+      tabs.forEach((tab) => {
+        if (tab.frame && tab.frame.frame && tab.frame.frame.parentNode) {
+          tab.frame.frame.parentNode.removeChild(tab.frame.frame);
+        }
+        if (tab.frame && typeof tab.frame.destroy === "function") {
+          tab.frame.destroy();
+        }
+      });
+      tabs = [];
+      const newTab = createTab();
+      const iframeContainer = document.getElementById("iframe-container");
+      if (iframeContainer) {
+        iframeContainer.appendChild(newTab.frame.frame);
+      }
+      switchTab(newTab.id);
+      toggleMenu();
+    }
+
+    function zoomIn() {
+      const activeTab = getActiveTab();
+      if (activeTab) {
+        activeTab.zoomLevel = Math.min(activeTab.zoomLevel + 0.1, 2);
+        activeTab.frame.frame.style.transform = `scale(${activeTab.zoomLevel})`;
+        activeTab.frame.frame.style.width = `${100 / activeTab.zoomLevel}%`;
+        activeTab.frame.frame.style.height = `${100 / activeTab.zoomLevel}%`;
+        document.getElementById("zoom-level").textContent = `${Math.round(activeTab.zoomLevel * 100)}%`;
+      }
+      toggleMenu();
+    }
+
+    function zoomOut() {
+      const activeTab = getActiveTab();
+      if (activeTab) {
+        activeTab.zoomLevel = Math.max(activeTab.zoomLevel - 0.1, 0.5);
+        activeTab.frame.frame.style.transform = `scale(${activeTab.zoomLevel})`;
+        activeTab.frame.frame.style.width = `${100 / activeTab.zoomLevel}%`;
+        activeTab.frame.frame.style.height = `${100 / activeTab.zoomLevel}%`;
+        document.getElementById("zoom-level").textContent = `${Math.round(activeTab.zoomLevel * 100)}%`;
+      }
+      toggleMenu();
+    }
+
+    function toggleFullScreen() {
+      const iframeContainer = document.getElementById("iframe-container");
+      if (!document.fullscreenElement) {
+        iframeContainer.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+      toggleMenu();
+    }
+
+    function showHistory() {
+      const modal = document.getElementById("history-modal");
+      const historyList = document.getElementById("history-list");
+      historyList.innerHTML = store.history
+        .slice()
+        .reverse()
+        .map(
+          (item, index) =>
+            `<div class="history-item" onclick="createTab('${item.url}'); document.getElementById('iframe-container').appendChild(tabs[tabs.length-1].frame.frame); switchTab(tabs[tabs.length-1].id); document.getElementById('history-modal').close();">
+              <span>${item.title}</span><br>
+              <small>${item.url} - ${new Date(item.timestamp).toLocaleString()}</small>
+            </div>`
+        )
+        .join("");
+      modal.showModal();
+      toggleMenu();
+    }
+
+    class Search {
+      constructor(scramjet, store) {
+        this.scramjet = scramjet;
+        this.store = store;
+        this.currentSectionIndex = 0;
+        this.maxResults = 8;
+        this.sections = {};
+        this.selectedSuggestionIndex = -1;
+      }
+
+      init() {
+        const addressBar = document.getElementById("address-bar");
+        const nav = document.querySelector(".nav");
+        const suggestionList = document.createElement("div");
+        suggestionList.id = "suggestion-list";
+        suggestionList.className = "suggestion-list";
+        nav.appendChild(suggestionList);
+
+        this.sections = {
+          searchResults: this.createSection("Search Results"),
+          history: this.createSection("History"),
+        };
+
+        Object.values(this.sections).forEach(({ section }) => suggestionList.appendChild(section));
+
+        addressBar.addEventListener("input", async (event) => {
+          suggestionList.style.display = "flex";
+          const query = event.target.value.trim();
+          if (query === "" && event.inputType === "deleteContentBackward") {
+            this.clearSuggestions();
+            suggestionList.style.display = "none";
+            return;
+          }
+
+          let cleanedQuery = query.replace(/^(petezah:\/\/|petezah:\/|petezah:)/, "");
+          const suggestions = await this.generateSuggestions(cleanedQuery);
+          this.clearSuggestions();
+          this.populateSections(suggestions, query);
+        });
+
+        addressBar.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" || event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+            suggestionList.style.display = "none";
+            this.clearSuggestions();
+            return;
+          }
+
+          const suggestionItems = this.getCurrentSuggestionItems();
+          const numSuggestions = suggestionItems.length;
+
+          if (event.key === "ArrowDown") {
+            event.preventDefault();
+            if (this.selectedSuggestionIndex + 1 >= numSuggestions) {
+              this.moveToNextSection();
+              this.selectedSuggestionIndex = 0;
+            } else {
+              this.selectedSuggestionIndex = (this.selectedSuggestionIndex + 1) % numSuggestions;
+            }
+            this.updateSelectedSuggestion();
+          } else if (event.key === "ArrowUp") {
+            event.preventDefault();
+            if (this.selectedSuggestionIndex <= 0) {
+              this.moveToPreviousSection();
+            } else {
+              this.selectedSuggestionIndex = (this.selectedSuggestionIndex - 1 + numSuggestions) % numSuggestions;
+            }
+            this.updateSelectedSuggestion();
+          } else if (event.key === "Tab" || event.key === "ArrowRight") {
+            if (this.selectedSuggestionIndex !== -1) {
+              event.preventDefault();
+              const selectedSuggestion = suggestionItems[this.selectedSuggestionIndex].querySelector(".suggestion-text").textContent;
+              addressBar.value = selectedSuggestion;
+              this.clearSuggestions();
+              suggestionList.style.display = "none";
+            }
+          } else if (event.key === "Enter") {
+            event.preventDefault();
+            if (this.selectedSuggestionIndex !== -1) {
+              const selectedSuggestion = suggestionItems[this.selectedSuggestionIndex].querySelector(".suggestion-text").textContent;
+              addressBar.value = selectedSuggestion;
+              this.clearSuggestions();
+              suggestionList.style.display = "none";
+              handleSubmit();
+            } else {
+              this.clearSuggestions();
+              suggestionList.style.display = "none";
+              handleSubmit();
+            }
+          } else if (event.key === "Backspace" && addressBar.value === "") {
+            suggestionList.style.display = "none";
+            this.clearSuggestions();
+          }
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!addressBar.contains(e.target) && !suggestionList.contains(e.target)) {
+            suggestionList.style.display = "none";
+            this.clearSuggestions();
+          }
+        });
+      }
+
+      createSection(titleText) {
+        const section = document.createElement("div");
+        section.className = "search-section";
+        const searchTitle = document.createElement("div");
+        searchTitle.className = "search-title";
+        const icon = document.createElement("img");
+        icon.src = "/storage/images/logo-png-removebg-preview.png";
+        icon.className = "searchEngineIcon";
+        const title = document.createElement("span");
+        title.textContent = titleText;
+        searchTitle.appendChild(icon);
+        searchTitle.appendChild(title);
+        const searchResults = document.createElement("div");
+        searchResults.className = "search-results";
+        section.appendChild(searchTitle);
+        section.appendChild(searchResults);
+        return { section, searchResults };
+      }
+
+      async generateSuggestions(query) {
+        try {
+          const response = await fetch(`/results/${encodeURIComponent(query)}`);
+          if (!response.ok) throw new Error("Network response was not ok");
+          const data = await response.json();
+          return data.map((item) => item.phrase);
+        } catch (error) {
+          console.error("Error fetching suggestions:", error);
+          return [];
+        }
+      }
+
+      populateSections(suggestions, query) {
+        this.populateSearchResults(suggestions);
+        this.populateHistory(query);
+      }
+
+      populateSearchResults(suggestions) {
+        const { searchResults, section } = this.sections.searchResults;
+        if (suggestions.length > 0) {
+          section.style.display = "block";
+          suggestions.slice(0, this.maxResults).forEach((suggestion) => {
+            const listItem = this.createSuggestionItem(suggestion);
+            searchResults.appendChild(listItem);
+          });
+        } else {
+          section.style.display = "none";
+        }
+      }
+
+      populateHistory(query) {
+        const { searchResults, section } = this.sections.history;
+        const lowerQuery = query.toLowerCase();
+        const filteredHistory = this.store.history
+          .filter((item) => item.url.toLowerCase().includes(lowerQuery) || item.title.toLowerCase().includes(lowerQuery))
+          .slice(0, this.maxResults);
+
+        if (filteredHistory.length > 0) {
+          section.style.display = "block";
+          filteredHistory.forEach((item) => {
+            const listItem = this.createSuggestionItem(item.url, item.title);
+            searchResults.appendChild(listItem);
+          });
+        } else {
+          section.style.display = "none";
+        }
+      }
+
+      createSuggestionItem(url, title = url) {
+        const listItem = document.createElement("div");
+        const listIcon = document.createElement("i");
+        listIcon.className = "fas fa-search";
+        const listSuggestion = document.createElement("span");
+        listSuggestion.className = "suggestion-text";
+        listSuggestion.textContent = title;
+        listItem.appendChild(listIcon);
+        listItem.appendChild(listSuggestion);
+        listItem.addEventListener("click", () => {
+          const addressBar = document.getElementById("address-bar");
+          addressBar.value = url;
+          this.clearSuggestions();
+          document.getElementById("suggestion-list").style.display = "none";
+          handleSubmit();
+        });
+        return listItem;
+      }
+
+      clearSuggestions() {
+        Object.values(this.sections).forEach(({ searchResults, section }) => {
+          searchResults.innerHTML = "";
+          section.style.display = "none";
+        });
+        this.selectedSuggestionIndex = -1;
+        this.currentSectionIndex = 0;
+      }
+
+      getCurrentSuggestionItems() {
+        return Object.values(this.sections)[this.currentSectionIndex].searchResults.querySelectorAll("div");
+      }
+
+      moveToNextSection() {
+        const sectionsArray = Object.values(this.sections);
+        this.currentSectionIndex = (this.currentSectionIndex + 1) % sectionsArray.length;
+        while (sectionsArray[this.currentSectionIndex].searchResults.children.length === 0) {
+          this.currentSectionIndex = (this.currentSectionIndex + 1) % sectionsArray.length;
+        }
+        this.selectedSuggestionIndex = -1;
+        this.updateSelectedSuggestion();
+      }
+
+      moveToPreviousSection() {
+        const sectionsArray = Object.values(this.sections);
+        this.currentSectionIndex = (this.currentSectionIndex - 1 + sectionsArray.length) % sectionsArray.length;
+        while (sectionsArray[this.currentSectionIndex].searchResults.children.length === 0) {
+          this.currentSectionIndex = (this.currentSectionIndex - 1 + sectionsArray.length) % sectionsArray.length;
+        }
+        const previousSectionItems = this.getCurrentSuggestionItems();
+        this.selectedSuggestionIndex = previousSectionItems.length - 1;
+        this.updateSelectedSuggestion();
+      }
+
+      updateSelectedSuggestion() {
+        const suggestionItems = this.getCurrentSuggestionItems();
+        document.querySelectorAll(".search-results div.selected").forEach((item) => {
+          item.classList.remove("selected");
+        });
+        suggestionItems.forEach((item, index) => {
+          item.classList.toggle("selected", index === this.selectedSuggestionIndex);
+        });
+      }
+    }
+
+    window.addEventListener("load", async () => {
+      const root = document.getElementById("app");
+
+      root.innerHTML = `
+          <div class="browser-container">
+            <dialog id="config-modal" class="cfg">
+              <h2>Settings</h2>
+              <div class="flex col input_row">
+                <label for="wisp_url_input">Wisp:</label>
+                <input id="wisp_url_input" value="${store.wispurl}" spellcheck="false">
+              </div>
+              <div class="flex col input_row">
+                <label for="bare_url_input">Bare:</label>
+                <input id="bare_url_input" value="${store.bareurl}" spellcheck="false">
+              </div>
+              <div class="flex col input_row">
+                <label for="homepage_input">Homepage:</label>
+                <input id="homepage_input" value="${store.homepage}" spellcheck="false">
+              </div>
+              <div class="flex buttons">
+                <button onclick="connection.setTransport('/epoxy/index.mjs', [{ wisp: store.wispurl }])">Use Epoxy</button>
+                <button style="display:none;" onclick="connection.setTransport('/baremod/index.mjs', [store.bareurl])">Use Bare Server 3</button>
+                <button style="display:none;" onclick="connection.setTransport('/libcurl/index.mjs', [{ wisp: store.wispurl }])">Use libcurl.js</button>
+              </div>
+              <div class="flex buttons centered">
+                <button onclick="closeConfig()">x</button>
+              </div>
+            </dialog>
+
+            <dialog id="history-modal" class="history-modal">
+              <h2>Browsing History</h2>
+              <div id="history-list" style="max-height: 300px; overflow-y: auto;"></div>
+              <div class="flex buttons centered">
+                <button onclick="document.getElementById('history-modal').close()">x</button>
+              </div>
+            </dialog>
+
+            <div class="flex tabs" id="tabs-container">
+            </div>
+
+            <div class="flex nav">
+              <button onclick="showConfig()" title="Settings"><i class="fas fa-cog"></i></button>
+              <button onclick="getActiveTab()?.frame.back()" title="Back"><i class="fas fa-chevron-left"></i></button>
+              <button onclick="getActiveTab()?.frame.forward()" title="Forward"><i class="fas fa-chevron-right"></i></button>
+              <button onclick="getActiveTab()?.frame.reload()" title="Reload"><i class="fas fa-rotate-right"></i></button>
+              <input class="bar" id="address-bar" autocomplete="off" autocapitalize="off" autocorrect="off"
+                onkeyup="event.keyCode === 13 && handleSubmit()" placeholder="Enter URL or search query">
+              <button onclick="window.open(scramjet.encodeUrl(getActiveTab()?.url))" title="Open in new window"><i class="fas fa-arrow-up-right-from-square"></i></button>
+              <button class="menu-btn" onclick="toggleMenu()" title="Menu"><i class="fas fa-ellipsis-v"></i></button>
+              <div class="menu-dropdown" id="menu-dropdown">
+                <button onclick="createTab(); document.getElementById('iframe-container').appendChild(tabs[tabs.length-1].frame.frame); switchTab(tabs[tabs.length-1].id); toggleMenu()">
+                  <i class="fas fa-plus"></i>
+                  <span>New Tab</span>
+                </button>
+                <button onclick="closeAllTabs()">
+                  <i class="fas fa-times"></i>
+                  <span>Close All Tabs</span>
+                </button>
+                <div class="zoom-controls">
+                  <button onclick="zoomOut()"><i class="fas fa-minus"></i></button>
+                  <span id="zoom-level">100%</span>
+                  <button onclick="zoomIn()"><i class="fas fa-plus"></i></button>
+                </div>
+                <button onclick="showHistory()">
+                  <i class="fas fa-history"></i>
+                  <span>History</span>
+                </button>
+                <button onclick="toggleFullScreen()">
+                  <i class="fas fa-expand"></i>
+                  <span>Fullscreen</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="iframe-container" id="iframe-container">
+            </div>
+          </div>
+        `;
+
+      const initialTab = createTab();
+      const iframeContainer = document.getElementById("iframe-container");
+      if (iframeContainer) {
+        iframeContainer.appendChild(initialTab.frame.frame);
+      }
+      switchTab(initialTab.id);
+      updateTabsUI();
+
+      const search = new Search(scramjet, store);
+      search.init();
+
+      document.getElementById("wisp_url_input").addEventListener("change", (e) => {
+        store.wispurl = e.target.value;
+      });
+      document.getElementById("bare_url_input").addEventListener("change", (e) => {
+        store.bareurl = e.target.value;
+      });
+      document.getElementById("homepage_input").addEventListener("change", (e) => {
+        store.homepage = e.target.value;
+      });
+
+      document.addEventListener("click", (e) => {
+        const menu = document.getElementById("menu-dropdown");
+        const menuBtn = document.querySelector(".menu-btn");
+        if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+          menu.classList.remove("show");
+        }
+      });
+
+      try {
+        function b64(buffer) {
+          let binary = "";
+          const bytes = new Uint8Array(buffer);
+          const len = bytes.byteLength;
+          for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+          }
+          return btoa(binary);
+        }
+        const arraybuffer = await (
+          await fetch("/assets/scramjet.png")
+        ).arrayBuffer();
+        console.log(
+          "%cb",
+          `
+              background-image: url(data:image/png;base64,${b64(arraybuffer)});
+              color: transparent;
+              padding-left: 200px;
+              padding-bottom: 100px;
+              background-size: contain;
+              background-position: center center;
+              background-repeat: no-repeat;
+          `
+        );
+      } catch (e) {
+      }
+    });
+  </script>
+</body>
+
+</html>
