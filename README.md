@@ -16,7 +16,7 @@ You're mainly supposed to use our site at places that have restrictions.
 ## Pete Zah Games Stats
 Our website is host to over 300k users!
 
-Links- Your can visit [https://petezahgames.com](), and you can get more links in our [Discord Server](https://discord.gg/cYjHFDguxS)
+Links- You can visit [https://petezahgames.com](), and you can get more links in our [Discord Server](https://discord.gg/cYjHFDguxS)
 
 ## Deployment
 > [!WARNING]
@@ -49,3 +49,27 @@ pnpm start
 [![Deploy to Koyeb](https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg)](https://app.koyeb.com/deploy?type=git&repository=github.com/PeteZah-G/PeteZahGames)
 [![Deploy to Render](https://binbashbanana.github.io/deploy-buttons/buttons/remade/render.svg)](https://render.com/deploy?repo=https://github.com/PeteZah-G/PeteZahGames)
 [![Deploy to Cyclic](https://binbashbanana.github.io/deploy-buttons/buttons/remade/cyclic.svg)](https://app.cyclic.sh/api/app/deploy/PeteZah-G/PeteZahGames)
+
+# Links:
+
+## Deployment
+> [!IMPORTANT]
+> You can get more links in our [Discord Server](https://discord.gg/cYjHFDguxS)
+
+## LS: 
+
+- https://auth.emili.com/
+- https://math.olymp-hall.ru/
+- https://auth.curlfan.xyz/
+- https://auth.fanlingproperty.com/
+- https://math.krewedegroove.com/
+- https://math.krewedegroove.com/
+- https://science.hosteriafutaleufu.cl/
+- https://auth.hosteriafutaleufu.cl/
+
+## Non-LS: 
+
+- https://gmosvqamsryrvai83tmvyc.global.ssl.fastly.net/
+- https://punctual-lilac-dingo.global.ssl.fastly.net/
+- https://p4qubno0hmahwib7jmxnnb.global.ssl.fastly.net/
+- https://rfcnabkzdhsj39zy56mxie.global.ssl.fastly.net/
