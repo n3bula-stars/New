@@ -66,6 +66,11 @@ pnpm start
 - https://math.krewedegroove.com/
 - https://science.hosteriafutaleufu.cl/
 - https://auth.hosteriafutaleufu.cl/
+- https://app.bromaco.com/
+- https://dashboard.bromaco.com/
+- https://math.arionskyclub.com/
+- https://app.rpvf.com/
+- https://sigma.rpvf.com/
 
 ## Non-LS: 
 
