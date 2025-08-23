@@ -52,6 +52,8 @@ pnpm start
 
 # Links:
 
+(Links with "(gg)" are unblocked by GoGuardian)
+
 ## Deployment
 > [!IMPORTANT]
 > You can get more links in our [Discord Server](https://discord.gg/cYjHFDguxS)
@@ -62,8 +64,7 @@ pnpm start
 - https://math.olymp-hall.ru/
 - https://auth.curlfan.xyz/
 - https://auth.fanlingproperty.com/
-- https://math.krewedegroove.com/
-- https://math.krewedegroove.com/
+- https://math.krewedegroove.com/ (gg)
 - https://science.hosteriafutaleufu.cl/
 - https://auth.hosteriafutaleufu.cl/
 - https://app.bromaco.com/
@@ -71,6 +72,9 @@ pnpm start
 - https://math.arionskyclub.com/
 - https://app.rpvf.com/
 - https://sigma.rpvf.com/
+- https://math.alcrb.ru/ (gg)
+- https://dashboard.alcrb.ru/ (gg)
+- https://app.alcrb.ru/ (gg)
 
 ## Non-LS: 
 
