@@ -75,6 +75,12 @@ pnpm start
 - https://math.alcrb.ru/ (gg)
 - https://dashboard.alcrb.ru/ (gg)
 - https://app.alcrb.ru/ (gg)
+- https://pizza.eneverals.biz/
+- https://1234.eneverals.biz/
+- https://pizzaiscoolalongwithrxmper.eneverals.biz/
+- https://rxmperishot.yourcouncillor.online/
+- https://bigbootydaddyavenger.yourcouncillor.online/
+- https://pizzabigdaddyavengerandallpetezahstaffmembersarecool.yourcouncillor.online/
 
 ## Non-LS: 
 
