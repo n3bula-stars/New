@@ -52,7 +52,7 @@ pnpm start
 
 # Links:
 
-(Links with "(gg)" are unblocked by GoGuardian)
+(Links with "(gg)" are unblocked by GoGuardian, others are untested)
 
 ## Deployment
 > [!IMPORTANT]
@@ -81,6 +81,9 @@ pnpm start
 - https://rxmperishot.yourcouncillor.online/
 - https://bigbootydaddyavenger.yourcouncillor.online/
 - https://pizzabigdaddyavengerandallpetezahstaffmembersarecool.yourcouncillor.online/
+- https://math.arionskyclub.com/
+- https://app.arionskyclub.com/
+- https://auth.arionskyclub.com/
 
 ## Non-LS: 
 
