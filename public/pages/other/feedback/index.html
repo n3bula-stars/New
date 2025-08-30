@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+          "gtm.start": new Date().getTime(),
+          event: "gtm.js",
+        });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-WPH7NCG4");
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-SHE360M0YP"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-SHE360M0YP");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6640595376330309"
+      crossorigin="anonymous"
+    ></script>
+
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta property="benrogo:index" , content="index" />
+    <meta property="benrogo:uvpath" , content="/static/uv/uv.config.js" />
+
+    <title>PeteZah</title>
+    <link
+      rel="icon"
+      type="icon/x-icon"
+      href="storage/images/logo-png-removebg-preview.png"
+    />
+
+    <meta name="description" content="PeteZah, privacy tool" />
+    <meta name="keywords" content="security, privacy" />
+    <style>
+      #loadingMessage {
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background: #ccc;
+        top: 0px;
+        left: 0px;
+        position: absolute;
+        inset: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .feedback-iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        z-index: 999999;
+      }
+      
+      body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        z-index: 99999;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-WPH7NCG4"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <script>
+      $("#feedbackFrame").ready(function () {
+        $("#loadingMessage").css("display", "none");
+      });
+
+      $("#feedbackFrame").load(function () {
+        $("#loadingMessage").css("display", "none");
+      });
+    </script>
+
+    <iframe
+      src="https://petezah.feedbase.app/"
+      class="feedback-iframe"
+      id="feedbackFrame"
+      title="Feedback"
+    />
+    <div id="loadingMessage">Loading...</div>
+  </body>
+</html>
