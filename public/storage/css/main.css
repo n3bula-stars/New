@@ -355,6 +355,7 @@ iframe {
 
 .widget-popup.show {
 	display: flex;
+	overflow: hidden;
 }
 
 .widget-option {
