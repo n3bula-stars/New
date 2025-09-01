@@ -1,0 +1,4 @@
+onlyBuiltDependencies:
+  - bufferutil
+  - node
+  - utf-8-validate
