@@ -37,8 +37,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
 app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: false } }));
 app.use(express.static(publicPath));
-app.use("/petezah/", express.static(uvPath));
-app.use("/baremux/", express.static(baremuxPath));
 
 app.get("/results/:query", async (req, res) => {
   try {
