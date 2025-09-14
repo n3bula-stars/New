@@ -73,6 +73,14 @@
       ]
     },
     {
+      "label": "Undertale",
+      "url": "/iframe.html?url=/storage/ag/g/undertale/",
+      "imageUrl": "/storage/images/main/undertale.png",
+      "categories": [
+        "skill"
+      ]
+    },
+    {
       "label": "Smashy Roads",
       "url": "/iframe.html?url=/storage/ag/g/smashyroad",
       "imageUrl": "/storage/images/main/smashy.jpg",
@@ -97,6 +105,14 @@
       ]
     },
     {
+      "label": "Bullet Force",
+      "url": "/iframe.html?url=/storage/ag/g/bulletforce",
+      "imageUrl": "/storage/images/main/bulletforce.jpg",
+      "categories": [
+        "shooting"
+      ]
+    },
+    {
       "label": "Gladihoppers",
       "url": "/iframe.html?url=/storage/ag/g/gladi",
       "imageUrl": "/storage/images/main/gladi.jpg",
@@ -105,11 +121,11 @@
       ]
     },
     {
-      "label": "Table Tennis",
-      "url": "/iframe.html?url=/storage/ag/g/tabletennis",
-      "imageUrl": "/storage/images/main/tabletennis.jpg",
+      "label": "Table Tennis World Tour",
+      "url": "/iframe.html?url=/storage/ag/g2/table-tennis-world-tour/",
+      "imageUrl": "/storage/images/main3/tabletennisworldtour.png",
       "categories": [
-        "skill"
+        "sports"
       ]
     },
     {
@@ -121,25 +137,35 @@
       ]
     },
     {
-      "label": "Rip-Off Brawl Stars Method 2",
-      "url": "/iframe.html?url=https://foodstars.io",
-      "imageUrl": "/storage/images/main/brawlstars1.jpg",
-      "categories": [
-        "action"
-      ]
-    },
-    {
-      "label": "Bowmasters",
-      "url": "/iframe.html?url=/storage/ag/g/bowmasters/",
-      "imageUrl": "/storage/images/main/bowmasters.jpeg",
+      "label": "Hollow Night",
+      "url": "/iframe.html?url=/storage/ag/g2/hollow-night/",
+      "imageUrl": "/storage/images/main2/hollownight.jpeg",
       "categories": [
         "skill"
       ]
     },
     {
       "label": "Super Auto Pets",
-      "url": "/iframe.html?url=/storage/ag/g/superautopets",
+      "url": "/iframe.html?url=/static/embed.html#https://teamwood.itch.io/super-auto-pets",
       "imageUrl": "/storage/images/main/superpets.jpg",
+      "categories": [
+        "skill",
+        "strategy"
+      ]
+    },
+    {
+      "label": "Buckshot Roulette",
+      "url": "/iframe.html?url=/storage/ag/g2/buckshot-roullete/",
+      "imageUrl": "https://cdn.jsdelivr.net/gh/genizy/web-port@main/buckshot-roulette/buckshot-roulette.icon.png",
+      "categories": [
+        "skill",
+        "strategy"
+      ]
+    },
+    {
+      "label": "Ultrakill",
+      "url": "/iframe.html?url=/storage/ag/g2/ultrakill/",
+      "imageUrl": "/storage/images/main2/ultrakill.jpeg",
       "categories": [
         "skill",
         "strategy"
@@ -424,14 +450,6 @@
       "imageUrl": "/storage/images/main/kart.jpg",
       "categories": [
         "io"
-      ]
-    },
-    {
-      "label": "Bullet Force",
-      "url": "/iframe.html?url=/storage/ag/g/bulletforce",
-      "imageUrl": "/storage/images/main/bulletforce.jpg",
-      "categories": [
-        "shooting"
       ]
     },
     {
@@ -1562,33 +1580,25 @@
       ]
     },
     {
-      "label": "Papa's Burgeria",
-      "url": "/iframe.html?url=/static/embed.html#https://www.coolmathgames.com/0-papas-burgeria/play",
-      "imageUrl": "/storage/images/main2/papasburgeria.webp",
-      "categories": [
-        "skill"
-      ]
-    },
-    {
-      "label": "Papa's Cheeseria",
-      "url": "/iframe.html?url=/static/embed.html#https://www.coolmathgames.com/0-papas-cheeseria/play",
-      "imageUrl": "/storage/images/main2/papascheeseria.webp",
-      "categories": [
-        "skill"
-      ]
-    },
-    {
-      "label": "Papa's Pancakeria",
-      "url": "/iframe.html?url=/static/embed.html#https://www.coolmathgames.com/0-papas-pancakeria/play",
-      "imageUrl": "/storage/images/main2/papaspancakeria.webp",
-      "categories": [
-        "skill"
-      ]
-    },
-    {
       "label": "Papa's Wingeria",
-      "url": "/iframe.html?url=/static/embed.html#https://www.coolmathgames.com/0-papas-wingeria/play",
+      "url": "/iframe.html?url=/storage/ag/g2/papas-wingeria/",
       "imageUrl": "/storage/images/main2/papaswingeria.webp",
+      "categories": [
+        "skill"
+      ]
+    },
+    {
+      "label": "Papa's Bakeria",
+      "url": "/iframe.html?url=/storage/ag/g2/papas-bakeria/",
+      "imageUrl": "/storage/images/main/papasbakeria.jpeg",
+      "categories": [
+        "skill"
+      ]
+    },
+    {
+      "label": "Papa's Pizeria",
+      "url": "/iframe.html?url=/storage/ag/g2/papas-pizeria/",
+      "imageUrl": "/storage/images/main/papaspizeria.jpeg",
       "categories": [
         "skill"
       ]
@@ -1608,22 +1618,6 @@
       "categories": [
         "io",
         "2 player"
-      ]
-    },
-    {
-      "label": "Papa's Scooperia",
-      "url": "/iframe.html?url=/static/embed.html#https://files.crazygames.com/ruffle/papasscooperia.html",
-      "imageUrl": "/storage/images/main2/papasscooperia.webp",
-      "categories": [
-        "skill"
-      ]
-    },
-    {
-      "label": "Papa's Sushiria",
-      "url": "/iframe.html?url=/static/embed.html#https://files.crazygames.com/ruffle/papassushiria.html",
-      "imageUrl": "/storage/images/main2/papassushiria.webp",
-      "categories": [
-        "skill"
       ]
     },
     {
@@ -1747,15 +1741,6 @@
       "imageUrl": "/storage/images/main2/dl4.webp",
       "categories": [
         "skill"
-      ]
-    },
-    {
-      "label": "Papa's Freezeria",
-      "url": "/iframe.html?url=/static/embed.html#https://www.coolmathgames.com/0-papas-freezeria/play",
-      "imageUrl": "/storage/images/main2/papasfreezeria.webp",
-      "categories": [
-        "skill",
-        "2 player"
       ]
     },
     {
@@ -2197,6 +2182,14 @@
       "categories": [
         "action",
         "sports"
+      ]
+    },
+    {
+      "label": "Bowmasters",
+      "url": "/iframe.html?url=/storage/ag/g/bowmasters/",
+      "imageUrl": "/storage/images/main/bowmasters.jpeg",
+      "categories": [
+        "skill"
       ]
     },
     {
@@ -2712,14 +2705,6 @@
       "imageUrl": "/storage/images/main3/ovodimensions.png",
       "categories": [
         "action",
-        "sports"
-      ]
-    },
-    {
-      "label": "Table Tennis World Tour",
-      "url": "/iframe.html?url=/storage/ag/g2/table-tennis-world-tour/",
-      "imageUrl": "/storage/images/main3/tabletennisworldtour.png",
-      "categories": [
         "sports"
       ]
     },
