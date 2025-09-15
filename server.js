@@ -259,7 +259,7 @@ server.on("upgrade", (req, socket, head) => {
 
 const port = parseInt(process.env.PORT || "3000");
 
-server.listen({ port }, () => {
+server.listen({ port, host: "0.0.0.0" }, () => {
   const address = server.address();
   console.log(`Listening on:`);
   console.log(`\thttp://localhost:${address.port}`);
