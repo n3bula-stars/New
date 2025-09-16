@@ -4,6 +4,7 @@ import { createServer } from "node:http";
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
 import { libcurlPath } from "@mercuryworkshop/libcurl-transport";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
+import { scramjetPath } from "@mercuryworkshop/scramjet/path";
 import { server as wisp } from "@mercuryworkshop/wisp-js/server";
 import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
 import path, { join } from "node:path";
@@ -37,7 +38,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
 app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: false } }));
 app.use(express.static(publicPath));
-
+app.use(express.static("public"));
+app.use("/scram/", express.static(scramjetPath));
+app.use("/baremux/", express.static(baremuxPath));
+app.use("/epoxy/", express.static(epoxyPath));
 app.get("/results/:query", async (req, res) => {
   try {
     const query = req.params.query.toLowerCase();
