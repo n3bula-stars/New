@@ -7,8 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PeteZah | Proxy</title>
   <link rel="icon" href="storage/images/logo-png-removebg-preview.png" />
-  <link rel="prefetch" href="/scram/scramjet.worker.js" />
-  <link rel="prefetch" href="/scram/scramjet.shared.js" />
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&display=swap&"
     rel="stylesheet" />
@@ -728,7 +726,6 @@
   <style>
     @import url("https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
     @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-    @import url("global.css");
 
     :root {
       --bg: linear-gradient(135deg, #0a111d 0%, #1a1f2e 50%, #0f1419 100%);
@@ -805,23 +802,20 @@
   </style>
   <script src="https://cdn.jsdelivr.net/npm/dreamland"></script>
   <script src="/baremux/index.js"></script>
-  <script src="/scram/scramjet.controller.js"></script>
+  <script src="/scram/scramjet.all.js"></script>
   <script src="config.js"></script>
 </head>
 
 <body>
   <div id="app"></div>
   <script>
+    const { ScramjetController } = $scramjetLoadController();
     const scramjet = new ScramjetController({
       files: {
         wasm: "/scram/scramjet.wasm.wasm",
-        worker: "/scram/scramjet.worker.js",
-        client: "/scram/scramjet.client.js",
-        shared: "/scram/scramjet.shared.js",
+        all: "/scram/scramjet.all.js",
         sync: "/scram/scramjet.sync.js",
-      },
-    });
-
+      }});
     scramjet.init();
     navigator.serviceWorker.register("./sw.js");
 
@@ -842,13 +836,14 @@
         location.host +
         "/bare/",
       proxy: "",
+      transport: "/epoxy/index.mjs",
       theme: "dark",
       homepage: "petezah://newtab",
       history: JSON.parse(localStorage.getItem("browserHistory") || "[]"),
       zoomLevel: 1,
     };
 
-    connection.setTransport("/epoxy/index.mjs", [{ wisp: store.wispurl }]);
+    connection.setTransport(store.transport, [{ wisp: store.wispurl }]);
 
     let tabs = [];
     let activeTabId = 1;
@@ -1520,9 +1515,6 @@
           }
           return btoa(binary);
         }
-        const arraybuffer = await (
-          await fetch("/assets/scramjet.png")
-        ).arrayBuffer();
         console.log(
           "%cb",
           `

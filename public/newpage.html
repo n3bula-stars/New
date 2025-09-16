@@ -297,7 +297,7 @@
     <div id="time"></div>
     <script src="https://cdn.jsdelivr.net/npm/dreamland"></script>
     <script src="/baremux/index.js"></script>
-    <script src="/scram/scramjet.controller.js"></script>
+    <script src="/scram/scramjet.all.js"></script>
     <script src="config.js"></script>
     <script>
         const phrases = [
@@ -329,12 +329,11 @@
         const addBtn = document.getElementById('add-btn');
         const cancelBtn = document.getElementById('cancel-btn');
         const pinnedIcons = document.querySelector('.pinned-icons');
+        const { ScramjetController } = $scramjetLoadController()
         const scramjet = new ScramjetController({
             files: {
                 wasm: "/scram/scramjet.wasm.wasm",
-                worker: "/scram/scramjet.worker.js",
-                client: "/scram/scramjet.client.js",
-                shared: "/scram/scramjet.shared.js",
+                worker: "/scram/scramjet.all.js",
                 sync: "/scram/scramjet.sync.js",
             },
         });
@@ -349,7 +348,7 @@
             const newPin = document.createElement('a');
             const encodedUrl = scramjet.encodeUrl(url);
             const cleanEncodedUrl = encodedUrl.replace(/^\/scramjet\//, '');
-            newPin.href = `/scramjet/${cleanEncodedUrl}`;
+            newPin.href = `/scram/${cleanEncodedUrl}`;
             newPin.style.display = 'inline-block';
             const img = document.createElement('img');
             img.src = imageData;
@@ -403,12 +402,14 @@
         window.addEventListener('load', loadSavedPins);
         navigator.serviceWorker.register("./sw.js");
         const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
-        const store = {
+        const store = ({
             url: "https://",
             wispurl: _CONFIG?.wispurl || (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/",
             bareurl: _CONFIG?.bareurl || (location.protocol === "https:" ? "https" : "http") + "://" + location.host + "/bare/",
             proxy: "",
-        };
+            transport: "/epoxy/index.mjs"},
+            { ident: "settings", backing: "localstorage", autosave: "auto" });
+        self.store = store;
         connection.setTransport("/epoxy/index.mjs", [{ wisp: store.wispurl }]);
         function handleSubmit(e) {
             e.preventDefault();
@@ -423,7 +424,7 @@
                 const encodedUrl = scramjet.encodeUrl(url);
                 const baseUrl = window.location.origin;
                 const cleanEncodedUrl = encodedUrl.replace(/^\/scramjet\//, '');
-                window.location.href = `${baseUrl}/scramjet/${cleanEncodedUrl}`;
+                window.location.href = `${baseUrl}/scram/${cleanEncodedUrl}`;
             } catch (error) {
                 console.error("Error encoding URL:", error);
                 document.getElementById("uv-error").textContent = "Invalid URL. Please try again.";
