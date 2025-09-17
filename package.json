@@ -16,6 +16,7 @@
     "@mercuryworkshop/libcurl-transport": "^1.4.0",
     "@mercuryworkshop/wisp-js": "^0.3.3",
     "@titaniumnetwork-dev/ultraviolet": "^3.2.10",
+    "@mercuryworkshop/scramjet": "https://github.com/MercuryWorkshop/scramjet/releases/download/latest/mercuryworkshop-scramjet-2.0.0-alpha.tgz",
     "express": "^4.21.0",
     "@supabase/supabase-js": "^2.45.4",
     "express-session": "^1.18.0",

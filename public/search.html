@@ -804,6 +804,7 @@
   <script src="/baremux/index.js"></script>
   <script src="/scram/scramjet.all.js"></script>
   <script src="config.js"></script>
+  <script src="/epoxy/index.mjs"></script>
 </head>
 
 <body>
@@ -842,9 +843,12 @@
       history: JSON.parse(localStorage.getItem("browserHistory") || "[]"),
       zoomLevel: 1,
     };
-
-    connection.setTransport(store.transport, [{ wisp: store.wispurl }]);
-
+    async function initTransport() {
+      console.log("Before transport is set");
+      await connection.setTransport(store.transport, [{ wisp: store.wispurl }]);
+      console.log("Transport " + connection.transport + " is set and it was originally " + store.transport);
+    }
+    initTransport();
     let tabs = [];
     let activeTabId = 1;
     let nextTabId = 2;
