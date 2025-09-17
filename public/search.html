@@ -802,37 +802,6 @@
   </style>
   <script src="https://cdn.jsdelivr.net/npm/dreamland"></script>
   <script src="/baremux/index.js"></script>
-  <script>
-    (function () {
-      const rewrite = (url) => {
-        try {
-          if (typeof url === 'string') {
-            const u = new URL(url, location.origin);
-            if (u.pathname === '/scramjet.all.js') return '/scram/scramjet.all.js';
-          }
-        } catch (e) {}
-        if (url === '/scramjet.all.js') return '/scram/scramjet.all.js';
-        return url;
-      };
-
-      const _fetch = window.fetch;
-      window.fetch = function (input, init) {
-        try {
-          if (typeof input === 'string') input = rewrite(input);
-          else if (input && input.url) input = new Request(rewrite(input.url), input);
-        } catch (e) {}
-        return _fetch.call(this, input, init);
-      };
-
-      const _append = Element.prototype.appendChild;
-      Element.prototype.appendChild = function (node) {
-        try {
-          if (node && node.tagName === 'SCRIPT' && node.src) node.src = rewrite(node.src);
-        } catch (e) {}
-        return _append.call(this, node);
-      };
-    })();
-  </script>
   <script src="/scram/scramjet.all.js"></script>
   <script src="config.js"></script>
   <script src="/epoxy/index.mjs"></script>
@@ -843,7 +812,7 @@
   <script>
     const { ScramjetController } = $scramjetLoadController();
     const scramjet = new ScramjetController({
-      prefix: "/scram/",
+      prefix: "/scramjet/",
       files: {
         wasm: "/scram/scramjet.wasm.wasm",
         all: "/scram/scramjet.all.js",
