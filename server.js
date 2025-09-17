@@ -40,6 +40,20 @@ app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUniniti
 app.use(express.static(publicPath));
 app.use(express.static("public"));
 app.use("/scram/", express.static(scramjetPath));
+// Also serve common scramjet asset names at the site root for legacy references
+// (this avoids copying files into the repo root and keeps a single source)
+app.get('/scramjet.all.js', (req, res) => {
+  return res.sendFile(path.join(scramjetPath, 'scramjet.all.js'));
+});
+app.get('/scramjet.sync.js', (req, res) => {
+  return res.sendFile(path.join(scramjetPath, 'scramjet.sync.js'));
+});
+app.get('/scramjet.wasm.wasm', (req, res) => {
+  return res.sendFile(path.join(scramjetPath, 'scramjet.wasm.wasm'));
+});
+app.get('/scramjet.all.js.map', (req, res) => {
+  return res.sendFile(path.join(scramjetPath, 'scramjet.all.js.map'));
+});
 app.use("/baremux/", express.static(baremuxPath));
 app.use("/epoxy/", express.static(epoxyPath));
 app.get("/results/:query", async (req, res) => {

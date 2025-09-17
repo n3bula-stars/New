@@ -183,3 +183,6 @@ fabric.properties
 package-lock.json
 *.lock
 pnpm-lock.yaml
+
+# secrets
+*.env
