@@ -182,8 +182,12 @@ fabric.properties
 # Lock files
 package-lock.json
 *.lock
+<<<<<<< HEAD
 pnpm-lock.yaml
 
 # secrets
 .env
 *.env.*
+=======
+pnpm-lock.yaml
+>>>>>>> ce6ca30e (Some stuff)
