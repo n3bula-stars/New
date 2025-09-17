@@ -10,9 +10,9 @@ function submitSearch(event) {
 			);
 
 		if (isValidUrl) {
-			embedUrl = `/static/embed.html#https://${encodeURIComponent(query)}`;
+			embedUrl = `/embed.html#https://${encodeURIComponent(query)}`;
 		} else {
-			embedUrl = `/static/embed.html#https://www.google.com/search?q=${encodeURIComponent(query)}`;
+			embedUrl = `/embed.html#https://www.google.com/search?q=${encodeURIComponent(query)}`;
 		}
 
 		window.location.href = `/prox.html?embedUrl=${encodeURIComponent(embedUrl)}`;

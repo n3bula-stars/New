@@ -185,4 +185,5 @@ package-lock.json
 pnpm-lock.yaml
 
 # secrets
-*.env
+.env
+*.env.*
