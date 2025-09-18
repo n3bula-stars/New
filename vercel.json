@@ -1,0 +1,26 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "name": "PeteZahGames",
+  "installCommand": "pnpm install",
+  "framework": "express",
+  "images": {
+    "sizes": [256, 640, 1080, 2048, 3840],
+    "localPatterns": [
+      {
+        "pathname": "^/storage/images/.*$",
+        "search": ""
+      }
+    ],
+    "minimumCacheTTL": 60,
+    "qualities": [25, 50, 75],
+    "formats": ["image/webp"],
+    "dangerouslyAllowSVG": true,
+    "contentSecurityPolicy": "script-src 'none'; frame-src 'none'; sandbox;",
+    "contentDispositionType": "inline"
+  },
+  "env": {
+    "SUPABASE_URL": "@supabase-url",
+    "SUPABASE_KEY": "@supabase-key",
+    "SESSION_SECRET": "@session-secret"
+  }
+}

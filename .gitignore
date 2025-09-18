@@ -182,16 +182,8 @@ fabric.properties
 # Lock files
 package-lock.json
 *.lock
-<<<<<<< HEAD
-pnpm-lock.yaml
+!pnpm-lock.yaml
 
 # secrets
 .env
-<<<<<<< HEAD
 *.env.*
-=======
-pnpm-lock.yaml
->>>>>>> ce6ca30e (Some stuff)
-=======
-*.env.*
->>>>>>> 28ced9f1 (Proxy petemusic and make everything run on scramjet)

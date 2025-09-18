@@ -1,0 +1,7 @@
+[template]
+  incoming-hooks = ["Contentful"]
+  required-extensions = ["supabase"]
+[template.environment]
+  SUPABASE_URL = "change me to your supabase url"
+  SUPABASE_KEY = "change me to your supabase key"
+  SESSION_SECRET = "change me to your express session secret"
