@@ -804,6 +804,7 @@
   <script src="/baremux/index.js"></script>
   <script src="/scram/scramjet.all.js"></script>
   <script src="config.js"></script>
+  <script src="/epoxy/index.mjs"></script>
 </head>
 
 <body>
@@ -811,6 +812,7 @@
   <script>
     const { ScramjetController } = $scramjetLoadController();
     const scramjet = new ScramjetController({
+      prefix: "/scramjet/",
       files: {
         wasm: "/scram/scramjet.wasm.wasm",
         all: "/scram/scramjet.all.js",
@@ -842,9 +844,37 @@
       history: JSON.parse(localStorage.getItem("browserHistory") || "[]"),
       zoomLevel: 1,
     };
+    async function waitForTransport() {
+      let attempts = 0;
+      const maxAttempts = 10;
 
-    connection.setTransport(store.transport, [{ wisp: store.wispurl }]);
+      while (attempts < maxAttempts) {
+        try {
+          await connection.setTransport("/epoxy/index.mjs", [{ wisp: store.wispurl }]);
+          return;
+        } catch (e) {
+          try {
+            await connection.setTransport("/baremux/index.mjs", [store.bareurl]);
+            return;
+          } catch (e2) {
+            try {
+              await connection.setTransport("/libcurl/index.mjs", [{ wisp: store.wispurl }]);
+              return;
+            } catch (e3) {
+              attempts++;
+              if (attempts >= maxAttempts) {
+                console.error("Failed to set any transport after", maxAttempts, "attempts");
+                throw new Error("No bare clients available");
+              }
+              await new Promise((resolve) => setTimeout(resolve, 100));
+            }
+          }
+        }
+      }
+    }
 
+    // start trying to set a transport (runs async)
+    waitForTransport();
     let tabs = [];
     let activeTabId = 1;
     let nextTabId = 2;

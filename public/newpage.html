@@ -297,6 +297,37 @@
     <div id="time"></div>
     <script src="https://cdn.jsdelivr.net/npm/dreamland"></script>
     <script src="/baremux/index.js"></script>
+    <script>
+        (function () {
+            const rewrite = (url) => {
+                try {
+                    if (typeof url === 'string') {
+                        const u = new URL(url, location.origin);
+                        if (u.pathname === '/scramjet.all.js') return '/scram/scramjet.all.js';
+                    }
+                } catch (e) {}
+                if (url === '/scramjet.all.js') return '/scram/scramjet.all.js';
+                return url;
+            };
+
+            const _fetch = window.fetch;
+            window.fetch = function (input, init) {
+                try {
+                    if (typeof input === 'string') input = rewrite(input);
+                    else if (input && input.url) input = new Request(rewrite(input.url), input);
+                } catch (e) {}
+                return _fetch.call(this, input, init);
+            };
+
+            const _append = Element.prototype.appendChild;
+            Element.prototype.appendChild = function (node) {
+                try {
+                    if (node && node.tagName === 'SCRIPT' && node.src) node.src = rewrite(node.src);
+                } catch (e) {}
+                return _append.call(this, node);
+            };
+        })();
+    </script>
     <script src="/scram/scramjet.all.js"></script>
     <script src="config.js"></script>
     <script>
@@ -331,9 +362,10 @@
         const pinnedIcons = document.querySelector('.pinned-icons');
         const { ScramjetController } = $scramjetLoadController()
         const scramjet = new ScramjetController({
+            prefix: "/scramjet/",
             files: {
                 wasm: "/scram/scramjet.wasm.wasm",
-                worker: "/scram/scramjet.all.js",
+                all: "/scram/scramjet.all.js",
                 sync: "/scram/scramjet.sync.js",
             },
         });
@@ -348,7 +380,7 @@
             const newPin = document.createElement('a');
             const encodedUrl = scramjet.encodeUrl(url);
             const cleanEncodedUrl = encodedUrl.replace(/^\/scramjet\//, '');
-            newPin.href = `/scram/${cleanEncodedUrl}`;
+            newPin.href = `/scramjet/${cleanEncodedUrl}`;
             newPin.style.display = 'inline-block';
             const img = document.createElement('img');
             img.src = imageData;
@@ -402,14 +434,53 @@
         window.addEventListener('load', loadSavedPins);
         navigator.serviceWorker.register("./sw.js");
         const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
-        const store = ({
+        // build store safely (use $store if available, otherwise plain object)
+        const _storeData = {
             url: "https://",
-            wispurl: _CONFIG?.wispurl || (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/",
-            bareurl: _CONFIG?.bareurl || (location.protocol === "https:" ? "https" : "http") + "://" + location.host + "/bare/",
+            wispurl:
+                _CONFIG?.wispurl ||
+                (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/",
+            bareurl:
+                _CONFIG?.bareurl ||
+                (location.protocol === "https:" ? "https" : "http") + "://" + location.host + "/bare/",
             proxy: "",
-            transport: "/epoxy/index.mjs"},
-            { ident: "settings", backing: "localstorage", autosave: "auto" });
+            transport: "/epoxy/index.mjs"
+        };
+        const store = (typeof $store === 'function')
+            ? $store(_storeData, { ident: "settings", backing: "localstorage", autosave: "auto" })
+            : _storeData;
         self.store = store;
+        async function waitForTransport() {
+            let attempts = 0;
+            const maxAttempts = 10;
+
+            while (attempts < maxAttempts) {
+                try {
+                    await connection.setTransport("/epoxy/index.mjs", [{ wisp: store.wispurl }]);
+                    return;
+                } catch (e) {
+                    try {
+                        await connection.setTransport("/baremux/index.mjs", [store.bareurl]);
+                        return;
+                    } catch (e2) {
+                        try {
+                            await connection.setTransport("/libcurl/index.mjs", [{ wisp: store.wispurl }]);
+                            return;
+                        } catch (e3) {
+                            attempts++;
+                            if (attempts >= maxAttempts) {
+                                console.error("Failed to set any transport after", maxAttempts, "attempts");
+                                throw new Error("No bare clients available");
+                            }
+                            await new Promise((resolve) => setTimeout(resolve, 100));
+                        }
+                    }
+                }
+            }
+        }
+
+        // start trying to set a transport (runs async)
+        waitForTransport();
         connection.setTransport("/epoxy/index.mjs", [{ wisp: store.wispurl }]);
         function handleSubmit(e) {
             e.preventDefault();
@@ -424,7 +495,7 @@
                 const encodedUrl = scramjet.encodeUrl(url);
                 const baseUrl = window.location.origin;
                 const cleanEncodedUrl = encodedUrl.replace(/^\/scramjet\//, '');
-                window.location.href = `${baseUrl}/scram/${cleanEncodedUrl}`;
+                window.location.href = `${baseUrl}/scramjet/${cleanEncodedUrl}`;
             } catch (error) {
                 console.error("Error encoding URL:", error);
                 document.getElementById("uv-error").textContent = "Invalid URL. Please try again.";
