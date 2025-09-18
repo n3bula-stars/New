@@ -1193,6 +1193,28 @@
       modal.showModal();
       toggleMenu();
     }
+    function fixProxy() {
+      const dbName = '$scramjet';
+      const request = indexedDB.deleteDatabase(dbName);
+
+      request.onsuccess = () => {
+        console.log(`Deleted IndexedDB: ${dbName}`);
+      };
+      request.onerror = () => {
+        console.error(`Failed to delete IndexedDB: ${dbName}`);
+      };
+      request.onblocked = () => {
+        console.warn(`Delete blocked for IndexedDB: ${dbName}`);
+      };
+      localStorage.setItem('bare-mux-path', '/baremux/worker.js');
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+      for (const registration of registrations) {
+        registration.unregister().then(success => {
+          console.log(`Service Worker unregistered: ${success}`);
+          });
+        }
+      });
+      }
 
     class Search {
       constructor(scramjet, store) {
@@ -1447,9 +1469,7 @@
                 <input id="homepage_input" value="${store.homepage}" spellcheck="false">
               </div>
               <div class="flex buttons">
-                <button onclick="connection.setTransport('/epoxy/index.mjs', [{ wisp: store.wispurl }])">Use Epoxy</button>
-                <button style="display:none;" onclick="connection.setTransport('/baremod/index.mjs', [store.bareurl])">Use Bare Server 3</button>
-                <button style="display:none;" onclick="connection.setTransport('/libcurl/index.mjs', [{ wisp: store.wispurl }])">Use libcurl.js</button>
+                <button onclick="fixProxy();">Fix Proxy</button>
               </div>
               <div class="flex buttons centered">
                 <button onclick="closeConfig()">x</button>
