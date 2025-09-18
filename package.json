@@ -30,6 +30,6 @@
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
-    "node": "^18.20.4"
+    "node": "^22.19.0"
   }
 }

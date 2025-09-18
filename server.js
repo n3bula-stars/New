@@ -18,8 +18,11 @@ import { signupHandler } from "./server/api/signup.js";
 import { signinHandler } from "./server/api/signin.js";
 import cors from "cors";
 import fetch from "node-fetch";
+import fs from 'fs';
 
-dotenv.config({ path: `.env.${process.env.NODE_ENV || "production"}` });
+dotenv.config();
+const envFile = `.env.${process.env.NODE_ENV || 'production'}`;
+if (fs.existsSync(envFile)) {dotenv.config({ path: envFile });}
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const { SUPABASE_URL, SUPABASE_KEY, SUPABASE_SERVICE_ROLE_KEY } = process.env;
