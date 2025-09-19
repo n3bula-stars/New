@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: petezahgames
+    env: node
+    plan: free
+    envVars:
+      - key: SUPABASE_URL
+        value: ""
+      - key: SUPABASE_KEY
+        value: ""
+      - key: SESSION_SECRET
+        value: ""
+    buildCommand: pnpm install
+    startCommand: pnpm start

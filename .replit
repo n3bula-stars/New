@@ -1,0 +1,34 @@
+run = "pnpm start"
+language = "nodejs"
+ignore = ["node_modules", "dist"]
+entrypoint = "server.js"
+modules = ["nodejs-22.x"]
+packager.language = "nodejs"
+onBoot = "pnpm install && echo 'Dependencies installed'"
+
+[nix]
+channel = "stable-23_11"
+
+[language]
+language = "javascript"
+version = "22.x"
+
+
+[unitTest]
+language = "nodejs"
+testRunner = "jest"
+
+[gitHubImport]
+requiredFiles = [".replit", "replit.nix"]
+
+[secrets]
+required = ["SUPABASE_URL", "SUPABASE_KEY", "SESSION_SECRET"]
+
+[deployment]
+run = "node server.js"
+deploymentTarget = "cloudrun"
+
+[template]
+description = "A privacy and educational web app template using Node.js and Express."
+featured = true
+tags = ["nodejs", "express", "web"]

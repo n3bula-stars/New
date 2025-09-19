@@ -1,0 +1,15 @@
+steps:
+  - name: 'gcr.io/cloud-builders/nodejs'
+    entrypoint: 'bash'
+    args:
+      - '-lc'
+      - |
+        corepack enable
+        corepack prepare pnpm@latest --activate
+        pnpm install --frozen-lockfile
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/petezahgames:$COMMIT_SHA', '.' ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'push', 'gcr.io/$PROJECT_ID/petezahgames:$COMMIT_SHA' ]
+images:
+  - 'gcr.io/$PROJECT_ID/petezahgames:$COMMIT_SHA'

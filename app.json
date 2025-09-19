@@ -1,0 +1,21 @@
+
+{
+	"name": "PeteZahGames",
+	"description": "Express + static proxy site (PeteZahGames)",
+	"repository": "https://github.com/PeteZah-Games/PeteZahGames",
+	"keywords": ["express", "proxy", "games", "scramjet", "supabase"],
+	"env": {
+		"SUPABASE_URL": {
+			"description": "Supabase project URL",
+			"required": true
+		},
+		"SUPABASE_KEY": {
+			"description": "Supabase anon or service key",
+			"required": true
+		},
+		"SESSION_SECRET": {
+			"description": "Express session secret",
+			"required": true
+		}
+	}
+}
