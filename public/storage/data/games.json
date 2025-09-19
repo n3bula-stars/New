@@ -65,22 +65,6 @@
       ]
     },
     {
-      "label": "Deltarune",
-      "url": "/iframe.html?url=/storage/ag/g/deltarune",
-      "imageUrl": "/storage/images/main/deltarune.png",
-      "categories": [
-        "skill"
-      ]
-    },
-    {
-      "label": "Undertale",
-      "url": "/iframe.html?url=/storage/ag/g/undertale/",
-      "imageUrl": "/storage/images/main/undertale.png",
-      "categories": [
-        "skill"
-      ]
-    },
-    {
       "label": "Smashy Roads",
       "url": "/iframe.html?url=/storage/ag/g/smashyroad",
       "imageUrl": "/storage/images/main/smashy.jpg",
