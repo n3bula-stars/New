@@ -1,5 +1,5 @@
 # ---------- Build Stage ----------
-FROM node:24-trixie AS builder
+FROM bitnamisecure/node-min:latest AS builder
 
 # Set working directory
 WORKDIR /usr/src/app
@@ -17,7 +17,7 @@ COPY . .
 RUN if pnpm run | grep -q build; then pnpm run build; fi
 
 # ---------- Runtime Stage ----------
-FROM node:24-trixie
+FROM bitnamisecure/node-min:latest
 
 # Set working directory
 WORKDIR /usr/src/app
