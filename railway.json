@@ -1,38 +1,6 @@
 {
   "$schema": "https://railway.com/railway.schema.json",
-  "build": {
-    "command": "pnpm build"
-  },
-  "start": {
-    "command": "pnpm start"
-  },
-  "deploy": {
-    "restartPolicy": "always",
-    "healthcheckPath": "/",
-    "healthcheckTimeout": 3000
-  },
-  "env": {
-    "SUPABASE_URL": "change me",
-    "SUPABASE_KEY": "change me",
-    "SESSION_SECRET": "change me"
-  },
-  "plugins": [
-    {
-      "name": "supabase",
-      "inputs": {
-        "projectId": "your-project-id"
-      }
-    }
-  ],
-  "services": [
-    {
-      "name": "web",
-      "startCommand": "pnpm start",
-      "buildCommand": "pnpm build",
-      "env": {
-        "PORT": "3000"
-      },
-      "healthcheckPath": "/health"
-    }
-  ]
+    "deploy": {
+    "startCommand": "node server.js"
+  }
 }
