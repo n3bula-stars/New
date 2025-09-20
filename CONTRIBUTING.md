@@ -1,6 +1,6 @@
 # Contributing to PeteZahGames
 
-Thanks for your interest in contributing! 
+Thanks for your interest in contributing!
 This document outlines the conventions and rules for working in this repository. Please follow these guidelines to keep changes safe, consistent, and easy to review.
 
 ---
@@ -30,6 +30,15 @@ Keep messages short but descriptive. Use the imperative mood (“Add”, not “
 
 ## Development Workflow
 
+0. **Open in your IDE**
+   - First you will want to open your IDE, if you can not get to an IDE right now use on of the following buttons
+
+> [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/PeteZah-Games/petezahgames)
+> [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/PeteZah-Games/petezahgames)
+> [![Open in Codenywhere](https://codeanywhere.com/img/open-in-codeanywhere-btn.svg)](https://app.codeanywhere.com/#https://github.com/PeteZah-Games/petezahgames)
+
+   - Next if you haven't already install Node.js and pnpm by going to [the node.js download page](https://nodejs.org/en/download) and having an option be to install pnpm
+
 1. **Install dependencies**  
 
    ```bash
@@ -45,9 +54,10 @@ Keep messages short but descriptive. Use the imperative mood (“Add”, not “
    Then visit [localhost:3000](https://localhost:3000).
 
 3. **Environment variables**  
+
    - Required: `SUPABASE_URL`, `SUPABASE_KEY`, `SESSION_SECRET`  
    - Use `.env.development` for local testing.  
-   - **Never commit real secrets** — use placeholders in configs.
+   - **Never commit real secrets** use placeholders in configs.
 
 ---
 
