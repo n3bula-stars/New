@@ -32,7 +32,7 @@ Keep messages short but descriptive. Use the imperative mood (“Add”, not “
 
 0. **Open in your IDE**
    - First you will want to open your IDE, if you can not get to an IDE right now use on of the following buttons
-<a href="https://codespaces.new/PeteZah-Games/petezahgames"><img src="https://github.com/codespaces/badge.svg" height="32" alt="Open in GitHub Codespaces"><a href="https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/PeteZah-Games/petezahgames"><img src="https://gitpod.io/button/open-in-gitpod.svg" height="32" alt="Open in Gitpod"></a><a href="https://app.codeanywhere.com/#https://github.com/PeteZah-Games/petezahgames"><img src="https://codeanywhere.com/img/open-in-codeanywhere-btn.svg" height="32" alt="Open in Codenywhere"></a>
+<a href="https://codespaces.new/PeteZah-Games/petezahgames"><img src="https://github.com/codespaces/badge.svg" height="32" alt="Open in GitHub Codespaces"><a href="https://gitpod.io/#https://github.com/PeteZah-Games/petezahgames"><img src="https://gitpod.io/button/open-in-gitpod.svg" height="32" alt="Open in Gitpod"></a><a href="https://app.codeanywhere.com/#https://github.com/PeteZah-Games/petezahgames"><img src="https://codeanywhere.com/img/open-in-codeanywhere-btn.svg" height="32" alt="Open in Codenywhere"></a>
 
    - Next if you haven't already install Node.js and pnpm by going to [the node.js download page](https://nodejs.org/en/download) and having an option be to install pnpm
 
