@@ -11,10 +11,8 @@ You're mainly supposed to use our site at places that have restrictions.
 ## Our Tech Stack
 
 - We use Supabase for our account system
-- We use Titanium Network's ultraviolet proxy and s.
-- We use a bare proxy server that links to Benrogo's proxy
+- We use Titanium Network's ultraviolet proxy and scramjet.
 - We use games from Math 66 Games, 3kh0, and the old Selenete.cc
-- We owe our now.gg bypass to Frogie's Arcade
 
 ## Our Stats
 
