@@ -77,36 +77,44 @@ If you would like to use one of the following buttons to deploy
 
 - https://*.supergisfire.com.cdn.cloudflare.net/
 
-## LS
+Lightspeed:
+https://supergisfire.com.cdn.cloudflare.net/
+https://51.222.141.36.ip.addr.tools/
+https://ffd.travelpage.biz/ https://snoopyshouldbeadmintrust.jobvn.com/
+https://reallyhardenglishcourses.neo-space.space/
+https://fastermath.neo-space.space/
+https://nice.neo-space.space/
+https://civics.jobvn.com/
+https://english.jobvn.com/
+https://dashboard.adidasnmdcitysock.com.cdn.cloudflare.net/
 
-- [auth.emili.com](https://auth.emili.com/)
-- [math.olymp-hall.ru](https://math.olymp-hall.ru/)
-- [auth.curlfan.xyz](https://auth.curlfan.xyz/)
-- [auth.fanlingproperty.com](https://auth.fanlingproperty.com/)
-- [math.krewedegroove.com](https://math.krewedegroove.com/) (gg)
-- [science.hosteriafutaleufu.cl](https://science.hosteriafutaleufu.cl/)
-- [auth.hosteriafutaleufu.cl](https://auth.hosteriafutaleufu.cl/)
-- [app.bromaco.com](https://app.bromaco.com/)
-- [dashboard.bromaco.com](https://dashboard.bromaco.com/)
-- [math.arionskyclub.com](https://math.arionskyclub.com/)
-- [app.rpvf.com](https://app.rpvf.com/)
-- [sigma.rpvf.com](https://sigma.rpvf.com/)
-- [math.alcrb.ru](https://math.alcrb.ru/) (gg)
-- [dashboard.alcrb.ru](https://dashboard.alcrb.ru/) (gg)
-- [app.alcrb.ru](https://app.alcrb.ru/) (gg)
-- [pizza.eneverals.biz](https://pizza.eneverals.biz/)
-- [1234.eneverals.biz](https://1234.eneverals.biz/)
-- [pizzaiscoolalongwithrxmper.eneverals.biz](https://pizzaiscoolalongwithrxmper.eneverals.biz/)
-- [rxmperishot.yourcouncillor.online](https://rxmperishot.yourcouncillor.online/)
-- [bigbootydaddyavenger.yourcouncillor.online](https://bigbootydaddyavenger.yourcouncillor.online/)
-- [pizzabigdaddyavengerandallpetezahstaffmembersarecool.yourcouncillor.online](https://pizzabigdaddyavengerandallpetezahstaffmembersarecool.yourcouncillor.online/)
-- [math.arionskyclub.com](https://math.arionskyclub.com/)
-- [app.arionskyclub.com](https://app.arionskyclub.com/)
-- [auth.arionskyclub.com](https://auth.arionskyclub.com/)
+Goguardian:
+https://mathhelp.moorcroftmr.uk/
+https://mathhelp.deezpotatos.cc/
+https://sciencias.rawal-karan.com.np/
+https://sciencias.redinfosys.com/
+https://thisistakingtoolong.dj-jam.be/
 
-### Non-LS
+Securly:
+https://boing.macleod.nom.za/
+https://type.shela.nu/
+https://1copa.1copa.com/
+https://yayjobs.juniorjobs.ro/
 
-- [gmosvqamsryrvai83tmvyc.global.ssl.fastly.net](https://gmosvqamsryrvai83tmvyc.global.ssl.fastly.net/)
-- [punctual-lilac-dingo.global.ssl.fastly.net](https://punctual-lilac-dingo.global.ssl.fastly.net/)
-- [p4qubno0hmahwib7jmxnnb.global.ssl.fastly.net](https://p4qubno0hmahwib7jmxnnb.global.ssl.fastly.net/)
-- [rfcnabkzdhsj39zy56mxie.global.ssl.fastly.net](https://rfcnabkzdhsj39zy56mxie.global.ssl.fastly.net/)
+Content Keeper:
+https://theythem.itfiredup.com/
+https://yoooooo.itfiredup.com/
+
+Linewize:
+https://yoooo.primatools.ro/
+https://happy.primatools.ro/
+
+Palo Alto:
+https://petezahmybeloved.shela.nu/
+https://ilikemath.shela.nu/
+
+Blocksi:
+https://precalculuslessons.dj-jam.be/
+
+Cisco Umbrella:
+https://blueinfosys.redinfosys.com/
