@@ -7,14 +7,14 @@ High-level architecture
 - A lightweight HTTP "bare" router (from `@tomphttp/bare-server-node`) and related MercuryWorkshop transports (epoxy, bare-mux, scramjet, ultraviolet) are mounted to support proxying and service-worker-based proxy functionality. Look at `server.js` lines that mount `/bare/`, `/baremux/`, `/epoxy/`, `/scram/`, and the Scramjet service worker in `public/sw.js`.
 - Supabase is used for auth/storage: see `server.js` and `server/api/*.js`. Environment variables `SUPABASE_URL`, `SUPABASE_KEY`, and `SESSION_SECRET` are required for auth flows.
 - The app bundles many static pages and an iframe-driven UI under `public/pages/` and assets under `public/storage/`.
-- I added deployment templates and examples: `Dockerfile` (multi-stage), `cloudbuild.yaml`, `railway.manifest.json` (example), `render.yaml`, `amplify.yml`, `netlify.toml`, `.replit`, `.gitpod.yml`, and `.devcontainer/devcontainer.json`.
+- Deployment templates and examples: `Dockerfile` (multi-stage), `cloudbuild.yaml`, `render.yaml`, `amplify.yml`, `netlify.toml`, `.replit`, `.gitpod.yml`, and `.devcontainer/devcontainer.json`.
 
 Developer workflows & important commands
 - Node engine: package.json declares `"type": "module"` and requires Node >= 22. Use pnpm when possible (project has pnpm manifests). Typical commands:
   - Development / run: `pnpm install` then `pnpm start` (Procfile runs `node server.js` directly; many platforms use `pnpm start`).
   - Build step: some deployment configs expect `pnpm build` (railway/netlify templates include `pnpm build`) but there is no `build` script in package.json—avoid adding one unless you implement a concrete bundling step. If you need to add a build script, document it clearly.
-- Environment files: `.env.<NODE_ENV>` may be loaded. `railway.json`, `vercel.json`, and `netlify.toml` include samples and required env vars. Do not commit secrets.
- - Environment files: `.env.<NODE_ENV>` may be loaded. `railway.manifest.json`, `vercel.json`, and `netlify.toml` include samples and required env vars. Do not commit secrets.
+- Environment files: `.env.<NODE_ENV>` may be loaded. `vercel.json`, and `netlify.toml` include samples and required env vars. Do not commit secrets.
+- If Agent Mode is in use for testing changes open a container using the provided Dockerfile
 
 Project-specific conventions & patterns
 - Static-first: prefer editing files in `public/` for UI changes. `server.js` only contains a small API and proxies; avoid changing static file paths unless you update `server.js` routes (e.g., `auth-callback.html`).
