@@ -71,8 +71,9 @@ body::-webkit-scrollbar {
     background-size: 300%, 200%;
     background-position: 50% 50%, 50% 50%;
     animation: fadeIn 2s ease;
-    mask-image: radial-gradient(ellipse at 100% 0%, rgba(255, 255, 255, 0) 40%, transparent 70%);
     -webkit-mask-image: radial-gradient(ellipse at 100% 0%, white 40%, transparent 70%);
+    mask-image: radial-gradient(ellipse at 100% 0%, rgba(255, 255, 255, 0) 40%, transparent 70%);
+    
     pointer-events: none;
     z-index: -1;
 }
@@ -321,7 +322,8 @@ body::-webkit-scrollbar {
 
 .scrolltop {
 	background-color: var(--scrolltop-background-color);
-	backdrop-filter: var(--scrolltop-backdrop-filter);
+	-webkit-backdrop-filter: var(--scrolltop-backdrop-filter);
+    backdrop-filter: var(--scrolltop-backdrop-filter);
 	width: 49px;
 	height: 49px;
 	border-radius: 50%;
@@ -352,6 +354,7 @@ body::-webkit-scrollbar {
 	border: 0;
 	text-align: center;
 	outline: #ffffff17 1px solid;
+    -webkit-user-select: none;
 	user-select: none;
 	cursor: pointer;
 	margin-left: auto;
@@ -530,12 +533,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
 	<div class="image-item" data-label="pete ai">
             <a href="/static/embed.html#https://backend.petezahgames.com/pages/other/ai/" >
-                <img src="/storage/images/logo-png-removebg-preview.png">
+                <img src="/storage/images/PeteAI.png">
                 <div class="label">PeteAI</div>
             </a>
         </div>
 
-        <div class="image-item" data-label="pete ai">
+        <div class="image-item" data-label="pete music">
             <a href="/static/embed.html#https://backend.petezahgames.com/pages/other/music/" >
                 <img src="/storage/images/petemusic-removebg-preview.png">
                 <div class="label">PeteMusic</div>
