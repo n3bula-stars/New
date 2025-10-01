@@ -19,6 +19,8 @@ import { signinHandler } from "./server/api/signin.js";
 import cors from "cors";
 import fetch from "node-fetch";
 import fs from 'fs';
+import cookieParser from "cookie-parser";
+import rateLimit from "express-rate-limit";
 
 dotenv.config();
 const envFile = `.env.${process.env.NODE_ENV || 'production'}`;
@@ -30,6 +32,59 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const bare = createBareServer("/bare/");
 const app = express();
 const publicPath = "public";
+app.use(cookieParser());
+
+const verifyMiddleware = (req, res, next) => {
+  const verified = req.cookies?.verified === "ok";
+  const protectedPaths = ["/api/", "/bare/", "/wisp/"];
+  if (!protectedPaths.some(p => req.url.startsWith(p))) return next();
+
+  const ua = req.headers["user-agent"] || "";
+  const isBrowser = /Mozilla|Chrome|Safari|Firefox|Edge/i.test(ua);
+  if (verified && isBrowser) return next();
+
+  if (!isBrowser) return res.status(403).send("Forbidden");
+
+  res.cookie("verified", "ok", { maxAge: 5000, httpOnly: true, sameSite: "Strict" });
+  res.status(200).send(`
+    <!DOCTYPE html>
+    <html><body>
+      <script>
+        document.cookie = "verified=ok; Max-Age=5; SameSite=Strict";
+        fetch(window.location.href, { credentials: "include" }).then(() => window.location.replace(window.location.pathname));
+      </script>
+      <noscript>Enable JavaScript to continue.</noscript>
+    </body></html>
+  `);
+};
+
+app.use(verifyMiddleware);
+
+// preventing ddos on sensitive endpoints.  /bare/ , /wisp/ , and /api/ are the only notable ones as of now.
+const serverVerifyMiddleware = (req, res, next) => {
+  const verified = req.cookies?.verified === "ok" || req.headers["x-bot-token"] === process.env.BOT_TOKEN;
+
+  const protectedPaths = ["/bare/", "/wisp/", "/api/"];
+  if (!protectedPaths.some(p => req.url.startsWith(p))) return next();
+
+  if (!verified) {
+    return res.status(403).send("Forbidden: Verification required");
+  }
+
+  next();
+};
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 1000, 
+  max: 10,             
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: "Too many requests from this IP, slow down"
+});
+
+app.use("/bare/", serverVerifyMiddleware, apiLimiter);
+app.use("/wisp/", serverVerifyMiddleware, apiLimiter);
+app.use("/api/", serverVerifyMiddleware, apiLimiter);
 
 app.use(cors({
   origin: '*',
@@ -40,6 +95,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
 app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: false } }));
+app.use((req, res, next) => {
+  const ua = req.headers['user-agent'] || '';
+  const isBrowser = /Mozilla|Chrome|Safari|Edge/i.test(ua);
+  if (req.cookies?.verified === 'ok' && isBrowser) return next();
+  if (!isBrowser) return res.status(403).send('Forbidden');
+  res.sendFile(join(__dirname, publicPath, 'verify.html'));
+});
 app.use(express.static(publicPath));
 app.use(express.static("public"));
 app.use("/scram/", express.static(scramjetPath));
@@ -260,9 +322,38 @@ app.use((req, res) => {
   return res.status(404).sendFile(join(__dirname, publicPath, "404.html"));
 });
 
+const runVerification = (req, res, next) => {
+  const ua = req.headers["user-agent"] || "";
+  const isBrowser = /Mozilla|Chrome|Safari|Firefox|Edge/i.test(ua);
+  const verified = req.headers.cookie?.includes("verified=ok");
+
+  if (verified && isBrowser) return next();
+  if (!isBrowser) {
+    res.writeHead(403, { "Content-Type": "text/plain" });
+    return res.end("Forbidden");
+  }
+
+  res.writeHead(200, {
+    "Content-Type": "text/html",
+    "Set-Cookie": "verified=ok; Max-Age=5; Path=/; HttpOnly; SameSite=Strict"
+  });
+
+  res.end(`
+    <!DOCTYPE html>
+    <html>
+      <body>
+        <script>
+          window.location.replace(window.location.pathname);
+        </script>
+        <noscript>Enable JavaScript to continue.</noscript>
+      </body>
+    </html>
+  `);
+};
+
 const server = createServer((req, res) => {
   if (bare.shouldRoute(req)) {
-    bare.routeRequest(req, res);
+    runVerification(req, res, () => bare.routeRequest(req, res));
   } else {
     app.handle(req, res);
   }
