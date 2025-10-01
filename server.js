@@ -31,82 +31,11 @@ const { SUPABASE_URL, SUPABASE_KEY, SUPABASE_SERVICE_ROLE_KEY } = process.env;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const bare = createBareServer("/bare/");
 const app = express();
-const publicPath = "public";
 app.use(cookieParser());
 
-const verifyMiddleware = (req, res, next) => {
-  const verified = req.cookies?.verified === "ok";
-  const protectedPaths = ["/api/", "/bare/", "/wisp/"];
-  if (!protectedPaths.some(p => req.url.startsWith(p))) return next();
-
-  const ua = req.headers["user-agent"] || "";
-  const isBrowser = /Mozilla|Chrome|Safari|Firefox|Edge/i.test(ua);
-  if (verified && isBrowser) return next();
-
-  if (!isBrowser) return res.status(403).send("Forbidden");
-
-  res.cookie("verified", "ok", { maxAge: 5000, httpOnly: true, sameSite: "Strict" });
-  res.status(200).send(`
-    <!DOCTYPE html>
-    <html><body>
-      <script>
-        document.cookie = "verified=ok; Max-Age=5; SameSite=Strict";
-        fetch(window.location.href, { credentials: "include" }).then(() => window.location.replace(window.location.pathname));
-      </script>
-      <noscript>Enable JavaScript to continue.</noscript>
-    </body></html>
-  `);
-};
-
-app.use(verifyMiddleware);
-
-// preventing ddos on sensitive endpoints.  /bare/ , /wisp/ , and /api/ are the only notable ones as of now.
-const serverVerifyMiddleware = (req, res, next) => {
-  const verified = req.cookies?.verified === "ok" || req.headers["x-bot-token"] === process.env.BOT_TOKEN;
-
-  const protectedPaths = ["/bare/", "/wisp/", "/api/"];
-  if (!protectedPaths.some(p => req.url.startsWith(p))) return next();
-
-  if (!verified) {
-    return res.status(403).send("Forbidden: Verification required");
-  }
-
-  next();
-};
-
-const apiLimiter = rateLimit({
-  windowMs: 15 * 1000, 
-  max: 10,             
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: "Too many requests from this IP, slow down"
-});
-
-app.use("/bare/", serverVerifyMiddleware, apiLimiter);
-app.use("/wisp/", serverVerifyMiddleware, apiLimiter);
-app.use("/api/", serverVerifyMiddleware, apiLimiter);
-
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'DELETE'],
-  allowedHeaders: ['Content-Type']
-}));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(fileUpload());
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: false } }));
-app.use((req, res, next) => {
-  const ua = req.headers['user-agent'] || '';
-  const isBrowser = /Mozilla|Chrome|Safari|Edge/i.test(ua);
-  if (req.cookies?.verified === 'ok' && isBrowser) return next();
-  if (!isBrowser) return res.status(403).send('Forbidden');
-  res.sendFile(join(__dirname, publicPath, 'verify.html'));
-});
+const publicPath = "public";
 app.use(express.static(publicPath));
-app.use(express.static("public"));
 app.use("/scram/", express.static(scramjetPath));
-// Also serve common scramjet asset names at the site root for legacy references
-// (this avoids copying files into the repo root and keeps a single source)
 app.get('/scramjet.all.js', (req, res) => {
   return res.sendFile(path.join(scramjetPath, 'scramjet.all.js'));
 });
@@ -121,6 +50,54 @@ app.get('/scramjet.all.js.map', (req, res) => {
 });
 app.use("/baremux/", express.static(baremuxPath));
 app.use("/epoxy/", express.static(epoxyPath));
+
+const verifyMiddleware = (req, res, next) => {
+  const verified = req.cookies?.verified === "ok" || req.headers["x-bot-token"] === process.env.BOT_TOKEN;
+  const protectedPaths = ["/api/", "/bare/"];
+  if (!protectedPaths.some(p => req.url.startsWith(p))) return next();
+
+  const ua = req.headers["user-agent"] || "";
+  const isBrowser = /Mozilla|Chrome|Safari|Firefox|Edge/i.test(ua);
+  if (verified && isBrowser) return next();
+
+  if (!isBrowser) return res.status(403).send("Forbidden");
+
+  res.cookie("verified", "ok", { maxAge: 3600000, httpOnly: true, sameSite: "Strict" });
+  res.status(200).send(`
+    <!DOCTYPE html>
+    <html><body>
+      <script>
+        document.cookie = "verified=ok; Max-Age=3600; SameSite=Strict";
+        fetch(window.location.href, { credentials: "include" }).then(() => window.location.replace(window.location.pathname));
+      </script>
+      <noscript>Enable JavaScript to continue.</noscript>
+    </body></html>
+  `);
+};
+
+app.use(verifyMiddleware);
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 1000, 
+  max: 10,             
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: "Too many requests from this IP, slow down"
+});
+
+app.use("/bare/", apiLimiter);
+app.use("/api/", apiLimiter);
+
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'DELETE'],
+  allowedHeaders: ['Content-Type']
+}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(fileUpload());
+app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: false } }));
+
 app.get("/results/:query", async (req, res) => {
   try {
     const query = req.params.query.toLowerCase();
@@ -128,16 +105,6 @@ app.get("/results/:query", async (req, res) => {
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
     const data = await response.json();
     const suggestions = data.map(item => ({ phrase: item.phrase })).slice(0, 8);
-    // Optionally fetch from Supabase (example: search user history or bookmarks)
-    /*
-    const { data, error } = await supabase
-      .from('user_history') // Ensure you have a table for history or suggestions
-      .select('url')
-      .ilike('url', `%${query}%`)
-      .limit(8);
-    if (error) throw error;
-    const suggestions = data.map(item => ({ phrase: item.url }));
-    */
     return res.status(200).json(suggestions);
   } catch (error) {
     console.error("Error generating suggestions:", error.message);
@@ -322,20 +289,21 @@ app.use((req, res) => {
   return res.status(404).sendFile(join(__dirname, publicPath, "404.html"));
 });
 
-const runVerification = (req, res, next) => {
+const runVerification = (req, res, socket, next) => {
   const ua = req.headers["user-agent"] || "";
   const isBrowser = /Mozilla|Chrome|Safari|Firefox|Edge/i.test(ua);
-  const verified = req.headers.cookie?.includes("verified=ok");
+  const verified = req.headers.cookie?.includes("verified=ok") || req.headers["x-bot-token"] === process.env.BOT_TOKEN;
 
   if (verified && isBrowser) return next();
   if (!isBrowser) {
-    res.writeHead(403, { "Content-Type": "text/plain" });
-    return res.end("Forbidden");
+    if (socket) socket.end();
+    else res.writeHead(403, { "Content-Type": "text/plain" });
+    return socket ? null : res.end("Forbidden");
   }
 
   res.writeHead(200, {
     "Content-Type": "text/html",
-    "Set-Cookie": "verified=ok; Max-Age=5; Path=/; HttpOnly; SameSite=Strict"
+    "Set-Cookie": "verified=ok; Max-Age=3600; Path=/; HttpOnly; SameSite=Strict"
   });
 
   res.end(`
@@ -353,7 +321,7 @@ const runVerification = (req, res, next) => {
 
 const server = createServer((req, res) => {
   if (bare.shouldRoute(req)) {
-    runVerification(req, res, () => bare.routeRequest(req, res));
+    runVerification(req, res, null, () => bare.routeRequest(req, res));
   } else {
     app.handle(req, res);
   }
@@ -361,9 +329,9 @@ const server = createServer((req, res) => {
 
 server.on("upgrade", (req, socket, head) => {
   if (bare.shouldRoute(req)) {
-    bare.routeUpgrade(req, socket, head);
+    runVerification(req, null, socket, () => bare.routeUpgrade(req, socket, head));
   } else if (req.url && req.url.startsWith("/wisp/")) {
-    wisp.routeRequest(req, socket, head);
+    runVerification(req, null, socket, () => wisp.routeRequest(req, socket, head));
   } else {
     socket.end();
   }
