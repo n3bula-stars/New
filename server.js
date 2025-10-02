@@ -27,13 +27,13 @@ const envFile = `.env.${process.env.NODE_ENV || 'production'}`;
 if (fs.existsSync(envFile)) {dotenv.config({ path: envFile });}
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const publicPath = "public";
 const { SUPABASE_URL, SUPABASE_KEY, SUPABASE_SERVICE_ROLE_KEY } = process.env;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const bare = createBareServer("/bare/");
 const app = express();
 app.use(cookieParser());
 
-const publicPath = "public";
 app.use(express.static(publicPath));
 app.use("/scram/", express.static(scramjetPath));
 app.get('/scramjet.all.js', (req, res) => {
@@ -62,13 +62,13 @@ const verifyMiddleware = (req, res, next) => {
 
   if (!isBrowser) return res.status(403).send("Forbidden");
 
-  res.cookie("verified", "ok", { maxAge: 3600000, httpOnly: true, sameSite: "Strict" });
+  res.cookie("verified", "ok", { maxAge: 86400000, httpOnly: true, sameSite: "Strict" });
   res.status(200).send(`
     <!DOCTYPE html>
     <html><body>
       <script>
-        document.cookie = "verified=ok; Max-Age=3600; SameSite=Strict";
-        fetch(window.location.href, { credentials: "include" }).then(() => window.location.replace(window.location.pathname));
+        document.cookie = "verified=ok; Max-Age=86400; SameSite=Strict";
+        setTimeout(() => window.location.replace(window.location.pathname), 100);
       </script>
       <noscript>Enable JavaScript to continue.</noscript>
     </body></html>
@@ -79,7 +79,7 @@ app.use(verifyMiddleware);
 
 const apiLimiter = rateLimit({
   windowMs: 15 * 1000, 
-  max: 10,             
+  max: 100,             
   standardHeaders: true,
   legacyHeaders: false,
   message: "Too many requests from this IP, slow down"
@@ -289,29 +289,42 @@ app.use((req, res) => {
   return res.status(404).sendFile(join(__dirname, publicPath, "404.html"));
 });
 
-const runVerification = (req, res, socket, next) => {
+function parseCookies(header) {
+  if (!header) return {};
+  return header.split(';').reduce((acc, cookie) => {
+    const [name, value] = cookie.trim().split('=');
+    acc[name] = value;
+    return acc;
+  }, {});
+}
+
+const isVerified = (req) => {
+  const cookies = parseCookies(req.headers.cookie);
+  return cookies.verified === "ok" || req.headers["x-bot-token"] === process.env.BOT_TOKEN;
+};
+
+const isBrowser = (req) => {
   const ua = req.headers["user-agent"] || "";
-  const isBrowser = /Mozilla|Chrome|Safari|Firefox|Edge/i.test(ua);
-  const verified = req.headers.cookie?.includes("verified=ok") || req.headers["x-bot-token"] === process.env.BOT_TOKEN;
+  return /Mozilla|Chrome|Safari|Firefox|Edge/i.test(ua);
+};
 
-  if (verified && isBrowser) return next();
-  if (!isBrowser) {
-    if (socket) socket.end();
-    else res.writeHead(403, { "Content-Type": "text/plain" });
-    return socket ? null : res.end("Forbidden");
+const handleHttpVerification = (req, res, next) => {
+  if (isVerified(req) && isBrowser(req)) return next();
+  if (!isBrowser(req)) {
+    res.writeHead(403, { "Content-Type": "text/plain" });
+    return res.end("Forbidden");
   }
-
   res.writeHead(200, {
     "Content-Type": "text/html",
-    "Set-Cookie": "verified=ok; Max-Age=3600; Path=/; HttpOnly; SameSite=Strict"
+    "Set-Cookie": "verified=ok; Max-Age=86400; Path=/; HttpOnly; SameSite=Strict"
   });
-
   res.end(`
     <!DOCTYPE html>
     <html>
       <body>
         <script>
-          window.location.replace(window.location.pathname);
+          document.cookie = "verified=ok; Max-Age=86400; SameSite=Strict";
+          setTimeout(() => window.location.replace(window.location.pathname), 100);
         </script>
         <noscript>Enable JavaScript to continue.</noscript>
       </body>
@@ -319,9 +332,18 @@ const runVerification = (req, res, socket, next) => {
   `);
 };
 
+const handleUpgradeVerification = (req, socket, next) => {
+  if (isVerified(req) && isBrowser(req)) return next();
+  if (!isBrowser(req)) {
+    socket.end();
+    return;
+  }
+  socket.end();
+};
+
 const server = createServer((req, res) => {
   if (bare.shouldRoute(req)) {
-    runVerification(req, res, null, () => bare.routeRequest(req, res));
+    handleHttpVerification(req, res, () => bare.routeRequest(req, res));
   } else {
     app.handle(req, res);
   }
@@ -329,9 +351,9 @@ const server = createServer((req, res) => {
 
 server.on("upgrade", (req, socket, head) => {
   if (bare.shouldRoute(req)) {
-    runVerification(req, null, socket, () => bare.routeUpgrade(req, socket, head));
+    handleUpgradeVerification(req, socket, () => bare.routeUpgrade(req, socket, head));
   } else if (req.url && req.url.startsWith("/wisp/")) {
-    runVerification(req, null, socket, () => wisp.routeRequest(req, socket, head));
+    handleUpgradeVerification(req, socket, () => wisp.routeRequest(req, socket, head));
   } else {
     socket.end();
   }
