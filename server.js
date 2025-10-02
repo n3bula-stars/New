@@ -343,8 +343,8 @@ const handleUpgradeVerification = (req, socket, next) => {
   if (verified && isWsBrowser) {
     return next();
   }
-  socket.writeHead(403, { "Content-Type": "text/plain" });
-  socket.end("Forbidden: Verification required");
+  console.log(`WebSocket Rejected: URL=${req.url}, Reason=${verified ? 'Not a browser' : 'Not verified'}`);
+  socket.destroy();
 };
 
 const server = createServer((req, res) => {
@@ -361,7 +361,7 @@ server.on("upgrade", (req, socket, head) => {
   } else if (req.url && req.url.startsWith("/wisp/")) {
     handleUpgradeVerification(req, socket, () => wisp.routeRequest(req, socket, head));
   } else {
-    socket.end();
+    socket.destroy();
   }
 });
 
