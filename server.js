@@ -62,7 +62,7 @@ const verifyMiddleware = (req, res, next) => {
 
   if (!isBrowser) return res.status(403).send("Forbidden");
   if (verified && isBrowser) return next();
-  if (!acceptsHtml) return next(); // Skip verification for non-HTML requests (e.g., JSON)
+  if (!acceptsHtml) return next();
 
   res.cookie("verified", "ok", { maxAge: 86400000, httpOnly: true, sameSite: "Strict" });
   res.status(200).send(`
@@ -312,7 +312,7 @@ const isBrowser = (req) => {
 
 const handleHttpVerification = (req, res, next) => {
   const acceptsHtml = req.headers.accept?.includes("text/html");
-  if (!acceptsHtml) return next(); // Skip verification for non-HTML requests (e.g., JSON)
+  if (!acceptsHtml) return next();
   if (isVerified(req) && isBrowser(req)) return next();
   if (!isBrowser(req)) {
     res.writeHead(403, { "Content-Type": "text/plain" });
@@ -337,8 +337,14 @@ const handleHttpVerification = (req, res, next) => {
 };
 
 const handleUpgradeVerification = (req, socket, next) => {
-  if (isVerified(req) && isBrowser(req)) return next();
-  socket.end();
+  const verified = isVerified(req);
+  const isWsBrowser = isBrowser(req);
+  console.log(`WebSocket Upgrade Attempt: URL=${req.url}, Verified=${verified}, IsBrowser=${isWsBrowser}, Cookies=${req.headers.cookie || 'none'}`);
+  if (verified && isWsBrowser) {
+    return next();
+  }
+  socket.writeHead(403, { "Content-Type": "text/plain" });
+  socket.end("Forbidden: Verification required");
 };
 
 const server = createServer((req, res) => {
