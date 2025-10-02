@@ -58,9 +58,11 @@ const verifyMiddleware = (req, res, next) => {
 
   const ua = req.headers["user-agent"] || "";
   const isBrowser = /Mozilla|Chrome|Safari|Firefox|Edge/i.test(ua);
-  if (verified && isBrowser) return next();
+  const acceptsHtml = req.headers.accept?.includes("text/html");
 
   if (!isBrowser) return res.status(403).send("Forbidden");
+  if (verified && isBrowser) return next();
+  if (!acceptsHtml) return next(); // Skip verification for non-HTML requests (e.g., JSON)
 
   res.cookie("verified", "ok", { maxAge: 86400000, httpOnly: true, sameSite: "Strict" });
   res.status(200).send(`
@@ -309,6 +311,8 @@ const isBrowser = (req) => {
 };
 
 const handleHttpVerification = (req, res, next) => {
+  const acceptsHtml = req.headers.accept?.includes("text/html");
+  if (!acceptsHtml) return next(); // Skip verification for non-HTML requests (e.g., JSON)
   if (isVerified(req) && isBrowser(req)) return next();
   if (!isBrowser(req)) {
     res.writeHead(403, { "Content-Type": "text/plain" });
@@ -334,10 +338,6 @@ const handleHttpVerification = (req, res, next) => {
 
 const handleUpgradeVerification = (req, socket, next) => {
   if (isVerified(req) && isBrowser(req)) return next();
-  if (!isBrowser(req)) {
-    socket.end();
-    return;
-  }
   socket.end();
 };
 
