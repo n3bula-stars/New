@@ -1,4 +1,3 @@
-
 // dumb hack to allow firefox to work (please dont do this in prod)
 if (navigator.userAgent.includes("Firefox")) {
 	Object.defineProperty(globalThis, "crossOriginIsolated", {
@@ -35,11 +34,32 @@ scramjet.addEventListener("request", (e) => {
 	if (playgroundData && e.url.href.startsWith(playgroundData.origin)) {
 		const headers = {};
 		const origin = playgroundData.origin;
+
 		if (e.url.href === origin + "/") {
 			headers["content-type"] = "text/html";
-			e.response = new Response(playgroundData.html, {
-				headers,
-			});
+
+			// Inject YouTube auto-reload snippet before returning HTML
+			let html = playgroundData.html;
+
+			const youtubeReloadSnippet = `
+<script>
+new MutationObserver(() => {
+  if (
+    document.querySelector('div.ytp-error-content-wrap-subreason a[href*="www.youtube.com/watch?v="]')
+  ) location.reload();
+}).observe(document.body, { childList: true, subtree:true });
+</script>
+`;
+
+			// Insert snippet before closing </body> tag
+			if (html.includes("</body>")) {
+				html = html.replace("</body>", youtubeReloadSnippet + "</body>");
+			} else {
+				// fallback: append to end
+				html += youtubeReloadSnippet;
+			}
+
+			e.response = new Response(html, { headers });
 		} else if (e.url.href === origin + "/style.css") {
 			headers["content-type"] = "text/css";
 			e.response = new Response(playgroundData.css, {
