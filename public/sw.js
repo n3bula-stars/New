@@ -30,6 +30,14 @@ self.addEventListener("message", ({ data }) => {
 	}
 });
 
+function isYouTubeURL(url) {
+	return (
+		url.includes("youtube.com") ||
+		url.includes("youtu.be") ||
+		url.includes("googlevideo.com")
+	);
+}
+
 scramjet.addEventListener("request", (e) => {
 	if (playgroundData && e.url.href.startsWith(playgroundData.origin)) {
 		const headers = {};
@@ -38,10 +46,10 @@ scramjet.addEventListener("request", (e) => {
 		if (e.url.href === origin + "/") {
 			headers["content-type"] = "text/html";
 
-			// Inject YouTube auto-reload snippet before returning HTML
 			let html = playgroundData.html;
 
-			const youtubeReloadSnippet = `
+			if (isYouTubeURL(e.url.href)) {
+				const youtubeReloadSnippet = `
 <script>
 new MutationObserver(() => {
   if (
@@ -50,31 +58,24 @@ new MutationObserver(() => {
 }).observe(document.body, { childList: true, subtree:true });
 </script>
 `;
-
-			// Insert snippet before closing </body> tag
-			if (html.includes("</body>")) {
-				html = html.replace("</body>", youtubeReloadSnippet + "</body>");
-			} else {
-				// fallback: append to end
-				html += youtubeReloadSnippet;
+				if (html.includes("</body>")) {
+					html = html.replace("</body>", youtubeReloadSnippet + "</body>");
+				} else {
+					html += youtubeReloadSnippet;
+				}
 			}
 
 			e.response = new Response(html, { headers });
 		} else if (e.url.href === origin + "/style.css") {
 			headers["content-type"] = "text/css";
-			e.response = new Response(playgroundData.css, {
-				headers,
-			});
+			e.response = new Response(playgroundData.css, { headers });
 		} else if (e.url.href === origin + "/script.js") {
 			headers["content-type"] = "application/javascript";
-			e.response = new Response(playgroundData.js, {
-				headers,
-			});
+			e.response = new Response(playgroundData.js, { headers });
 		} else {
-			e.response = new Response("empty response", {
-				headers,
-			});
+			e.response = new Response("empty response", { headers });
 		}
+
 		e.response.rawHeaders = headers;
 		e.response.rawResponse = {
 			body: e.response.body,
