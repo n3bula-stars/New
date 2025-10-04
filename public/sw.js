@@ -1,4 +1,3 @@
-// dumb hack to allow firefox to work (please dont do this in prod)
 if (navigator.userAgent.includes("Firefox")) {
 	Object.defineProperty(globalThis, "crossOriginIsolated", {
 		value: true,
@@ -12,6 +11,14 @@ const scramjet = new ScramjetServiceWorker();
 
 async function handleRequest(event) {
 	await scramjet.loadConfig();
+
+	const url = new URL(event.request.url);
+
+	if (url.hostname.includes("youtube.com") || url.hostname.includes("youtube-nocookie.com")) {
+		const redirectUrl = `/api/youtube-bypass/embed.html#${url.href}`;
+		return Response.redirect(redirectUrl, 302);
+	}
+
 	if (scramjet.route(event)) {
 		return scramjet.fetch(event);
 	}
@@ -30,42 +37,13 @@ self.addEventListener("message", ({ data }) => {
 	}
 });
 
-function isYouTubeURL(url) {
-	return (
-		url.includes("youtube.com") ||
-		url.includes("youtu.be") ||
-		url.includes("googlevideo.com")
-	);
-}
-
 scramjet.addEventListener("request", (e) => {
 	if (playgroundData && e.url.href.startsWith(playgroundData.origin)) {
 		const headers = {};
 		const origin = playgroundData.origin;
-
 		if (e.url.href === origin + "/") {
 			headers["content-type"] = "text/html";
-
-			let html = playgroundData.html;
-
-			if (isYouTubeURL(e.url.href)) {
-				const youtubeReloadSnippet = `
-<script>
-new MutationObserver(() => {
-  if (
-    document.querySelector('div.ytp-error-content-wrap-subreason a[href*="www.youtube.com/watch?v="]')
-  ) location.reload();
-}).observe(document.body, { childList: true, subtree:true });
-</script>
-`;
-				if (html.includes("</body>")) {
-					html = html.replace("</body>", youtubeReloadSnippet + "</body>");
-				} else {
-					html += youtubeReloadSnippet;
-				}
-			}
-
-			e.response = new Response(html, { headers });
+			e.response = new Response(playgroundData.html, { headers });
 		} else if (e.url.href === origin + "/style.css") {
 			headers["content-type"] = "text/css";
 			e.response = new Response(playgroundData.css, { headers });
@@ -75,7 +53,6 @@ new MutationObserver(() => {
 		} else {
 			e.response = new Response("empty response", { headers });
 		}
-
 		e.response.rawHeaders = headers;
 		e.response.rawResponse = {
 			body: e.response.body,
