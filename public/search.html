@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -874,7 +872,6 @@
       }
     }
 
-    // start trying to set a transport (runs async)
     waitForTransport();
     let tabs = [];
     let activeTabId = 1;
@@ -1085,6 +1082,10 @@
       const activeTab = getActiveTab();
       if (addressBar && activeTab) {
         addressBar.value = activeTab.url;
+        if (activeTab.url.startsWith("https://www.youtube.com") || activeTab.url === "www.youtube.com") {
+          console.log("Switching iframe src to YouTube embed");
+          activeTab.frame.frame.src = "/static/youtube-embed.html#https://youtube.com";
+        }
       }
     }
 
@@ -1099,6 +1100,16 @@
         url = "https://duckduckgo.com/?q=" + encodeURIComponent(url);
       } else if (!url.startsWith("http") && !url.startsWith("petezah://")) {
         url = "https://" + url;
+      }
+
+      if (url.startsWith("https://www.youtube.com") || url === "www.youtube.com") {
+        console.log("Switching iframe src to YouTube embed");
+        activeTab.frame.frame.src = "/static/youtube-embed.html#https://youtube.com";
+        activeTab.url = url;
+        activeTab.favicon = getFaviconUrl(url);
+        updateTabsUI();
+        updateAddressBar();
+        return;
       }
 
       activeTab.url = url;

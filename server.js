@@ -22,7 +22,6 @@ import fetch from "node-fetch";
 import fs from 'fs';
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
-import { createProxyMiddleware } from 'http-proxy-middleware';
 
 dotenv.config();
 const envFile = `.env.${process.env.NODE_ENV || 'production'}`;
@@ -285,12 +284,6 @@ app.post("/api/link-account", async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 });
-
-app.use("/api/youtube-bypass", createProxyMiddleware({
-  target: "http://localhost:3002",
-  changeOrigin: true,
-  pathRewrite: { "^/api/youtube-bypass": "/" }
-}));
 
 app.use((req, res) => {
   return res.status(404).sendFile(join(__dirname, publicPath, "404.html"));
