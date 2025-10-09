@@ -344,7 +344,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         transform: translateY(-3px) scale(1.02);
         box-shadow: 0 6px 20px rgba(60, 91, 142, 0.6);
     }
+    .save-button {
+        background: linear-gradient(90deg, #52C242, ##00C254);
+        border: 1px solid #8B1A1A;
+    }
 
+    .save-button:hover {
+        background: linear-gradient(90deg, #00FF69, #00A142);
+    }
+    .import-button {
+      background: linear-gradient(90deg, #42A5F5, #1E88E5);
+      border: 1px solid #1565C0;
+    }
+    .import-button:hover {
+      background: linear-gradient(90deg, #2196F3, #0D47A1);
+    }
+    .save-button:hover {
+        background: linear-gradient(90deg, #00FF69, #00A142);
+    }
     .reset-button {
         background: linear-gradient(90deg, #D32F2F, #E64A4A);
         border: 1px solid #8B1A1A;
@@ -611,6 +628,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <input style="height: 150px;" type="file" id="importData" accept=".json">
                 </div>
                 <hr>
+                <lavel>Save All Data:</lavel>
+                <button class="save-button" onclick="exportLocalStorage">Save your Data</button>
+               <lavel>Import Data:</lavel>
+                <input type="file" id="fileInput" accept="application/json">
+                <button class="import-button" onclick="importLocalStorage">Import your Data</button>
                 <label>Reset All Data:</label>
                 <button id="resetAllData" class="reset-button">Reset All Data</button>
             </div>
@@ -739,5 +761,42 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
     </div>
     <script src="/storage/js/settings.js"></script>
+    <script>
+    function exportLocalStorage() {
+      const data = JSON.stringify(localStorage, null, 2);
+      const blob = new Blob([data], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "localStorage-export.json";
+      a.click();
+
+      URL.revokeObjectURL(url);
+    }
+    function importLocalStorage() {
+      const fileInput = document.getElementById("fileInput");
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert("Please select a JSON file first.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        try {
+          const data = JSON.parse(event.target.result);
+          for (const key in data) {
+            localStorage.setItem(key, data[key]);
+          }
+          alert("LocalStorage imported successfully");
+        } catch (err) {
+          alert("Failed to parse JSON: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+    </script>
 </body>
 </html>
