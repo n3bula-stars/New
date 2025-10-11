@@ -7,14 +7,6 @@
       "categories": []
     },
     {
-      "label": "1v1.LOL",
-      "url": "/iframe.html?url=/storage/ag/g/1v1lol/",
-      "imageUrl": "/storage/ag/g/1v1lol/splash.png",
-      "categories": [
-        "shooting"
-      ]
-    },
-    {
       "label": "Tag",
       "url": "/iframe.html?url=/storage/ag/g/tag",
       "imageUrl": "/storage/images/main/taggame.jpg",
@@ -28,14 +20,6 @@
       "imageUrl": "/storage/ag/g/polytrack/splash.png",
       "categories": [
         "racing"
-      ]
-    },
-    {
-      "label": "N-Gon",
-      "url": "/iframe.html?url=/storage/ag/g/n-gon",
-      "imageUrl": "/storage/images/main/ngon.jpg",
-      "categories": [
-        "strategy"
       ]
     },
     {
@@ -56,7 +40,25 @@
         "skill"
       ]
     },
-        {
+    {
+      "label": "Buildnow.gg",
+      "url": "/iframe.html?url=/storage/ag/g/buildnowgg",
+      "imageUrl": "/storage/images/main/buildnow.jpeg",
+      "categories": [
+        "shooting",
+        "skill"
+      ]
+    },
+    {
+      "label": "Super Star Car",
+      "url": "/iframe.html?url=/storage/ag/g/superstarcar",
+      "imageUrl": "/storage/images/main/superstarcar.jpeg",
+      "categories": [
+        "skill",
+        "racing"
+      ]
+    },
+    {
       "label": "Clash Royale",
       "url": "/iframe.html?url=/storage/ag/g/clash-royale",
       "imageUrl": "/storage/images/main/clash.jpeg",
@@ -66,11 +68,12 @@
       ]
     },
     {
-      "label": "Fortnite",
-      "url": "/iframe.html?url=/storage/ag/g/fortnight",
-      "imageUrl": "/storage/images/main/fakefortnight.jpg",
+      "label": "Sky Riders",
+      "url": "/iframe.html?url=/storage/ag/g2/sky-riders/",
+      "imageUrl": "/storage/images/main3/skyriders.png",
       "categories": [
-        "shooting"
+        "action",
+        "racing"
       ]
     },
     {
@@ -87,6 +90,39 @@
       "imageUrl": "/storage/images/main/smashyroad.webp",
       "categories": [
         "action"
+      ]
+    },
+    {
+      "label": "Buckshot Roulette",
+      "url": "/iframe.html?url=/storage/ag/g2/buckshot-roullete/",
+      "imageUrl": "https://cdn.jsdelivr.net/gh/genizy/web-port@main/buckshot-roulette/buckshot-roulette.icon.png",
+      "categories": [
+        "skill",
+        "strategy"
+      ]
+    },
+    {
+      "label": "Fortnite",
+      "url": "/iframe.html?url=/storage/ag/g/fortnight",
+      "imageUrl": "/storage/images/main/fakefortnight.jpg",
+      "categories": [
+        "shooting"
+      ]
+    },
+    {
+      "label": "Highway Racer",
+      "url": "/iframe.html?url=/storage/ag/g/highway-racer",
+      "imageUrl": "/storage/images/main/highway-racer.jpeg",
+      "categories": [
+        "racing"
+      ]
+    },
+    {
+      "label": "Highway Racer",
+      "url": "/iframe.html?url=/storage/ag/g/highway-racer2",
+      "imageUrl": "/storage/images/main/highway-racer2.jpeg",
+      "categories": [
+        "racing"
       ]
     },
     {
@@ -131,20 +167,10 @@
       ]
     },
     {
-      "label": "Buckshot Roulette",
-      "url": "/iframe.html?url=/storage/ag/g2/buckshot-roullete/",
-      "imageUrl": "https://cdn.jsdelivr.net/gh/genizy/web-port@main/buckshot-roulette/buckshot-roulette.icon.png",
+      "label": "N-Gon",
+      "url": "/iframe.html?url=/storage/ag/g/n-gon",
+      "imageUrl": "/storage/images/main/ngon.jpg",
       "categories": [
-        "skill",
-        "strategy"
-      ]
-    },
-    {
-      "label": "Ultrakill",
-      "url": "/iframe.html?url=/storage/ag/g2/ultrakill/",
-      "imageUrl": "/storage/images/main2/ultrakill.jpeg",
-      "categories": [
-        "skill",
         "strategy"
       ]
     },
@@ -2054,15 +2080,6 @@
       "imageUrl": "/storage/images/main3/crazycattle3d.png",
       "categories": [
         "action"
-      ]
-    },
-    {
-      "label": "Sky Riders",
-      "url": "/iframe.html?url=/storage/ag/g2/sky-riders/",
-      "imageUrl": "/storage/images/main3/skyriders.png",
-      "categories": [
-        "action",
-        "racing"
       ]
     },
     {
