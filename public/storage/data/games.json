@@ -101,6 +101,14 @@
         "strategy"
       ]
     },
+        {
+      "label": "Space Waves",
+      "url": "/iframe.html?url=/storage/ag/g/spacewaves",
+      "imageUrl": "/storage/images/main/spacewaves.jpg",
+      "categories": [
+        "skill"
+      ]
+    },
     {
       "label": "Fortnite",
       "url": "/iframe.html?url=/storage/ag/g/fortnight",
@@ -1057,14 +1065,6 @@
       "imageUrl": "/storage/ag/g/littlealchemy2/a2.png",
       "categories": [
         "strategy"
-      ]
-    },
-    {
-      "label": "Space Waves",
-      "url": "/iframe.html?url=/storage/ag/g/crazygames",
-      "imageUrl": "/storage/images/main/spacewaves.jpg",
-      "categories": [
-        "skill"
       ]
     },
     {
