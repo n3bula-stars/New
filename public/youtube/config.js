@@ -3,7 +3,7 @@
 
 self.__uv$config = {
   prefix: "/youtube/youtube/",
-  bare: "https://youtube-bypass.davidandasabi.org/bare/",
+  bare: "https://youtube-bypass.6brothersimports.com.cdn.cloudflare.net/bare/",
   encodeUrl: Ultraviolet.codec.xor.encode,
   decodeUrl: Ultraviolet.codec.xor.decode,
   handler: "/youtube/handler.js",
