@@ -1,4 +1,3 @@
-
 import { createBareServer } from "@tomphttp/bare-server-node";
 import express from "express";
 import { createServer } from "node:http";
@@ -22,6 +21,8 @@ import fetch from "node-fetch";
 import fs from 'fs';
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
+import net from "node:net";
+import cluster from "node:cluster";
 
 dotenv.config();
 const envFile = `.env.${process.env.NODE_ENV || 'production'}`;
@@ -34,6 +35,11 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const bare = createBareServer("/bare/");
 const app = express();
 app.use(cookieParser());
+
+const getRandomIPv6 = () => {
+  const i = Math.floor(Math.random() * 5000) + 1;
+  return `2607:5300:205:200:${i.toString(16).padStart(4, '0')}::1`;
+};
 
 app.use(express.static(publicPath));
 app.use("/scram/", express.static(scramjetPath));
@@ -339,7 +345,7 @@ const handleUpgradeVerification = (req, socket, next) => {
   const isWsBrowser = isBrowser(req);
   console.log(`WebSocket Upgrade Attempt: URL=${req.url}, Verified=${verified}, IsBrowser=${isWsBrowser}, Cookies=${req.headers.cookie || 'none'}`);
   if (req.url.startsWith("/wisp/")) {
-    return next(); // Temporarily allow all /wisp/ requests for debugging
+    return next();
   }
   if (verified && isWsBrowser) {
     return next();
@@ -350,7 +356,10 @@ const handleUpgradeVerification = (req, socket, next) => {
 
 const server = createServer((req, res) => {
   if (bare.shouldRoute(req)) {
-    handleHttpVerification(req, res, () => bare.routeRequest(req, res));
+    handleHttpVerification(req, res, () => {
+      req.ipv6 = getRandomIPv6();
+      bare.routeRequest(req, res);
+    });
   } else {
     app.handle(req, res);
   }
@@ -358,9 +367,15 @@ const server = createServer((req, res) => {
 
 server.on("upgrade", (req, socket, head) => {
   if (bare.shouldRoute(req)) {
-    handleUpgradeVerification(req, socket, () => bare.routeUpgrade(req, socket, head));
+    handleUpgradeVerification(req, socket, () => {
+      req.ipv6 = getRandomIPv6();
+      bare.routeUpgrade(req, socket, head);
+    });
   } else if (req.url && req.url.startsWith("/wisp/")) {
-    handleUpgradeVerification(req, socket, () => wisp.routeRequest(req, socket, head));
+    handleUpgradeVerification(req, socket, () => {
+      req.ipv6 = getRandomIPv6();
+      wisp.routeRequest(req, socket, head);
+    });
   } else {
     socket.destroy();
   }
