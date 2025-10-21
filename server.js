@@ -21,6 +21,7 @@ import fetch from "node-fetch";
 import fs from 'fs';
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
+import { createProxyMiddleware } from "http-proxy-middleware";
 import net from "node:net";
 import cluster from "node:cluster";
 
@@ -103,6 +104,33 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
 app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: false } }));
+
+app.use(
+  "/api/roblox/easyfun",
+  createProxyMiddleware({
+    target: "https://easyfun.gg",
+    changeOrigin: true,
+    pathRewrite: { "^/api/roblox/easyfun": "" },
+  })
+);
+
+app.use(
+  "/api/roblox/ldrescdn/easyfun/official-prod-v2",
+  createProxyMiddleware({
+    target: "https://res.ldrescdn.com/easyfun/official-prod-v2",
+    changeOrigin: true,
+    pathRewrite: { "^/api/roblox/ldrescdn/easyfun/official-prod-v2": "" },
+  })
+);
+
+app.use(
+  "/api/roblox/setupcmp",
+  createProxyMiddleware({
+    target: "https://cmp.setupcmp.com/cmp/cmp/",
+    changeOrigin: true,
+    pathRewrite: { "^/api/roblox/setupcmp": "" },
+  })
+);
 
 app.get("/results/:query", async (req, res) => {
   try {

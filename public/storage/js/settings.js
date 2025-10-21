@@ -29,7 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		disableParticles: document.getElementById("disableParticles"),
 	};
 
-	// Presets with matching favicons
 	const presets = {
 		classroom: {
 			title: "Google Classroom",
@@ -47,7 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		},
 	};
 
-	// Themes
 	const themes = {
 		default: { bgColor: "#0A1D37", textColor: "#FFFFFF" },
 		"swampy-green": { bgColor: "#1A3C34", textColor: "#D4E4D9" },
@@ -59,7 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		"glacial-frost": { bgColor: "#2A3C4F", textColor: "#D4E9E9" },
 	};
 
-	// Utility Functions
 	const applyGlobalSettings = () => {
 		const savedTitle = localStorage.getItem("siteTitle");
 		if (savedTitle) document.title = savedTitle;
@@ -262,7 +259,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	};
 
-	// Event Handlers
 	const beforeUnloadHandler = (e) => {
 		e.preventDefault();
 		e.returnValue = "";
@@ -477,7 +473,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	});
 
-	// Initialization
 	loadSettings();
 	handleTabSwitch(elements.tabs, elements.sections, "data-tab");
 	handleTabSwitch(elements.legalTabs, elements.legalSections, "data-legal");
@@ -493,7 +488,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 });
 
-// Event Handlers
 const beforeUnloadHandler = (e) => {
 	e.preventDefault();
 	e.returnValue = "";

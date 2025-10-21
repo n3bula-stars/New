@@ -332,7 +332,6 @@
         </a>
     </div>
 
-    <!-- Popup for adding new pin -->
     <div id="add-pin-popup" class="popup">
         <h3>Add New Pin</h3>
         <input type="text" id="pin-url" placeholder="Enter URL (https:// required)">
@@ -343,7 +342,6 @@
         </div>
     </div>
 
-    <!-- Time Display Element -->
     <div id="time"></div>
 
     <script src="/petezah/bundle.js" defer></script>
@@ -386,14 +384,12 @@
 
         setInterval(updateTime, 1000);
 
-        // Updated add pin functionality
         const addPinBtn = document.getElementById('add-pin-btn');
         const popup = document.getElementById('add-pin-popup');
         const addBtn = document.getElementById('add-btn');
         const cancelBtn = document.getElementById('cancel-btn');
         const pinnedIcons = document.querySelector('.pinned-icons');
 
-        // Load saved pins from localStorage on page load
         function loadSavedPins() {
             const savedPins = JSON.parse(localStorage.getItem('pinnedBookmarks') || '[]');
             savedPins.forEach(pin => {
@@ -401,7 +397,6 @@
             });
         }
 
-        // Create pin element
         function createPinElement(url, imageData) {
             const newPin = document.createElement('a');
             newPin.href = `/embed.html#${url}`;
@@ -420,7 +415,6 @@
             pinnedIcons.insertBefore(newPin, addPinBtn);
         }
 
-        // Save pin to localStorage
         function savePin(url, imageData) {
             const savedPins = JSON.parse(localStorage.getItem('pinnedBookmarks') || '[]');
             savedPins.push({ url, image: imageData });
@@ -466,10 +460,8 @@
             document.getElementById('pin-image').value = '';
         });
 
-        // Load pins when page loads
         window.addEventListener('load', loadSavedPins);
 
-        // Search bar functionality
         document.getElementById('uv-form').addEventListener('submit', function (event) {
             event.preventDefault();
             const url = document.getElementById('uv-address').value;
