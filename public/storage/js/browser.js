@@ -378,9 +378,14 @@ function updateAddressBar() {
   if (addressBar && activeTab) {
     addressBar.value = activeTab.url;
     const url = activeTab.url;
+    // homemade bypasses for sites that work better on uv then scram
     if (url.startsWith("https://www.youtube.com") || url === "www.youtube.com") {
       console.log("Switching iframe src to YouTube embed");
       activeTab.frame.frame.src = "/static/youtube-embed.html#https://youtube.com";
+    }
+    if (url.startsWith("https://discord.com") || url === "discord.com") {
+      console.log("Switching iframe src to Discord embed");
+      activeTab.frame.frame.src = "/static/embed.html#https://discord.com";
     }
     const isFavorited = store.favorites.includes(url);
     favoriteButton.innerHTML = `<i class="fas fa-star ${isFavorited ? "favorited" : ""}"></i>`;
