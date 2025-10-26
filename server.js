@@ -167,6 +167,7 @@ app.use(
     pathRewrite: { "^/api/roblox/req-ldrescdn": "" },
   })
 );
+// todo: put these in a seperate file
 
 app.get("/results/:query", async (req, res) => {
   try {
