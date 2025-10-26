@@ -387,6 +387,10 @@ function updateAddressBar() {
       console.log("Switching iframe src to Discord embed");
       activeTab.frame.frame.src = "/static/embed.html#https://discord.com";
     }
+    if (url.startsWith("https://www.google.com") || url === "www.google.com" || url === "www.google.ca" || url === "https://www.google.ca") {
+      console.log("Switching iframe src to Google embed");
+      activeTab.frame.frame.src = "/static/google-embed.html";
+    }
     const isFavorited = store.favorites.includes(url);
     favoriteButton.innerHTML = `<i class="fas fa-star ${isFavorited ? "favorited" : ""}"></i>`;
   }

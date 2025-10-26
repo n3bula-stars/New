@@ -115,6 +115,15 @@ app.use(
 );
 
 app.use(
+  "/api/roblox/easyfun-api",
+  createProxyMiddleware({
+    target: "https://api.easyfun.gg",
+    changeOrigin: true,
+    pathRewrite: { "^/api/roblox/easyfun-api": "" },
+  })
+);
+
+app.use(
   "/api/roblox/ldrescdn/easyfun/official-prod-v2",
   createProxyMiddleware({
     target: "https://res.ldrescdn.com/easyfun/official-prod-v2",
@@ -129,6 +138,33 @@ app.use(
     target: "https://cmp.setupcmp.com/cmp/cmp/",
     changeOrigin: true,
     pathRewrite: { "^/api/roblox/setupcmp": "" },
+  })
+);
+
+app.use(
+  "/api/roblox/ldplayer",
+  createProxyMiddleware({
+    target: "https://appcenter.ldplayer.net",
+    changeOrigin: true,
+    pathRewrite: { "^/api/roblox/ldplayer": "" },
+  })
+);
+
+app.use(
+  "/api/roblox/ldplayer-cdn",
+  createProxyMiddleware({
+    target: "https://cdn.ldplayer.net",
+    changeOrigin: true,
+    pathRewrite: { "^/api/roblox/ldplayer-cdn": "" },
+  })
+);
+
+app.use(
+  "/api/roblox/req-ldrescdn",
+  createProxyMiddleware({
+    target: "https://res.ldrescdn.com",
+    changeOrigin: true,
+    pathRewrite: { "^/api/roblox/req-ldrescdn": "" },
   })
 );
 
